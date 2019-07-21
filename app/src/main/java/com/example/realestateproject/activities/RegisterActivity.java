@@ -3,24 +3,37 @@ package com.example.realestateproject.activities;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.realestateproject.R;
+import com.example.realestateproject.models.UserModel;
 import com.example.realestateproject.retrofits.RetroClient;
 import com.example.realestateproject.retrofits.RetroUser;
+
+import org.json.JSONString;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
-    private EditText et_id, et_password;
-    private Button btn_submit, btn_cancle;
+    private EditText et_id, et_password, et_fullName, et_address, et_phoneNumber;
+    private TextView tv_birthday;
+    private Button btn_submit, btn_cancle, btn_pickBirthday;
+    private CheckBox chk_male, chk_female;
+    private int gender = 0;
     private RetroUser retroUser;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -29,6 +42,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         et_password = findViewById(R.id.et_password_reg);
         btn_submit = findViewById(R.id.btn_submit_reg);
         btn_cancle = findViewById(R.id.btn_cancle_reg);
+        et_fullName = findViewById(R.id.et_fullName_reg);
+        et_address = findViewById(R.id.et_address_reg);
+        et_phoneNumber = findViewById(R.id.et_phoneNumber_reg);
+        tv_birthday = findViewById(R.id.tv_birthday_reg);
+        btn_pickBirthday = findViewById(R.id.btn_birthday_reg);
+        chk_male = findViewById(R.id.chk_male);
+        chk_female = findViewById(R.id.chk_female);
     }
 
     @Override
@@ -36,10 +56,21 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         this.initialView();
+        chk_male.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chooseGender(view);
+            }
+        });
+        chk_female.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chooseGender(view);
+            }
+        });
         //Init retrofit to class
         Retrofit retrofitClient = RetroClient.getInstance();
         retroUser = retrofitClient.create(RetroUser.class);
-
         btn_submit.setOnClickListener(this);
         btn_cancle.setOnClickListener(this);
 
@@ -51,7 +82,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             case R.id.btn_submit_reg:
                 String id = et_id.getText().toString().trim();
                 String password = et_password.getText().toString().trim();
-                this.registerUser(id,password);
+                String fullName = et_fullName.getText().toString().trim();
+                String birthday = tv_birthday.getText().toString();
+                String address= et_address.getText().toString().trim();
+                String phoneNumber = et_phoneNumber.getText().toString().trim();
+                UserModel userModel = new UserModel(id, password, fullName, birthday, address, phoneNumber, gender);
+                        this.registerUser(userModel);
                 break;
             case R.id.btn_cancle_reg:
                 //Doing something
@@ -60,20 +96,40 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    private void registerUser(String id, String password) {
-        if (TextUtils.isEmpty(id) || TextUtils.isEmpty(password)) {
+    private void registerUser(UserModel userModel) {
+        if (TextUtils.isEmpty(userModel.getId()) || TextUtils.isEmpty(userModel.getPassword())) {
             Toast.makeText(this, "Id/Password is required", Toast.LENGTH_SHORT).show();
         } else {
-            compositeDisposable.add(retroUser.registerUser(id, password)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Consumer<String>() {
-                        @Override
-                        public void accept(String response) throws Exception {
-                            Toast.makeText(RegisterActivity.this, ""+response, Toast.LENGTH_SHORT);
-                        }
-                    })
-            );
+            Call<UserModel> call = retroUser.registerUser(userModel);
+            call.enqueue(new Callback<UserModel>() {
+                @Override
+                public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                    if(response.isSuccessful()){
+                        Toast.makeText(RegisterActivity.this, response.body().toString(), Toast.LENGTH_SHORT).show();
+                        Log.i("Result:", response.body().toString());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<UserModel> call, Throwable t) {
+
+                }
+            });
+        }
+    }
+
+    private void chooseGender(View view) {
+        switch (view.getId()){
+            case R.id.chk_male:
+                gender = 0;
+                if(chk_female.isChecked())
+                chk_female.setChecked(false);
+                break;
+            case R.id.chk_female:
+                gender = 1;
+                if(chk_male.isChecked())
+                chk_male.setChecked(false);
+                break;
         }
     }
 }

@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +20,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
@@ -57,16 +61,21 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.btn_login_signIn:
                 String id = et_id.getText().toString().trim();
                 String password = et_pasword.getText().toString().trim();
-                compositeDisposable.add(retroUser.checkUserLogin(id, password)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Consumer<String>() {
-                            @Override
-                            public void accept(String response) throws Exception {
-                                Toast.makeText(SignInActivity.this, "Thanh cong", Toast.LENGTH_SHORT);
-                            }
-                        })
-                );
+                Call<String> call = retroUser.checkUserLogin(id, password);
+                call.enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        if(response.isSuccessful()){
+                            Toast.makeText(SignInActivity.this, ""+response.message().toString(), Toast.LENGTH_SHORT).show();
+                            Log.d("login", response.message().toString());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+
+                    }
+                });
                 break;
             case R.id.btn_register_signIn:
                 startActivity(new Intent(this, RegisterActivity.class));

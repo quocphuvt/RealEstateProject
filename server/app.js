@@ -19,17 +19,21 @@ mongoose.connect("mongodb://localhost/RealEstateManager", (err, client) => {
             const userData = request.body;
             const userObject = {
                 id: userData.id,
-                password: userData.password
+                password: userData.password,
+                fullName: userData.fullName,
+                birthday: userData.birthday,
+                address: userData.address,
+                phoneNumber: userData.phoneNumber,
+                gender: userData.gender
             }
-            UserApi = new UserApi(response);
-            UserApi.registerUser(userObject);
-            // response.json("User was created!");
+            userApi = new UserApi(response);
+            userApi.registerUser(userObject);
         });
 
         app.post("/sign_in", (request, response, next) => {
             const userData = request.body;
-            UserApi.checkUserLogin(userData.id, userData.password);
-            // response.json("Login success");
+            userApi = new UserApi(response);
+            userApi.checkUserLogin(userData.id, userData.password);
         });
     }
 })
