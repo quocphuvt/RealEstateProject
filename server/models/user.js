@@ -11,6 +11,6 @@ const userSchema = new Schema({
     gender: Number
 });
 
-const userModel = mongoose.model("users", userSchema);
+const userModel = mongoose.model("users", userSchema); //users: collection
 
 module.exports = userModel;

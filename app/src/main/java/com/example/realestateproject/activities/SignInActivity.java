@@ -1,8 +1,10 @@
 package com.example.realestateproject.activities;
 
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +24,8 @@ import retrofit2.Retrofit;
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText et_id, et_pasword;
     private Button btn_logIn, btn_register;
+    private Toolbar toolbar;
+
     private RetroUser retroUser;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -30,6 +34,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         et_pasword = findViewById(R.id.et_password_signIn);
         btn_logIn = findViewById(R.id.btn_login_signIn);
         btn_register = findViewById(R.id.btn_register_signIn);
+        toolbar = findViewById(R.id.toolbar);
     }
 
     @Override
@@ -39,6 +44,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         this.inititalView();
         Retrofit retrofitClient = RetroClient.getInstance();
         retroUser = retrofitClient.create(RetroUser.class);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("Sign In");
 
         btn_logIn.setOnClickListener(this);
         btn_register.setOnClickListener(this);

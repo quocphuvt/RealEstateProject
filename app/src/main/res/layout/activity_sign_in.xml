@@ -6,52 +6,163 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".activities.SignInActivity">
-
-    <include layout="@layout/toolbar" />
-
-    <LinearLayout
-        android:gravity="center"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
+        <FrameLayout
+            android:background="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="250dp">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_marginTop="20dp"
+                    android:text="Your Gateway to a"
+                    android:gravity="center"
+                    android:textStyle="italic"
+                    android:textSize="12dp"
+                    android:layout_width="match_parent"
+                    android:textColor="#fff"
+                    android:layout_height="wrap_content" />
 
-        <EditText
-            android:id="@+id/et_id_signIn"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:hint="id..." />
+                <android.support.v7.widget.CardView
+                    android:layout_marginTop="30dp"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_margin="5dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/sub_logo"
+                        android:layout_width="150dp"
+                        android:layout_height="80dp" />
+                </android.support.v7.widget.CardView>
+            </LinearLayout>
+        </FrameLayout>
+        <android.support.v7.widget.CardView
+            android:layout_gravity="center|bottom"
+            android:layout_marginBottom="30dp"
+            app:cardCornerRadius="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:gravity="center"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:background="@drawable/edittext_border"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_weight="0"
+                        android:src="@drawable/ic_account_circle_black_24dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp" />
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:layout_weight="1"
+                        app:met_hideUnderline="true"
+                        android:id="@+id/et_id_signIn"
+                        android:layout_width="300dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginRight="8dp"
+                        android:hint="Input your ID here..."
+                        android:textSize="12dp"
+                        />
+                </LinearLayout>
 
-        <EditText
-            android:id="@+id/et_password_signIn"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:hint="password..." />
+                <LinearLayout
+                    android:background="@drawable/edittext_border"
+                    android:paddingLeft="20dp"
+                    android:layout_marginTop="15dp"
+                    android:paddingRight="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:layout_weight="0"
+                        android:src="@drawable/ic_lock_black_24dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp" />
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/et_password_signIn"
+                        android:layout_weight="1"
+                        app:met_hideUnderline="true"
+                        android:layout_width="300dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginRight="8dp"
+                        android:inputType="textPassword"
+                        android:textSize="12dp"
+                        android:hint="Your password here..." />
+                </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_login_signIn"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="Login" />
+                <LinearLayout
+                    android:paddingLeft="45dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <CheckBox
+                        android:id="@+id/chk_rememberMe"
+                        android:buttonTint="@color/iconPrimaryColor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:text="Remember me"
+                        android:textSize="12dp"
+                        android:textColor="@color/iconPrimaryColor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_register_signIn"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Register" />
-    </LinearLayout>
+                <Button
+                    android:id="@+id/btn_login_signIn"
+                    android:layout_width="300dp"
+                    android:background="@color/colorPrimary"
+                    android:textColor="#fff"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="20dp"
+                    android:text="Sign In" />
+
+                <TextView
+                    android:textSize="8dp"
+                    android:gravity="center"
+                    android:textStyle="italic"
+                    android:layout_marginTop="20dp"
+                    android:text="Do you have any account ?"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:id="@+id/btn_register_signIn"
+                    android:background="@android:color/transparent"
+                    android:textColor="#4CAF50"
+                    android:layout_width="300dp"
+                    android:textSize="12dp"
+                    android:layout_height="30dp"
+                    android:text="Register" />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+    </FrameLayout>
 </LinearLayout>

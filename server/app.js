@@ -21,14 +21,15 @@ mongoose.connect("mongodb://localhost/RealEstateManager", (err, client) => {
                 id: userData.id,
                 password: userData.password
             }
+            UserApi = new UserApi(response);
             UserApi.registerUser(userObject);
-            response.json("User was created!");
+            // response.json("User was created!");
         });
 
         app.post("/sign_in", (request, response, next) => {
             const userData = request.body;
             UserApi.checkUserLogin(userData.id, userData.password);
-            response.json("Login success");
+            // response.json("Login success");
         });
     }
 })
