@@ -1,9 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<LinearLayout
+    tools:context=".activities.MySMSActivity"
+    android:orientation="vertical"
     android:layout_height="match_parent"
-    tools:context=".MySMSActivity">
+    android:layout_width="match_parent"
+    android:id="@+id/LinearLayout1"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/txtSendTo"
+        android:text="Send to:"/>
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/textView2"
+        android:text="Write content below:"
+        android:textColor="#FFFFFF"
+        android:background="#008000"/>
+
+    <EditText
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/editSMS"
+        android:inputType="textMultiLine"
+        android:gravity="top|left"
+        android:ems="10"
+        android:layout_weight="0.45">
+    <requestFocus/>
+</EditText>
+
+    <Button
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/btnSendSms"
+        android:text="Send Message"/>
+</LinearLayout>
