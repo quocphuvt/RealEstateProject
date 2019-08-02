@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.HomeFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:background="#334856"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_margin="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:text="Manage \nyour reals"
+                    android:textColor="#fff"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <ImageView
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/divider"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <ImageView
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:src="@drawable/real"
+                android:layout_width="wrap_content"
+                android:layout_height="90dp"
+                android:scaleType="fitCenter"
+                />
+        </LinearLayout>
+        <TextView
+            android:textColor="#1B1C20"
+            android:layout_margin="10dp"
+            android:layout_marginTop="10dp"
+            android:text="You have: 4 reals"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="#F0F3F4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/home_viewPager"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="330dp"
+                android:layout_gravity="bottom"
+                android:paddingLeft="50dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="35dp"
+                android:paddingRight="50dp"
+                android:clipToPadding="false"
+                android:overScrollMode="never">
+            </androidx.viewpager.widget.ViewPager>
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

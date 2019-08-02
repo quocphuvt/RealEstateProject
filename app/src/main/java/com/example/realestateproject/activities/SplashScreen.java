@@ -2,10 +2,9 @@ package com.example.realestateproject.activities;
 
 import android.content.Intent;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.example.realestateproject.MainActivity;
 import com.example.realestateproject.R;
 
 public class SplashScreen extends AppCompatActivity {

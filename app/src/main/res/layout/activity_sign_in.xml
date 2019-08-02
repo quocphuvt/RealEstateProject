@@ -27,7 +27,7 @@
                     android:textColor="#fff"
                     android:layout_height="wrap_content" />
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:layout_marginTop="30dp"
                     android:layout_gravity="center"
                     app:cardCornerRadius="10dp"
@@ -36,13 +36,13 @@
                     <ImageView
                         android:layout_margin="5dp"
                         android:layout_gravity="center"
-                        android:src="@drawable/sub_logo"
+                        app:srcCompat="@drawable/sub_logo"
                         android:layout_width="150dp"
                         android:layout_height="80dp" />
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
             </LinearLayout>
         </FrameLayout>
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:layout_gravity="center|bottom"
             android:layout_marginBottom="30dp"
             app:cardCornerRadius="10dp"
@@ -66,7 +66,7 @@
                     android:layout_height="wrap_content">
                     <ImageView
                         android:layout_weight="0"
-                        android:src="@drawable/ic_account_circle_black_24dp"
+                        app:srcCompat="@drawable/ic_account_circle_black_24dp"
                         android:layout_width="25dp"
                         android:layout_height="25dp" />
                     <com.rengwuxian.materialedittext.MaterialEditText
@@ -96,7 +96,7 @@
                     android:layout_height="wrap_content">
                     <ImageView
                         android:layout_weight="0"
-                        android:src="@drawable/ic_lock_black_24dp"
+                        app:srcCompat="@drawable/ic_lock_black_24dp"
                         android:layout_width="25dp"
                         android:layout_height="25dp" />
                     <com.rengwuxian.materialedittext.MaterialEditText
@@ -163,6 +163,6 @@
                     android:layout_height="30dp"
                     android:text="Register" />
             </LinearLayout>
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
     </FrameLayout>
 </LinearLayout>

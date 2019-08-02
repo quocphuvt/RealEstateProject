@@ -4,4 +4,8 @@
     <color name="colorPrimaryDark">#bc5100</color>
     <color name="colorAccent">#ffb04c</color>
     <color name="iconPrimaryColor" >#636363</color>
+    <color name="toolbarTitle">#fff</color>
+    <color name="white">#ffffff</color>
+    <color name="darkgray">#6c6c6c</color>
+    <color name="inactive">#C3CBCE</color>
 </resources>

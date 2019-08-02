@@ -9,7 +9,7 @@
     tools:context=".activities.SplashScreen">
 
     <ImageView
-        android:src="@drawable/logo"
+        app:srcCompat="@drawable/logo"
         android:padding="50dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
