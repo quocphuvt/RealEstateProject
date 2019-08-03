@@ -4,14 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:gravity="center"
     android:background="#FFFFFF"
     tools:context=".activities.SplashScreen">
-
-    <ImageView
-        app:srcCompat="@drawable/logo"
-        android:padding="50dp"
+    <LinearLayout
+        android:padding="60dp"
+        android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+        <ImageView
+            app:srcCompat="@drawable/square_logo"
+            android:scaleType="fitCenter"
+            android:layout_width="match_parent"
+            android:adjustViewBounds="true"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:gravity="center"
+            android:textStyle="italic"
+            android:text="Real estate management"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
 </LinearLayout>

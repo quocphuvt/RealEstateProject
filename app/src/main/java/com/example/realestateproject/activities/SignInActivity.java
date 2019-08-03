@@ -3,12 +3,15 @@ package com.example.realestateproject.activities;
 import android.content.Intent;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.realestateproject.R;
@@ -23,9 +26,9 @@ import retrofit2.Retrofit;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText et_id, et_pasword;
-    private Button btn_logIn, btn_register;
+    private Button btn_logIn;
     private Toolbar toolbar;
-
+    private TextView tv_register;
     private RetroUser retroUser;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -33,7 +36,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         et_id = findViewById(R.id.et_id_signIn);
         et_pasword = findViewById(R.id.et_password_signIn);
         btn_logIn = findViewById(R.id.btn_login_signIn);
-        btn_register = findViewById(R.id.btn_register_signIn);
+        tv_register = findViewById(R.id.btn_register_signIn);
         toolbar = findViewById(R.id.toolbar);
     }
 
@@ -44,11 +47,12 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         this.inititalView();
         Retrofit retrofitClient = RetroClient.getInstance();
         retroUser = retrofitClient.create(RetroUser.class);
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Sign In");
+        setSupportActionBar(toolbar);
+        toolbar.setTitle("Sign In");
+        toolbar.setTitleTextColor(Color.WHITE);
 
         btn_logIn.setOnClickListener(this);
-        btn_register.setOnClickListener(this);
+        tv_register.setOnClickListener(this);
     }
 
     @Override
