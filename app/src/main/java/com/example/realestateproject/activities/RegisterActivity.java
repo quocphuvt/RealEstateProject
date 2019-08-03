@@ -34,6 +34,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     Button btn_Register, btn_Cancel;
     RadioGroup rdG_Gender;
     CheckBox chkMale, chkFemale;
+    UserModel userModel;
+    private int gender = 0;
+    private RetroUser retroUser;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private void initialView() {
 
@@ -44,7 +48,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         input_edt_Birthday = findViewById(R.id.input_edt_Birthday);
         input_edt_Phone = findViewById(R.id.input_edt_Phone);
         rdG_Gender = findViewById(R.id.rdG_Gender);
-
+        chkFemale=findViewById(R.id.chkFemale);
+        chkMale=findViewById(R.id.chkMale);
         btn_Register = findViewById(R.id.btnRegister);
         btn_Cancel = findViewById(R.id.btnCancel);
 
@@ -60,22 +65,79 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
         this.initialView();
+        chkMale.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseGender(v);
+            }
+        });
+        chkFemale.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseGender(v);
+            }
+        });
+        //Init retrofit to class
+        Retrofit retrofitClient = RetroClient.getInstance();
+        retroUser = retrofitClient.create(RetroUser.class);
+        btn_Register.setOnClickListener(this);
+        btn_Cancel.setOnClickListener(this);
+
 
 
     }
 
     @Override
     public void onClick(View view) {
-
+        switch (view.getId()) {
+            case R.id.btnRegister:
+                String id = input_edt_ID.getText().toString().trim();
+                String password = input_edt_Password.getText().toString().trim();
+                String fullName = input_edt_Name.getText().toString().trim();
+                String birthday = input_edt_Birthday.getText().toString();
+                String address= sp_City.getSelectedItem().toString().trim();
+                String phoneNumber = input_edt_Phone.getText().toString().trim();
+                UserModel userModel = new UserModel(id, password, fullName, birthday, address,phoneNumber, gender);
+                this.registerUser(userModel);
+        }
     }
 
     private void registerUser(UserModel userModel) {
+        if (TextUtils.isEmpty(userModel.getId()) || TextUtils.isEmpty(userModel.getPassword())) {
+            Toast.makeText(this, "Id/Password is required", Toast.LENGTH_SHORT).show();
+        } else {
+            Call<UserModel> call = retroUser.registerUser(userModel);
+            call.enqueue(new Callback<UserModel>() {
+                @Override
+                public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                    if(response.isSuccessful()){
+                        Toast.makeText(RegisterActivity.this, response.body().toString(), Toast.LENGTH_SHORT).show();
+                        Log.i("Result:", response.body().toString());
+                    }
+                }
 
+                @Override
+                public void onFailure(Call<UserModel> call, Throwable t) {
+                    Toast.makeText(RegisterActivity.this, "fall", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     private void chooseGender(View view) {
-
+        switch (view.getId()){
+            case R.id.chkMale:
+                gender = 0;
+                if(chkFemale.isChecked())
+                    chkFemale.setChecked(false);
+                break;
+            case R.id.chkFemale:
+                gender = 1;
+                if(chkMale.isChecked())
+                    chkMale.setChecked(false);
+                break;
+        }
     }
+
 }

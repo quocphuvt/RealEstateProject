@@ -1,42 +1,28 @@
-const express = require("express");
-const bodyparser = require("body-parser");
-const mongoose = require("mongoose");
-const fs = require("fs");
-//APIs
-const UserApi = require("./connectors/users");
 
+const express = require('express');
 const app = express();
+const mongoose = require('mongoose');
+const bodyParser =require ('body-parser');
 
-app.use(bodyparser.urlencoded({ extended: false }));
-app.use(bodyparser.json());
+app.use(bodyParser.json());
 
-mongoose.connect("mongodb://localhost/RealEstateManager", (err, client) => {
-    if(err){
-        console.log("Unable to connect to MongoDB. Error: "+err)
-    }
-    else {
-        app.post("/register", (request, response, next) => {
-            const userData = request.body;
-            const userObject = {
-                id: userData.id,
-                password: userData.password,
-                fullName: userData.fullName,
-                birthday: userData.birthday,
-                address: userData.address,
-                phoneNumber: userData.phoneNumber,
-                gender: userData.gender
-            }
-            userApi = new UserApi(response);
-            userApi.registerUser(userObject);
-        });
+//import Routes
+const postRouter =require ('./connectors/Post_Users');
+app.use('/register', postRouter);
 
-        app.post("/sign_in", (request, response, next) => {
-            const userData = request.body;
-            userApi = new UserApi(response);
-            userApi.checkUserLogin(userData.id, userData.password);
-        });
-    }
-})
 
-app.listen(8000); //Port of Server
+//Routes
+app.get('/', (req,res)=>{
+    res.send('');
+});
+
+app.get('/register',(req,res)=>{
+    res.send('');
+});
+//Connect to DB
+mongoose.connect('mongodb://localhost/RealEstateManager', { useNewUrlParser: true },()=>{
+    console.log('Connect to DB!');
+});
+//Listen server
+app.listen(8000);
 
