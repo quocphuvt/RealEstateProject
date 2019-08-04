@@ -53,7 +53,7 @@ mongoose.connect("mongodb://localhost/RealEstateManager", (err, client) => {
 
         })
 
-        app.post("/listreal",(request,response,next)=>{
+        app.post("/list_real",(request,response,next)=>{
             const realApi = new RealApi(response);
             realApi.getAllReals();
         })

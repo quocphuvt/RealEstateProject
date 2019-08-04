@@ -11,8 +11,9 @@ import retrofit2.http.POST;
 public interface RetroReal {
     @POST("/real_creating")
     Call<RealEstate> createReal(@Body RealEstate realEstate);
-    @POST("/listreal")
-    Call<List<RealEstate>> getListreals ();
+
+    @POST("/list_real")
+    Call<List<RealEstate>> getListreals();
 
 }
 
