@@ -5,4 +5,7 @@ public class Constants {
     public static final String[] CITIES = {"Hồ chí Minh, Hà Nội, Vũng Tàu, Hải Phòng, Đằ Nẵng, Cần Thơ"};
     public static final String[] STATUS = {"AVAILABLE, EXPIRED"};
     public static final String[] TYPE ={"RENT, SALE"};
+    public static void test(){
+
+    }
 }

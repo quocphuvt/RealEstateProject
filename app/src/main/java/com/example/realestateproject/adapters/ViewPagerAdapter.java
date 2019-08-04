@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.example.realestateproject.fragments.HomeFragment;
+import com.example.realestateproject.fragments.MapFragment;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -20,7 +21,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
                 fragment = new HomeFragment();
                 break;
             case 1:
-                fragment = new HomeFragment();
+                fragment = new MapFragment();
                 break;
             case 2:
                 fragment = new HomeFragment();

@@ -21,6 +21,10 @@ public class CardFragment extends Fragment {
     private TextView tv_title, tv_subtitle;
     private String title, subtitle;
 
+    public CardFragment(){
+
+    }
+
     public CardFragment(String title, String subtitle){
         this.title = title;
         this.subtitle = subtitle;
