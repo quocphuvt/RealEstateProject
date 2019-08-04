@@ -1,12 +1,16 @@
 package com.example.realestateproject.activities;
 
 import android.content.Intent;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,11 +19,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.realestateproject.R;
+import com.example.realestateproject.models.UserModel;
+import com.example.realestateproject.models.UserResponses;
 import com.example.realestateproject.retrofits.RetroClient;
 import com.example.realestateproject.retrofits.RetroUser;
 import com.example.realestateproject.supports.LayoutInterface;
 
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -57,25 +67,28 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_login_signIn:
-                Toast.makeText(this, "Dang nhap ne", Toast.LENGTH_SHORT).show();
-                String id = et_id.getText().toString().trim();
+                final String id = et_id.getText().toString().trim();
                 String password = et_pasword.getText().toString().trim();
-                Call<String> call = retroUser.checkUserLogin(id, password);
-                call.enqueue(new Callback<String>() {
-                    @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
-                        Toast.makeText(SignInActivity.this, ""+call, Toast.LENGTH_SHORT).show();
-                        if(response.isSuccessful()){
-                            Toast.makeText(SignInActivity.this, ""+response.message().toString(), Toast.LENGTH_SHORT).show();
-                            Log.d("login", response.message().toString());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<String> call, Throwable t) {
-                        Toast.makeText(SignInActivity.this, ""+t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+                retroUser.checkUserLogin(id, password)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<UserResponses>() {
+                            @Override
+                            public void accept(UserResponses userResponses) throws Exception {
+                                if (userResponses.getStatus().equals("id failed")) {
+                                    Toast.makeText(SignInActivity.this, "" + userResponses.getMessage(), Toast.LENGTH_SHORT).show();
+                                } else if (userResponses.getStatus().equals("password failed")) {
+                                    Toast.makeText(SignInActivity.this, "" + userResponses.getMessage(), Toast.LENGTH_SHORT).show();
+                                } else if(userResponses.getStatus().equals("success")){
+                                    SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putString("id", id);
+                                    editor.apply();
+                                    Toast.makeText(SignInActivity.this, "" + userResponses.getMessage(), Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(SignInActivity.this, HomeActivity.class));
+                                }
+                            }
+                        });
                 break;
             case R.id.btn_register_signIn:
                 startActivity(new Intent(this, RegisterActivity.class));

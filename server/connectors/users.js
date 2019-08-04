@@ -6,26 +6,25 @@ module.exports = class UserApi {
         this.res = res;
     }
     registerUser (user) {
-        userModel.create(user).then(() => {
-            this.res.json({"status": "success", "user_id": user.id})
+        userModel.create(user).then((data) => {
+            this.res.json(data)
         }).catch(err => console.log("Register err: " + err));
     }
     checkIdExisted (id) {
-        return userModel.find({ id }, (err, data) => {
-            if (data != null) {
-                return 1;
-            }
+        return userModel.findOne({ id }, (err, data) => {
+            return data;
         })
     }
     checkUserLogin (id, password) {
-        userModel.find({ id: id, password: password }, (err, data) => {
+        userModel.findOne({ id: id }, (err, data) => {
             if (data) {
-                console.log(data)
-                this.res.json(data);
-                console.log("Login success!");
+                if(data.password === password) {
+                    this.res.json({"status": "success", "message": "Login success"});
+                }
+                else this.res.json({"status": "password failed", "message": "Uncorrect password"});
             }
             else {
-                console.log("Login failed!")
+                this.res.json({"status": "id failed","message": "Uncorrect ID"});
             }
         });
     }

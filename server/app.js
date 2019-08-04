@@ -17,8 +17,6 @@ mongoose.connect("mongodb://localhost/RealEstateManager", (err, client) => {
     else {
         app.post("/register", async (request, response, next) => {
             const userData = request.body;
-            console.log('==> userData');
-            console.log(userData);
             const userObject = {
                 id: userData.id,
                 password: userData.password,
@@ -30,19 +28,18 @@ mongoose.connect("mongodb://localhost/RealEstateManager", (err, client) => {
             }
             userApi = new UserApi(response);
             const userExisted = await userApi.checkIdExisted(userData.id);
-            if(userExisted === 1){
-                console.log("User was existed");
+            if(userExisted != null){
+                return response.json({"id": null});
             }
             else {
-                console.log("Register success");
-                userApi.registerUser(userObject)
+                return userApi.registerUser(userObject)
             };
            
         });
 
         app.post("/sign_in", (request, response, next) => {
             const userData = request.body;
-            console.log(userData)
+            console.log(userData);
             userApi = new UserApi(response);
             userApi.checkUserLogin(userData.id, userData.password);
         });

@@ -144,13 +144,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             call.enqueue(new Callback<UserModel>() {
                 @Override
                 public void onResponse(Call<UserModel> call, Response<UserModel> response) {
-                    Log.i("res:", response.message() + "");
                     if (response.isSuccessful()) {
-                        Toast.makeText(RegisterActivity.this, response.body().toString(), Toast.LENGTH_SHORT).show();
-                        Log.i("Result:", response.body().toString());
+                        if(response.body().getId() != null){
+                            Toast.makeText(RegisterActivity.this, "User was created!", Toast.LENGTH_SHORT).show();
+                            finish();
+                            Log.i("Result:", response.body().toString());
+                        }
+                        else Toast.makeText(RegisterActivity.this, "ID was existed", Toast.LENGTH_SHORT).show();
                     }
                 }
-
                 @Override
                 public void onFailure(Call<UserModel> call, Throwable t) {
                     Toast.makeText(RegisterActivity.this, ""+t.getMessage(), Toast.LENGTH_SHORT).show();
