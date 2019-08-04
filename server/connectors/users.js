@@ -7,14 +7,13 @@ module.exports = class UserApi {
     }
     registerUser (user) {
         userModel.create(user).then(() => {
-            this.res.json("OKE NE")
-            console.log("User was created!")
+            this.res.json({"status": "success", "user_id": user.id})
         }).catch(err => console.log("Register err: " + err));
     }
     checkIdExisted (id) {
-        userModel.find({ id }, (err, data) => {
+        return userModel.find({ id }, (err, data) => {
             if (data != null) {
-                console.log("ID was exist!");
+                return 1;
             }
         })
     }

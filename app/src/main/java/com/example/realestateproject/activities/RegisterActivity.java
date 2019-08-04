@@ -1,20 +1,39 @@
 package com.example.realestateproject.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+
+import android.app.DatePickerDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.realestateproject.MainActivity;
 import com.example.realestateproject.R;
+import com.example.realestateproject.adapters.CityAdapter;
 import com.example.realestateproject.models.UserModel;
 import com.example.realestateproject.retrofits.RetroClient;
 import com.example.realestateproject.retrofits.RetroUser;
+import com.example.realestateproject.supports.Constants;
+import com.example.realestateproject.supports.LayoutInterface;
+import com.google.android.material.textfield.TextInputEditText;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
 import retrofit2.Call;
@@ -22,27 +41,28 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
-    private EditText et_id, et_password, et_fullName, et_address, et_phoneNumber;
-    private TextView tv_birthday;
-    private Button btn_submit, btn_cancle, btn_pickBirthday;
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, LayoutInterface {
+    private TextInputEditText et_id, et_password, et_fullName, et_phoneNumber;
+    private TextView tv_cancel_reg, tv_birthday;
+    private Button btn_submit;
     private CheckBox chk_male, chk_female;
     private int gender = 0;
+    private Spinner sp_city;
+    private Toolbar toolbar;
     private RetroUser retroUser;
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private void initialView() {
         et_id = findViewById(R.id.et_id_reg);
         et_password = findViewById(R.id.et_password_reg);
         btn_submit = findViewById(R.id.btn_submit_reg);
-        btn_cancle = findViewById(R.id.btn_cancle_reg);
+        tv_cancel_reg = findViewById(R.id.tv_cancel_reg);
         et_fullName = findViewById(R.id.et_fullName_reg);
-        et_address = findViewById(R.id.et_address_reg);
         et_phoneNumber = findViewById(R.id.et_phoneNumber_reg);
         tv_birthday = findViewById(R.id.tv_birthday_reg);
-        btn_pickBirthday = findViewById(R.id.btn_birthday_reg);
         chk_male = findViewById(R.id.chk_male);
         chk_female = findViewById(R.id.chk_female);
+        sp_city = findViewById(R.id.sp_city_reg);
+        toolbar = findViewById(R.id.toolbar);
     }
 
     @Override
@@ -50,6 +70,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         this.initialView();
+        this.setToolbar("Register");
+
+        tv_birthday.setOnClickListener(this);
         chk_male.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,8 +88,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         //Init retrofit to class
         Retrofit retrofitClient = RetroClient.getInstance();
         retroUser = retrofitClient.create(RetroUser.class);
+        CityAdapter cityAdapter = new CityAdapter(Constants.CITIES, this);
+        sp_city.setAdapter(cityAdapter);
         btn_submit.setOnClickListener(this);
-        btn_cancle.setOnClickListener(this);
+        tv_cancel_reg.setOnClickListener(this);
 
     }
 
@@ -78,14 +103,35 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 String password = et_password.getText().toString().trim();
                 String fullName = et_fullName.getText().toString().trim();
                 String birthday = tv_birthday.getText().toString();
-                String address= et_address.getText().toString().trim();
+                String city = "Ho ChI mINH";
                 String phoneNumber = et_phoneNumber.getText().toString().trim();
-                UserModel userModel = new UserModel(id, password, fullName, birthday, address, phoneNumber, gender);
-                        this.registerUser(userModel);
+                UserModel userModel = new UserModel(id, password, fullName, birthday, city, phoneNumber, gender);
+                this.registerUser(userModel);
                 break;
-            case R.id.btn_cancle_reg:
+            case R.id.tv_cancel_reg:
                 //Doing something
                 finish();
+                break;
+            case R.id.tv_birthday_reg:
+                Calendar calendar = Calendar.getInstance();
+                DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        try {
+                            String date = dayOfMonth + "/" + (month + 1) + "/" + year;
+                            SimpleDateFormat simpleDate = new SimpleDateFormat("dd/MM/yyyy");
+                            Date d = simpleDate.parse(date);
+                            tv_birthday.setText(simpleDate.format(d));
+                        } catch (Exception e) {
+
+                        }
+
+                    }
+                },
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH));
+                datePickerDialog.show();
                 break;
         }
     }
@@ -98,8 +144,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             call.enqueue(new Callback<UserModel>() {
                 @Override
                 public void onResponse(Call<UserModel> call, Response<UserModel> response) {
-                    Log.i("res:", response.body()+"");
-                    if(response.isSuccessful()){
+                    Log.i("res:", response.message() + "");
+                    if (response.isSuccessful()) {
                         Toast.makeText(RegisterActivity.this, response.body().toString(), Toast.LENGTH_SHORT).show();
                         Log.i("Result:", response.body().toString());
                     }
@@ -107,24 +153,31 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
                 @Override
                 public void onFailure(Call<UserModel> call, Throwable t) {
-
+                    Toast.makeText(RegisterActivity.this, ""+t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         }
     }
 
     private void chooseGender(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.chk_male:
                 gender = 0;
-                if(chk_female.isChecked())
-                chk_female.setChecked(false);
+                if (chk_female.isChecked())
+                    chk_female.setChecked(false);
                 break;
             case R.id.chk_female:
                 gender = 1;
-                if(chk_male.isChecked())
-                chk_male.setChecked(false);
+                if (chk_male.isChecked())
+                    chk_male.setChecked(false);
                 break;
         }
+    }
+
+    @Override
+    public void setToolbar(String title) {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(title);
+        toolbar.setTitleTextColor(Color.WHITE);
     }
 }

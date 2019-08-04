@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.example.realestateproject.R;
 import com.example.realestateproject.retrofits.RetroClient;
 import com.example.realestateproject.retrofits.RetroUser;
+import com.example.realestateproject.supports.LayoutInterface;
 
 import io.reactivex.disposables.CompositeDisposable;
 import retrofit2.Call;
@@ -24,13 +25,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
+public class SignInActivity extends AppCompatActivity implements View.OnClickListener, LayoutInterface {
     private EditText et_id, et_pasword;
     private Button btn_logIn;
     private Toolbar toolbar;
     private TextView tv_register;
     private RetroUser retroUser;
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private void inititalView() {
         et_id = findViewById(R.id.et_id_signIn);
@@ -45,11 +45,9 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         this.inititalView();
+        this.setToolbar("Sign In");
         Retrofit retrofitClient = RetroClient.getInstance();
         retroUser = retrofitClient.create(RetroUser.class);
-        setSupportActionBar(toolbar);
-        toolbar.setTitle("Sign In");
-        toolbar.setTitleTextColor(Color.WHITE);
 
         btn_logIn.setOnClickListener(this);
         tv_register.setOnClickListener(this);
@@ -59,12 +57,14 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_login_signIn:
+                Toast.makeText(this, "Dang nhap ne", Toast.LENGTH_SHORT).show();
                 String id = et_id.getText().toString().trim();
                 String password = et_pasword.getText().toString().trim();
                 Call<String> call = retroUser.checkUserLogin(id, password);
                 call.enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
+                        Toast.makeText(SignInActivity.this, ""+call, Toast.LENGTH_SHORT).show();
                         if(response.isSuccessful()){
                             Toast.makeText(SignInActivity.this, ""+response.message().toString(), Toast.LENGTH_SHORT).show();
                             Log.d("login", response.message().toString());
@@ -73,7 +73,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
-
+                        Toast.makeText(SignInActivity.this, ""+t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
                 break;
@@ -81,5 +81,12 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 startActivity(new Intent(this, RegisterActivity.class));
                 break;
         }
+    }
+
+    @Override
+    public void setToolbar(String title) {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(title);
+        toolbar.setTitleTextColor(Color.WHITE);
     }
 }

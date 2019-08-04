@@ -1,5 +1,6 @@
 package com.example.realestateproject.retrofits;
 
+import com.example.realestateproject.supports.Constants;
 import com.google.gson.Gson;
 
 import retrofit2.Retrofit;
@@ -13,7 +14,7 @@ public class RetroClient {
     public static Retrofit getInstance() {
         if(instance == null) {
             instance = new Retrofit.Builder()
-                    .baseUrl("http://192.168.56.1:8000/")
+                    .baseUrl(Constants.BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .build();

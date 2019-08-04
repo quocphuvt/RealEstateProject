@@ -15,23 +15,34 @@ mongoose.connect("mongodb://localhost/RealEstateManager", (err, client) => {
         console.log("Unable to connect to MongoDB. Error: "+err)
     }
     else {
-        app.post("/register", (request, response, next) => {
+        app.post("/register", async (request, response, next) => {
             const userData = request.body;
+            console.log('==> userData');
+            console.log(userData);
             const userObject = {
                 id: userData.id,
                 password: userData.password,
                 fullName: userData.fullName,
                 birthday: userData.birthday,
-                address: userData.address,
+                city: userData.city,
                 phoneNumber: userData.phoneNumber,
                 gender: userData.gender
             }
             userApi = new UserApi(response);
-            userApi.registerUser(userObject);
+            const userExisted = await userApi.checkIdExisted(userData.id);
+            if(userExisted === 1){
+                console.log("User was existed");
+            }
+            else {
+                console.log("Register success");
+                userApi.registerUser(userObject)
+            };
+           
         });
 
         app.post("/sign_in", (request, response, next) => {
             const userData = request.body;
+            console.log(userData)
             userApi = new UserApi(response);
             userApi.checkUserLogin(userData.id, userData.password);
         });
