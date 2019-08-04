@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.example.realestateproject.fragments.CardFragment;
 import com.example.realestateproject.supports.CardAdapter;
+import com.example.realestateproject.supports.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +24,8 @@ public class CardFragmentPagerAdapter extends FragmentStatePagerAdapter implemen
         mFragments = new ArrayList<>();
         mBaseElevation = baseElevation;
 
-        String[] cardTitle = {"My Clients", "My Real estates", "History"};
-        String[] cardSubtitle = {"List clients were traded", "See all your reals", "Show all real history"};
         for(int i = 0; i< 3; i++){
-            addCardFragment(new CardFragment(cardTitle[i], cardSubtitle[i]));
+            addCardFragment(new CardFragment(Constants.CARD_TITLE[i], Constants.CARD_SUBTITLE[i]));
         }
     }
 

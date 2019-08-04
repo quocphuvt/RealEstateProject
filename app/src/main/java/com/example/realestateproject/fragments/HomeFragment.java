@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.realestateproject.R;
 import com.example.realestateproject.adapters.CardFragmentPagerAdapter;
+import com.example.realestateproject.supports.Constants;
 import com.example.realestateproject.supports.ShadowTransformer;
 
 /**

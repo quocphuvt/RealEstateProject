@@ -31,6 +31,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.realestateproject.R;
+import com.example.realestateproject.supports.Constants;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -64,7 +65,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public static Map<String,Marker> markers = new HashMap<>();
     private ArrayList<Marker> list_marker = new ArrayList<>();
     private Dialog dialog;
-    private Marker marker_nguyenkim,marker_tanhung;
     private MapView mapView;
     private SearchView sv_location;
     public static BottomSheetBehavior mBottomSheetBehavior;
@@ -109,10 +109,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             public void onMapReady(GoogleMap googleMap) {
                 mMap = googleMap;
 
-//        // Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
                 UiSettings uisetting = mMap.getUiSettings(); //Lấy giao diện Map
                 uisetting.setCompassEnabled(true); //La bàn
                 uisetting.setZoomControlsEnabled(true);
@@ -151,30 +147,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         //Tạo marker tại vị trí hiện tại
 
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(vitri, 15));;//zoom tới vị trí marker với độ zoom 15
-//        Bundle bundle = this.getArguments();
-//        if(bundle !=null){
-//            String location_store = bundle.getString("location");
-//            Double longtitude = Double.parseDouble(location_store.substring((location_store.indexOf(","))+1,location_store.length()));
-//            Double latitude = Double.parseDouble(location_store.substring(0,location_store.indexOf(",")));
-//            Toast.makeText(getContext(), ""+longtitude+"\n"+latitude, Toast.LENGTH_SHORT).show();
-//            MapFragment.mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,longtitude), 15));
-//        }
 
-        //Hàm nhấn vào bảng đồ để tạo marker
-//        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-//            @Override
-//            public void onMapClick(LatLng arg0) {
-//                // TODO Auto-generated method stub
-//                Marker mym2 = mMap.addMarker(
-//                        new MarkerOptions()
-//                                .position(arg0)
-//                                .title("dia diem")
-//                                .snippet(arg0.latitude +","+arg0.longitude)
-//                                .icon(BitmapDescriptorFactory.defaultMarker(
-//                                        BitmapDescriptorFactory.HUE_ROSE)));
-//                markers.add(mym2);
-//            }
-//        });
+        for(int i = 0; i< Constants.REAL_IN_HOCHIMINH.length; i++) {
+            String longtitude = Constants.REAL_IN_HOCHIMINH[i].substring((Constants.REAL_IN_HOCHIMINH[i].indexOf(",")) + 1, Constants.REAL_IN_HOCHIMINH[i].length());
+            String latitude = Constants.REAL_IN_HOCHIMINH[i].substring(0, Constants.REAL_IN_HOCHIMINH[i].indexOf(","));
+            Marker marker = mMap.addMarker( //Tạo marker
+                    new MarkerOptions()
+                            .position(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longtitude)))
+                            .title("300.000d")
+                            .snippet("test")
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+        }
+
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker arg0) {

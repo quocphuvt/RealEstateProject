@@ -11,10 +11,40 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="0dp" />
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/sv_location"
+    <androidx.cardview.widget.CardView
+        android:layout_margin="10dp"
+        app:cardCornerRadius="5dp"
+        android:paddingRight="5dp"
+        app:cardMaxElevation="10dp"
+        android:elevation="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></androidx.appcompat.widget.SearchView>
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.SearchView
+                android:layout_weight="1"
+                android:theme="@style/AppSearchView"
+                app:iconifiedByDefault="false"
+                app:searchIcon="@null"
+                android:background="#fff"
+                android:id="@+id/sv_location"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <LinearLayout
+                android:padding="10dp"
+                android:layout_weight="0"
+                android:background="#C4714B"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/ic_search_white_24dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
     <androidx.cardview.widget.CardView
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"

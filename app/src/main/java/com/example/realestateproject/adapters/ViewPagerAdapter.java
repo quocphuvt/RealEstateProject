@@ -4,8 +4,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
+import com.example.realestateproject.fragments.ContactFragment;
 import com.example.realestateproject.fragments.HomeFragment;
 import com.example.realestateproject.fragments.MapFragment;
+import com.example.realestateproject.fragments.SearchFragment;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -24,10 +26,10 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
                 fragment = new MapFragment();
                 break;
             case 2:
-                fragment = new HomeFragment();
+                fragment = new SearchFragment();
                 break;
             case 3:
-                fragment = new HomeFragment();
+                fragment = new ContactFragment();
                 break;
             default:
                 return null;
