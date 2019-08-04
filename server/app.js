@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const fs = require("fs");
 //APIs
 const UserApi = require("./connectors/users");
+const RealApi = require("./connectors/reals")
 
 const app = express();
 
@@ -39,10 +40,39 @@ mongoose.connect("mongodb://localhost/RealEstateManager", (err, client) => {
 
         app.post("/sign_in", (request, response, next) => {
             const userData = request.body;
-            console.log(userData);
             userApi = new UserApi(response);
             userApi.checkUserLogin(userData.id, userData.password);
         });
+
+        app.post("/real_creating",(request, response, next)=>{
+            const realData = request.body;
+            console.log(realData);
+            const realApi = new RealApi(response);
+            realApi.createReal(realData);
+
+        })
+
+        app.post("/list_real",(request,response,next)=>{
+            const realApi = new RealApi(response);
+            realApi.getAllReals();
+        })
+
+        app.post("/list_real_for_lease", (request, response) => {
+            const realApi = new RealApi(response);
+            realApi.getAllRealsForLease();
+        })
+
+        app.post("/list_real_for_sale", (request, response) => {
+            const realApi = new RealApi(response);
+            realApi.getAllRealsForSale();
+        })
+
+        app.post("/real_by_id", (request, response) => {
+            const realData = request.body;
+            console.log(realData);
+            const realApi = new RealApi(response);
+            realApi.getRealById(realData.id);
+        })
     }
 })
 

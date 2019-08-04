@@ -89,6 +89,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         Retrofit retrofitClient = RetroClient.getInstance();
         retroUser = retrofitClient.create(RetroUser.class);
         CityAdapter cityAdapter = new CityAdapter(Constants.CITIES, this);
+        //TODO: GET CITY
         sp_city.setAdapter(cityAdapter);
         btn_submit.setOnClickListener(this);
         tv_cancel_reg.setOnClickListener(this);
@@ -103,7 +104,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 String password = et_password.getText().toString().trim();
                 String fullName = et_fullName.getText().toString().trim();
                 String birthday = tv_birthday.getText().toString();
-                String city = "Ho ChI mINH";
+                String city = "Ho Chi Minh";
                 String phoneNumber = et_phoneNumber.getText().toString().trim();
                 UserModel userModel = new UserModel(id, password, fullName, birthday, city, phoneNumber, gender);
                 this.registerUser(userModel);
