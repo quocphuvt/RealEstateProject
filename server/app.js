@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const fs = require("fs");
 //APIs
 const UserApi = require("./connectors/users");
+const RealApi = require("./connectors/reals")
 
 const app = express();
 
@@ -43,6 +44,14 @@ mongoose.connect("mongodb://localhost/RealEstateManager", (err, client) => {
             userApi = new UserApi(response);
             userApi.checkUserLogin(userData.id, userData.password);
         });
+
+        app.post("/real_creating",(request, response, next)=>{
+            const realData = request.body;
+            console.log(realData);
+            const realApi = new RealApi(response);
+            realApi.createReal(realData);
+
+        })
     }
 })
 

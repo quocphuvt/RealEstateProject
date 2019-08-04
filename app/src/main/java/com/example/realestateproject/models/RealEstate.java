@@ -17,15 +17,14 @@ public class RealEstate {
 
     }
 
-    public RealEstate(String id, String name, String address, String contactNumber, String description, Double price, Double area, String _idUser) {
-        this.id = id;
+    public RealEstate(String name, String address, String contactNumber, String description, Double price, Double area) {
         this.name = name;
         this.address = address;
         this.contactNumber = contactNumber;
         this.description = description;
         this.price = price;
         this.area = area;
-        this._idUser = _idUser;
+
     }
 
     public String getId() {

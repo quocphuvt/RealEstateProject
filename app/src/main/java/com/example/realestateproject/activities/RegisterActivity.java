@@ -103,7 +103,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 String password = et_password.getText().toString().trim();
                 String fullName = et_fullName.getText().toString().trim();
                 String birthday = tv_birthday.getText().toString();
-                String city = "Ho ChI mINH";
+                String city = "Ho Chi Minh";
                 String phoneNumber = et_phoneNumber.getText().toString().trim();
                 UserModel userModel = new UserModel(id, password, fullName, birthday, city, phoneNumber, gender);
                 this.registerUser(userModel);
