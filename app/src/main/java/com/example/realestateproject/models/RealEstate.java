@@ -1,38 +1,55 @@
 package com.example.realestateproject.models;
 
 public class RealEstate {
-    private String id;
+    private String _id;
     private String name;
     private String address;
     private String contactNumber;
     private String description;
     private Double price;
     private Double area;
+    private String city;
+    private String type;
+    private String status;
     private String _idUser;
-    private String _idCity;
-    private String _idType;
-    private String _idStatus;
 
     public RealEstate() {
 
     }
 
-    public RealEstate(String name, String address, String contactNumber, String description, Double price, Double area) {
+    public RealEstate(String name, String address, String contactNumber, String description, Double price, Double area, String city, String type, String status, String _idUser) {
         this.name = name;
         this.address = address;
         this.contactNumber = contactNumber;
         this.description = description;
         this.price = price;
         this.area = area;
+        this.city = city;
+        this.type = type;
+        this.status = status;
+        this._idUser = _idUser;
+    }
 
+    public RealEstate(String _id, String name, String address, String contactNumber, String description, Double price, Double area, String city, String type, String status, String _idUser) {
+        this._id = _id;
+        this.name = name;
+        this.address = address;
+        this.contactNumber = contactNumber;
+        this.description = description;
+        this.price = price;
+        this.area = area;
+        this.city = city;
+        this.type = type;
+        this.status = status;
+        this._idUser = _idUser;
     }
 
     public String getId() {
-        return id;
+        return _id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setId(String _id) {
+        this._id = _id;
     }
 
     public String getName() {
@@ -91,27 +108,27 @@ public class RealEstate {
         this._idUser = _idUser;
     }
 
-    public String get_idCity() {
-        return _idCity;
+    public String getCity() {
+        return city;
     }
 
-    public void set_idCity(String _idCity) {
-        this._idCity = _idCity;
+    public void setCity(String city) {
+        this.city = city;
     }
 
-    public String get_idType() {
-        return _idType;
+    public String getType() {
+        return type;
     }
 
-    public void set_idType(String _idType) {
-        this._idType = _idType;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String get_idStatus() {
-        return _idStatus;
+    public String getStatus() {
+        return status;
     }
 
-    public void set_idStatus(String _idStatus) {
-        this._idStatus = _idStatus;
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

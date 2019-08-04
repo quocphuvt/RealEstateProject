@@ -1,5 +1,7 @@
 'use strict';
 const realModel = require("../models/real");
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 
 module.exports = class RealApi {
     constructor(res){
@@ -13,6 +15,24 @@ module.exports = class RealApi {
     getAllReals (){
         realModel.find({}, (err,data)=>{
             this.res.json(data)
+        })
+    }
+
+    getAllRealsForLease(){
+        realModel.find({type: 'LEASE'}, (err, data)=>{
+            this.res.json(data);
+        })
+    }
+
+    getAllRealsForSale(){
+        realModel.find({type: 'SALE'}, (err, data)=>{
+            this.res.json(data);
+        })
+    }
+
+    getRealById(id){
+        realModel.findOne({_id: new ObjectId(id)}, (err, data) => {
+            this.res.json(data);
         })
     }
 }

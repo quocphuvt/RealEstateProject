@@ -34,10 +34,12 @@
 
             <Button
                 android:id="@+id/card_button_home"
+                android:textColor="#4CAF50"
+                android:background="@android:color/transparent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Button" />
+                android:text="Show details" />
         </LinearLayout>
     </FrameLayout>
 

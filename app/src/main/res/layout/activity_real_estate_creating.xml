@@ -3,92 +3,208 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
+    android:background="#334856"
+    android:orientation="vertical"
+    tools:context=".activities.RegisterActivity">
 
-    tools:context=".activities.RealEstateCreatingActivity">
-    <LinearLayout
+    <include layout="@layout/toolbar" />
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#334856"
-        android:orientation="vertical">
-        <TextView
+        android:orientation="vertical"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Create Your Estate"
-            android:gravity="center"
-            android:textFontWeight="50dp"
-            android:textStyle="bold"
-            android:textColor="#E6BEB5"
-            android:textSize="30dp"/>
-    <EditText
-        android:id="@+id/et_realName_creating"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="Enter your Name"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="41dp" />
-    <EditText
-        android:id="@+id/et_realAddress_creating"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="Enter your Address"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="41dp" />
-    <EditText
-        android:id="@+id/et_realContact_creating"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="Enter your Contact"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="41dp" />
-    <EditText
-        android:id="@+id/et_realDescription_creating"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="Eneter Description"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="41dp" />
-    <EditText
-        android:id="@+id/et_realPrice_creating"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="number"
-        android:hint="Enter Price"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="41dp" />
-    <EditText
-        android:id="@+id/et_realArea_creating"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="number"
-        android:hint="Enter Area"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="41dp" />
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="15dp"
-            android:text="Submit"
-            android:id="@+id/btn_realSubmit_creating"/>
-        <TextView
-            android:id="@+id/tv_cancel_creating"
-            android:layout_marginTop="30dp"
-            android:layout_width="match_parent"
-            android:textColor="#ffff"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="CANCEL"/>
-    </LinearLayout>
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:text="Create your real news"
+                android:textColor="#CCCCCC"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:orientation="vertical">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_realName_creating"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Name"
+                    android:textColor="#fff"
+                    android:textColorHint="#B0B0B0"
+                    android:textSize="12sp" />
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_realAddress_creating"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Address"
+                    android:inputType="text"
+                    android:textColor="#fff"
+                    android:textColorHint="#B0B0B0"
+                    android:textSize="12sp" />
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_realContact_creating"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Contact"
+                    android:textColor="#fff"
+                    android:textColorHint="#B0B0B0"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:text="City"
+                    android:textColor="#B0B0B0"
+                    android:textSize="12sp" />
+
+                <Spinner
+                    android:id="@+id/sp_city_creating"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:spinnerMode="dropdown"
+                    />
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_realDescription_creating"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Description"
+                    android:ems="10"
+                    android:lines="5"
+                    android:gravity="top"
+                    android:textColor="#fff"
+                    android:textColorHint="#B0B0B0"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:text="Type"
+                    android:textColor="#B0B0B0"
+                    android:textSize="12sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center">
+
+                        <CheckBox
+                            android:id="@+id/chk_lease"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="#fff"
+                            android:text="For lease"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center">
+
+                        <CheckBox
+                            android:id="@+id/chk_sale"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="#fff"
+                            android:text="For sale"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_realArea_creating"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Area"
+                        android:inputType="number"
+                        android:textColor="#fff"
+                        android:textColorHint="#B0B0B0"
+                        android:textSize="12sp" />
+                    <TextView
+                        android:layout_weight="0"
+                        android:text="m x m"
+                        android:textColor="#B0B0B0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_realPrice_creating"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Price"
+                        android:inputType="number"
+                        android:textColor="#fff"
+                        android:textColorHint="#B0B0B0"
+                        android:textSize="12sp" />
+                    <TextView
+                        android:layout_weight="0"
+                        android:text="VND"
+                        android:textColor="#B0B0B0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btn_realSubmit_creating"
+                    android:layout_marginTop="5dp"
+                    android:text="POST"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:gravity="center"
+                    android:padding="10dp"></Button>
+
+                <TextView
+                    android:id="@+id/tv_cancel_creating"
+                    android:layout_marginBottom="40dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="Cancel"
+                    android:textColor="#fff"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

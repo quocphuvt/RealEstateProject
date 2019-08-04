@@ -89,6 +89,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         Retrofit retrofitClient = RetroClient.getInstance();
         retroUser = retrofitClient.create(RetroUser.class);
         CityAdapter cityAdapter = new CityAdapter(Constants.CITIES, this);
+        //TODO: GET CITY
         sp_city.setAdapter(cityAdapter);
         btn_submit.setOnClickListener(this);
         tv_cancel_reg.setOnClickListener(this);

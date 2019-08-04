@@ -24,14 +24,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.ListRealActivity"></activity>
-        <activity android:name=".activities.RealEstateCreatingActivity" />
+        <activity android:name=".activities.RealDetailsActivity"></activity>
+        <activity
+            android:name=".activities.HistoryActivity"
+            android:label="@string/title_activity_history"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.MyRealEstatesActivity"
+            android:label="@string/title_activity_my_real_estates"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activities.MyClientActivity" />
+        <activity android:name=".activities.ListRealActivity" />
+        <activity android:name=".activities.SplashScreen" />
         <activity android:name=".activities.HomeActivity" />
         <activity android:name=".activities.RegisterActivity" />
-        <activity android:name=".activities.SignInActivity" />
+        <activity android:name=".activities.RealEstateCreatingActivity" />
         <activity android:name=".MainActivity" />
         <activity
-            android:name=".activities.SplashScreen"
+            android:name=".activities.SignInActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

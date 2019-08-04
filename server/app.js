@@ -40,7 +40,6 @@ mongoose.connect("mongodb://localhost/RealEstateManager", (err, client) => {
 
         app.post("/sign_in", (request, response, next) => {
             const userData = request.body;
-            console.log(userData);
             userApi = new UserApi(response);
             userApi.checkUserLogin(userData.id, userData.password);
         });
@@ -56,6 +55,23 @@ mongoose.connect("mongodb://localhost/RealEstateManager", (err, client) => {
         app.post("/list_real",(request,response,next)=>{
             const realApi = new RealApi(response);
             realApi.getAllReals();
+        })
+
+        app.post("/list_real_for_lease", (request, response) => {
+            const realApi = new RealApi(response);
+            realApi.getAllRealsForLease();
+        })
+
+        app.post("/list_real_for_sale", (request, response) => {
+            const realApi = new RealApi(response);
+            realApi.getAllRealsForSale();
+        })
+
+        app.post("/real_by_id", (request, response) => {
+            const realData = request.body;
+            console.log(realData);
+            const realApi = new RealApi(response);
+            realApi.getRealById(realData.id);
         })
     }
 })

@@ -9,6 +9,10 @@ const realSchema = new Schema({
     description: String,
     price: Number,
     area: Number,
+    city: String,
+    type: String,
+    status: String,
+    _idUser: String
 });
 
 const realModel = mongoose.model("realEstates", realSchema); 

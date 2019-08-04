@@ -4,14 +4,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -50,6 +53,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         initView();
         navigationView.bringToFront();
         navigationView.setNavigationItemSelectedListener(this);
+        add_fab.setOnClickListener(this);
+
         mToogle = new ActionBarDrawerToggle(this,mDrawerlayout,R.string.open,R.string.close);
         mDrawerlayout.addDrawerListener(mToogle);
         mToogle.syncState();
@@ -91,15 +96,19 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()){
                     case R.id.navigation_home:
+                        add_fab.show();
                         main_viewPager.setCurrentItem(0);
                         break;
                     case R.id.navigation_map:
                         main_viewPager.setCurrentItem(1);
+                        add_fab.hide();
                         break;
                     case R.id.navigation_search:
                         main_viewPager.setCurrentItem(2);
+                        add_fab.show();
                         break;
                     case R.id.navigation_contact:
+                        add_fab.show();
                         main_viewPager.setCurrentItem(3);
                         break;
                 }
@@ -140,7 +149,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-
+        switch (view.getId()){
+            case R.id.add_fab:
+                startActivity(new Intent(this, RealEstateCreatingActivity.class));
+                break;
+        }
     }
 
     @Override
@@ -151,9 +164,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.ic_signout:
                 //TODO: User sign out
+                startActivity(new Intent(this, SignInActivity.class));
                 break;
             case R.id.ic_about:
                 //TODO: Show team's infomation
+                Toast.makeText(this, "Develope by team 2", Toast.LENGTH_SHORT).show();
                 break;
         }
         return false;

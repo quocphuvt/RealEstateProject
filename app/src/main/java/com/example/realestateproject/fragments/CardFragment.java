@@ -1,6 +1,7 @@
 package com.example.realestateproject.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,14 +21,16 @@ public class CardFragment extends Fragment {
     private CardView mCardView;
     private TextView tv_title, tv_subtitle;
     private String title, subtitle;
+    private Class className;
 
     public CardFragment(){
 
     }
 
-    public CardFragment(String title, String subtitle){
+    public CardFragment(String title, String subtitle,Class className){
         this.title = title;
         this.subtitle = subtitle;
+        this.className = className;
     }
 
     @Nullable
@@ -41,6 +44,13 @@ public class CardFragment extends Fragment {
         tv_title.setText(title);
         tv_subtitle.setText(subtitle);
         btn_goToDetails = view.findViewById(R.id.card_button_home);
+
+        btn_goToDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), className));
+            }
+        });
         mCardView.setMaxCardElevation(mCardView.getCardElevation()
                 * CardAdapter.MAX_ELEVATION_FACTOR);
         return view;
