@@ -170,6 +170,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         Criteria criteria = new Criteria();
         String provider = service.getBestProvider(criteria, true);
 //        Location location = service.getLastKnownLocation(provider); //lấy vị trí hiện tại
+        if (getArguments() != null) {
+            String mParam1 = getArguments().getString("location");
+            Log.i("locationne", mParam1);
+        }
 
         Retrofit retrofit = RetroClient.getInstance();
         retroReal = retrofit.create(RetroReal.class);

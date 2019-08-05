@@ -32,5 +32,8 @@ public interface RetroReal {
     @FormUrlEncoded
     Observable<RealEstate> getRealByLocation(@Field("location") String location);
 
+    @POST("/num_real")
+    Call<Integer> countNumReal();
+
 }
 

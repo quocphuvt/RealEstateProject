@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.realestateproject.R;
+import com.example.realestateproject.interfaces.ClickRealItemListener;
 import com.example.realestateproject.models.RealEstate;
 
 import java.util.List;
@@ -17,10 +18,12 @@ import java.util.List;
 public class RealsForSaleAdapter extends RecyclerView.Adapter<RealsForLeaseViewHolder> {
     private List<RealEstate> realEstates;
     private Context context;
+    private ClickRealItemListener clickRealItemListener;
 
-    public RealsForSaleAdapter(List<RealEstate> realEstates, Context context) {
+    public RealsForSaleAdapter(List<RealEstate> realEstates, Context context, ClickRealItemListener clickRealItemListener) {
         this.realEstates = realEstates;
         this.context = context;
+        this.clickRealItemListener = clickRealItemListener;
     }
 
     @NonNull
@@ -32,9 +35,15 @@ public class RealsForSaleAdapter extends RecyclerView.Adapter<RealsForLeaseViewH
 
     @Override
     public void onBindViewHolder(@NonNull RealsForLeaseViewHolder holder, int position) {
-        RealEstate realEstate = realEstates.get(position);
+        final RealEstate realEstate = realEstates.get(position);
         holder.tv_name.setText(realEstate.getName());
         holder.tv_city.setText(realEstate.getCity());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clickRealItemListener.onClickItem(realEstate.getId());
+            }
+        });
     }
 
     @Override

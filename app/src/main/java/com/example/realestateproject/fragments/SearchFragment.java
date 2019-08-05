@@ -19,8 +19,10 @@ import android.widget.ImageView;
 
 import com.example.realestateproject.R;
 import com.example.realestateproject.activities.ListRealActivity;
+import com.example.realestateproject.activities.RealDetailsActivity;
 import com.example.realestateproject.adapters.RealsForLeaseAdapter;
 import com.example.realestateproject.adapters.RealsForSaleAdapter;
+import com.example.realestateproject.interfaces.ClickRealItemListener;
 import com.example.realestateproject.models.RealEstate;
 import com.example.realestateproject.retrofits.RetroClient;
 import com.example.realestateproject.retrofits.RetroReal;
@@ -37,7 +39,7 @@ import retrofit2.Retrofit;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements ClickRealItemListener {
     private RecyclerView rv_lease, rv_sale;
     private AppCompatAutoCompleteTextView sv_location;
     private ImageView iv_showRealInCity;
@@ -96,7 +98,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void onResponse(Call<List<RealEstate>> call, Response<List<RealEstate>> response) {
                 rv_lease.setLayoutManager(new GridLayoutManager(getContext(), 1, RecyclerView.HORIZONTAL, false));
-                realsForLeaseAdapter = new RealsForLeaseAdapter(response.body(), getContext());
+                realsForLeaseAdapter = new RealsForLeaseAdapter(response.body(), getContext(), SearchFragment.this);
                 rv_lease.setAdapter(realsForLeaseAdapter);
                 if(swipeRefreshLayout.isRefreshing()){
                     swipeRefreshLayout.setRefreshing(false);
@@ -114,7 +116,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void onResponse(Call<List<RealEstate>> call, Response<List<RealEstate>> response) {
                 rv_sale.setLayoutManager(new GridLayoutManager(getContext(), 1, RecyclerView.HORIZONTAL, false));
-                realsForSaleAdapter = new RealsForSaleAdapter(response.body(), getContext());
+                realsForSaleAdapter = new RealsForSaleAdapter(response.body(), getContext(), SearchFragment.this);
                 rv_sale.setAdapter(realsForSaleAdapter);
             }
 
@@ -125,4 +127,10 @@ public class SearchFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onClickItem(String idReal) {
+        Intent i = new Intent(getContext(), RealDetailsActivity.class);
+        i.putExtra("id", idReal);
+        startActivity(i);
+    }
 }

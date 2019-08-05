@@ -41,4 +41,10 @@ module.exports = class RealApi {
             this.res.json(data);
         })
     }
+
+    countNumReal() {
+        realModel.find({status: "AVAILABLE"}, (err, data) => {
+            this.res.json(data.length);
+        })
+    }
 }

@@ -79,6 +79,11 @@ mongoose.connect("mongodb://localhost/RealEstateManager", (err, client) => {
             const realApi = new RealApi(response);
             realApi.getRealByLocation(realData.location);
         })
+
+        app.post("/num_real", (request, response) => {
+            const realApi = new RealApi(response);
+            realApi.countNumReal();
+        })
     }
 })
 

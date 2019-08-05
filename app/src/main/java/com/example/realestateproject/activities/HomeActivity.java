@@ -63,6 +63,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_date);
 
+        Intent i = getIntent();
+        if(i.getBooleanExtra("see_map", true)) {
+            Toast.makeText(this, "see map ne", Toast.LENGTH_SHORT).show();
+            main_viewPager.setCurrentItem(1);
+        }
+
         SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
         String userId = sharedPreferences.getString("id", ""); //Get user id when logining successful.
 
