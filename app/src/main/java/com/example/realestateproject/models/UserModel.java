@@ -1,7 +1,7 @@
 package com.example.realestateproject.models;
 
 public class UserModel {
-    private String _id;
+    private String id;
     private String password;
     private String fullName;
     private String birthday;
@@ -11,8 +11,8 @@ public class UserModel {
     private String _idFavorite;
     private String _idReal;
 
-    public UserModel(String _id, String password, String fullName, String birthday, String city, String phoneNumber, int gender) {
-        this._id = _id;
+    public UserModel(String id, String password, String fullName, String birthday, String city, String phoneNumber, int gender) {
+        this.id = id;
         this.password = password;
         this.fullName = fullName;
         this.birthday = birthday;
@@ -22,11 +22,11 @@ public class UserModel {
     }
 
     public String getId() {
-        return _id;
+        return id;
     }
 
-    public void setId(String _id) {
-        this._id = _id;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getPassword() {
