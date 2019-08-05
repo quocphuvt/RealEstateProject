@@ -67,6 +67,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         String userId = sharedPreferences.getString("id", ""); //Get user id when logining successful.
 
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        main_viewPager.setOffscreenPageLimit(4);
         main_viewPager.setAdapter(viewPagerAdapter);
         main_viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
