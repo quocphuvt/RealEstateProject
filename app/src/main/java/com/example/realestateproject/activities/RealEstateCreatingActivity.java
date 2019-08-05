@@ -33,7 +33,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class RealEstateCreatingActivity extends AppCompatActivity implements View.OnClickListener, LayoutInterface {
-    private EditText et_realName,et_realAddress,et_realDescription,et_realPrice,et_realContact,et_realArea;
+    private EditText et_realName,et_realAddress,et_realDescription,et_realPrice,et_realContact,et_realArea, et_location;
     private Button btn_realSubmit;
     private RetroReal retroReal;
     private TextView tv_cancel;
@@ -56,6 +56,7 @@ public class RealEstateCreatingActivity extends AppCompatActivity implements Vie
         chk_lease = findViewById(R.id.chk_lease);
         chk_sale = findViewById(R.id.chk_sale);
         toolbar = findViewById(R.id.toolbar);
+        et_location = findViewById(R.id.et_realLocation_creating);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +111,7 @@ public class RealEstateCreatingActivity extends AppCompatActivity implements Vie
                 String realArea = et_realArea.getText().toString().trim();
                 String realPrice = et_realPrice.getText().toString().trim();
                 String status = Constants.STATUS[0];
+                String location = et_location.getText().toString();
                 SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
                 String userId = sharedPreferences.getString("id","");
                 if(realName.isEmpty()){
@@ -143,7 +145,7 @@ public class RealEstateCreatingActivity extends AppCompatActivity implements Vie
                     Toast.makeText(this, "Choose your type of real", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    RealEstate realEstate = new RealEstate(realName,realAddress,realContact,realDescription,Double.parseDouble(realPrice),Double.parseDouble(realArea), city, type, status, userId);
+                    RealEstate realEstate = new RealEstate(realName,realAddress,realContact,realDescription,Double.parseDouble(realPrice),Double.parseDouble(realArea), city, type, status,location, userId);
                     Call<RealEstate> call = retroReal.createReal(realEstate);
                     call.enqueue(new Callback<RealEstate>() {
                         @Override

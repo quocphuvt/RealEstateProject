@@ -28,5 +28,9 @@ public interface RetroReal {
     @FormUrlEncoded
     Observable<RealEstate> getRealById(@Field("id") String id);
 
+    @POST("/real_by_location")
+    @FormUrlEncoded
+    Observable<RealEstate> getRealByLocation(@Field("location") String location);
+
 }
 

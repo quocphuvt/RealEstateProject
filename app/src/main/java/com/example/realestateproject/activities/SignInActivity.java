@@ -14,6 +14,8 @@ import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +43,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private Toolbar toolbar;
     private TextView tv_register;
     private RetroUser retroUser;
+    private CheckBox chk_rememberMe;
 
     private void inititalView() {
         et_id = findViewById(R.id.et_id_signIn);
@@ -48,6 +51,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         btn_logIn = findViewById(R.id.btn_login_signIn);
         tv_register = findViewById(R.id.btn_register_signIn);
         toolbar = findViewById(R.id.toolbar);
+        chk_rememberMe = findViewById(R.id.chk_remember_login);
     }
 
     @Override
@@ -56,9 +60,17 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_sign_in);
         this.inititalView();
         this.setToolbar("Sign In");
+        SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+        if(sharedPreferences.getBoolean("rememberAccount", true)){
+            et_id.setText(sharedPreferences.getString("id",""));
+            et_pasword.setText(sharedPreferences.getString("password", ""));
+            chk_rememberMe.setChecked(true);
+        }else {
+            et_id.setText("");
+            et_pasword.setText("");
+        }
         Retrofit retrofitClient = RetroClient.getInstance();
         retroUser = retrofitClient.create(RetroUser.class);
-
         btn_logIn.setOnClickListener(this);
         tv_register.setOnClickListener(this);
     }
@@ -68,7 +80,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         switch (view.getId()) {
             case R.id.btn_login_signIn:
                 final String id = et_id.getText().toString().trim();
-                String password = et_pasword.getText().toString().trim();
+                final String password = et_pasword.getText().toString().trim();
                 retroUser.checkUserLogin(id, password)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -83,9 +95,15 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                                     SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
                                     editor.putString("id", id);
+                                    editor.putString("password", password);
+                                    editor.putBoolean("autoLogin", true);
+                                    if(chk_rememberMe.isChecked()){
+                                        editor.putBoolean("rememberAccount", true);
+                                    }else editor.putBoolean("rememberAccount", false);
                                     editor.apply();
                                     Toast.makeText(SignInActivity.this, "" + userResponses.getMessage(), Toast.LENGTH_SHORT).show();
                                     startActivity(new Intent(SignInActivity.this, HomeActivity.class));
+                                    finish();
                                 }
                             }
                         });

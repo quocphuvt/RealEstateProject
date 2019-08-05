@@ -9,6 +9,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +44,7 @@ public class SearchFragment extends Fragment {
     private RealsForLeaseAdapter realsForLeaseAdapter;
     private RealsForSaleAdapter realsForSaleAdapter;
     private RetroReal retroReal;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -58,6 +60,16 @@ public class SearchFragment extends Fragment {
         rv_sale = view.findViewById(R.id.rv_sale_search);
         sv_location = view.findViewById(R.id.sv_location_search);
         iv_showRealInCity = view.findViewById(R.id.iv_showRealInCity_search);
+        swipeRefreshLayout = view.findViewById(R.id.swiperefresh);
+        final RecyclerViewMargin decoration = new RecyclerViewMargin(20, 1);
+        rv_lease.addItemDecoration(decoration);
+        rv_sale.addItemDecoration(decoration);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                callServer();
+            }
+        });
         ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, Constants.CITIES);
         sv_location.setAdapter(cityAdapter);
 
@@ -70,17 +82,25 @@ public class SearchFragment extends Fragment {
             }
         });
 
+        callServer();
+
+
+        return view;
+    }
+
+    private void callServer(){
         Retrofit retrofit = RetroClient.getInstance();
         retroReal = retrofit.create(RetroReal.class);
-        final RecyclerViewMargin decoration = new RecyclerViewMargin(20, 1);
         Call<List<RealEstate>> callForLease = retroReal.getAllRealsForLease();
         callForLease.enqueue(new Callback<List<RealEstate>>() {
             @Override
             public void onResponse(Call<List<RealEstate>> call, Response<List<RealEstate>> response) {
                 rv_lease.setLayoutManager(new GridLayoutManager(getContext(), 1, RecyclerView.HORIZONTAL, false));
                 realsForLeaseAdapter = new RealsForLeaseAdapter(response.body(), getContext());
-                rv_lease.addItemDecoration(decoration);
                 rv_lease.setAdapter(realsForLeaseAdapter);
+                if(swipeRefreshLayout.isRefreshing()){
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
 
             @Override
@@ -95,7 +115,6 @@ public class SearchFragment extends Fragment {
             public void onResponse(Call<List<RealEstate>> call, Response<List<RealEstate>> response) {
                 rv_sale.setLayoutManager(new GridLayoutManager(getContext(), 1, RecyclerView.HORIZONTAL, false));
                 realsForSaleAdapter = new RealsForSaleAdapter(response.body(), getContext());
-                rv_sale.addItemDecoration(decoration);
                 rv_sale.setAdapter(realsForSaleAdapter);
             }
 
@@ -104,7 +123,6 @@ public class SearchFragment extends Fragment {
 
             }
         });
-        return view;
     }
 
 }

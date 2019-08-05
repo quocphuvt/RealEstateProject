@@ -35,4 +35,10 @@ module.exports = class RealApi {
             this.res.json(data);
         })
     }
+
+    getRealByLocation(location){
+        realModel.findOne({location}, (err, data) => {
+            this.res.json(data);
+        })
+    }
 }

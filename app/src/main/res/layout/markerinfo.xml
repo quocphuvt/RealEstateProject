@@ -11,7 +11,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="TextView"
-        android:textColor="#88e0cd" />
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary" />
 
     <TextView
         android:id="@+id/tv_marker_snipset"
@@ -19,5 +21,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="TextView"
+        android:textSize="10sp"
         android:textColor="#646464" />
 </LinearLayout>

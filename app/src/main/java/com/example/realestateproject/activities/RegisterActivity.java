@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -50,6 +51,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private Spinner sp_city;
     private Toolbar toolbar;
     private RetroUser retroUser;
+    private String city= "";
 
     private void initialView() {
         et_id = findViewById(R.id.et_id_reg);
@@ -88,9 +90,24 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         //Init retrofit to class
         Retrofit retrofitClient = RetroClient.getInstance();
         retroUser = retrofitClient.create(RetroUser.class);
-        CityAdapter cityAdapter = new CityAdapter(Constants.CITIES, this);
-        //TODO: GET CITY
+        ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, Constants.CITIES);
+        cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sp_city.setAdapter(cityAdapter);
+        sp_city.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(adapterView.getItemAtPosition(i).equals("Choose city...")){
+                    //TODO: SOME THING
+                    city="";
+                }
+                else city = adapterView.getItemAtPosition(i).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         btn_submit.setOnClickListener(this);
         tv_cancel_reg.setOnClickListener(this);
 
@@ -104,7 +121,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 String password = et_password.getText().toString().trim();
                 String fullName = et_fullName.getText().toString().trim();
                 String birthday = tv_birthday.getText().toString();
-                String city = "Ho Chi Minh";
                 String phoneNumber = et_phoneNumber.getText().toString().trim();
                 UserModel userModel = new UserModel(id, password, fullName, birthday, city, phoneNumber, gender);
                 this.registerUser(userModel);

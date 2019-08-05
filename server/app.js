@@ -40,6 +40,7 @@ mongoose.connect("mongodb://localhost/RealEstateManager", (err, client) => {
 
         app.post("/sign_in", (request, response, next) => {
             const userData = request.body;
+            console.log(userData)
             userApi = new UserApi(response);
             userApi.checkUserLogin(userData.id, userData.password);
         });
@@ -69,9 +70,14 @@ mongoose.connect("mongodb://localhost/RealEstateManager", (err, client) => {
 
         app.post("/real_by_id", (request, response) => {
             const realData = request.body;
-            console.log(realData);
             const realApi = new RealApi(response);
             realApi.getRealById(realData.id);
+        })
+
+        app.post("/real_by_location", (request, response) => {
+            const realData = request.body;
+            const realApi = new RealApi(response);
+            realApi.getRealByLocation(realData.location);
         })
     }
 })

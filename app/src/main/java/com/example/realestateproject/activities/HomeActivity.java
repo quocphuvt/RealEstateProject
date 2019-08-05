@@ -164,6 +164,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 //TODO: Change user info
                 break;
             case R.id.ic_signout:
+                SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("autoLogin", false);
+                editor.apply();
                 //TODO: User sign out
                 startActivity(new Intent(this, SignInActivity.class));
                 break;

@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
+import com.example.realestateproject.R;
 import com.example.realestateproject.activities.HistoryActivity;
 import com.example.realestateproject.activities.MyClientActivity;
 import com.example.realestateproject.activities.MyRealEstatesActivity;
@@ -27,8 +28,9 @@ public class CardFragmentPagerAdapter extends FragmentStatePagerAdapter implemen
         mFragments = new ArrayList<>();
         mBaseElevation = baseElevation;
         Class[] classes = {MyClientActivity.class, MyRealEstatesActivity.class, HistoryActivity.class};
+        int[] resources = {R.drawable.group, R.drawable.mansion, R.drawable.history};
         for(int i = 0; i< 3; i++){
-            addCardFragment(new CardFragment(Constants.CARD_TITLE[i], Constants.CARD_SUBTITLE[i], classes[i]));
+            addCardFragment(new CardFragment(Constants.CARD_TITLE[i], Constants.CARD_SUBTITLE[i], classes[i], resources[i]));
         }
     }
 
