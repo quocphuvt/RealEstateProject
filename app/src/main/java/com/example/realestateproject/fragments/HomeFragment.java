@@ -55,8 +55,10 @@ public class HomeFragment extends Fragment {
         call.enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
-                Log.i("count", response.body().toString());
-                tv_numReal.setText("You have: "+response.body().toString()+" posts");
+                if(response.isSuccessful()){
+                    Log.i("count", response.body().toString());
+                    tv_numReal.setText("You have: "+response.body().toString()+" posts");
+                }
             }
 
             @Override

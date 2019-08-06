@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -35,6 +36,8 @@ public class ListRealActivity extends AppCompatActivity implements ClickRealItem
         lv_reals = findViewById(R.id.lv_reals_listreal);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setBackgroundColor(getResources().getColor(R.color.white));
         Intent i = getIntent();
         final String city = i.getStringExtra("city");
@@ -44,7 +47,10 @@ public class ListRealActivity extends AppCompatActivity implements ClickRealItem
         call.enqueue(new Callback<List<RealEstate>>() {
             @Override
             public void onResponse(Call<List<RealEstate>> call, Response<List<RealEstate>> response) {
-                getSupportActionBar().setTitle(city+" "+response.body().size());
+                if(city.isEmpty()){
+                    getSupportActionBar().setTitle("Having "+response.body().size()+" properties...");
+                }
+                getSupportActionBar().setTitle(city+" have "+response.body().size()+" properties...");
 //                Toast.makeText(ListRealActivity.this, ""+response.body(), Toast.LENGTH_SHORT).show();
                 ListRealAdapter listRealAdapter = new ListRealAdapter(response.body(), ListRealActivity.this, ListRealActivity.this);
                 lv_reals.setAdapter(listRealAdapter);
@@ -56,6 +62,16 @@ public class ListRealActivity extends AppCompatActivity implements ClickRealItem
 
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

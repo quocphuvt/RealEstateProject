@@ -8,6 +8,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">#F3F0F0</item>
+        <item name="colorControlActivated">#E4D808</item>
+    </style>
+
     <style name="AppSearchView" parent="Widget.AppCompat.SearchView">
         <item name="android:textSize">12sp</item>
     </style>
