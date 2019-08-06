@@ -24,7 +24,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.RealDetailsActivity"></activity>
+        <activity android:name=".activities.HomeActivity"></activity>
+        <activity android:name=".activities.RealDetailsActivity" />
         <activity
             android:name=".activities.HistoryActivity"
             android:label="@string/title_activity_history"
@@ -41,7 +42,7 @@
         <activity android:name=".activities.RealEstateCreatingActivity" />
         <activity android:name=".MainActivity" />
         <activity
-            android:name=".activities.HomeActivity"
+            android:name=".activities.UpdateProfileUserActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

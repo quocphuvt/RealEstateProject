@@ -21,4 +21,7 @@ public interface RetroUser {
     @POST("get_user")
     @FormUrlEncoded
     Observable<UserModel> getCurrentUser(@Field("id") String id);
+
+    @POST("/update_user")
+    Call<UserModel> updateUser(@Body UserModel userModel);
 }

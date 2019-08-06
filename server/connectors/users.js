@@ -1,5 +1,7 @@
 'use strict';
 const userModel = require("../models/user");
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 
 module.exports = class UserApi {
     constructor(res){
@@ -31,6 +33,11 @@ module.exports = class UserApi {
     getAllUsers(){
         userModel.find({}, (err, data) => {
             return data;
+        })
+    }
+    updateUserData(user){
+        userModel.findOneAndUpdate({id: user.id}, user, (err,data) =>  {
+                this.res.json(data); 
         })
     }
 }
