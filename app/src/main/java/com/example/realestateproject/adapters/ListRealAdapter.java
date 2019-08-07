@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +51,8 @@ public class ListRealAdapter extends BaseAdapter {
         TextView tv_area = view.findViewById(R.id.tv_area_item_real);
         TextView tv_price = view.findViewById(R.id.tv_price_item_real);
         TextView tv_seeDetails = view.findViewById(R.id.tv_seeDetails_item_real);
+        final ImageView iv_Favorite = view.findViewById(R.id.iv_Fav);
+
         final RealEstate realEstate= listReals.get(i);
         tv_name.setText(realEstate.getName());
         tv_address.setText(realEstate.getAddress());
@@ -63,6 +66,17 @@ public class ListRealAdapter extends BaseAdapter {
             public void onClick(View view) {
 //                Toast.makeText(context, "Click ne"+realEstate.getId(), Toast.LENGTH_SHORT).show();
                 clickRealItemListener.onClickItem(realEstate.getId());
+            }
+        });
+
+        iv_Favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(iv_Favorite.getDrawable().equals(R.drawable.fav)){
+                    iv_Favorite.setImageResource(R.drawable.fav2);
+                } else {
+                    iv_Favorite.setImageResource(R.drawable.fav);
+                }
             }
         });
 
