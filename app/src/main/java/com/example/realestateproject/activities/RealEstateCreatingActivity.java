@@ -26,6 +26,7 @@ import com.example.realestateproject.retrofits.RetroReal;
 import com.example.realestateproject.retrofits.RetroUser;
 import com.example.realestateproject.supports.Constants;
 import com.example.realestateproject.supports.LayoutInterface;
+import com.google.android.material.textfield.TextInputEditText;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,7 +34,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class RealEstateCreatingActivity extends AppCompatActivity implements View.OnClickListener, LayoutInterface {
-    private EditText et_realName,et_realAddress,et_realDescription,et_realPrice,et_realContact,et_realArea, et_location;
+    private TextInputEditText et_realName,et_realAddress,et_realDescription,et_realPrice,et_realContact,et_realArea, et_location;
     private Button btn_realSubmit;
     private RetroReal retroReal;
     private TextView tv_cancel;
@@ -44,6 +45,7 @@ public class RealEstateCreatingActivity extends AppCompatActivity implements Vie
     private Toolbar toolbar;
 
     private void initialView(){
+        et_location = findViewById(R.id.et_realLocation_creating);
         et_realName=findViewById(R.id.et_realName_creating);
         et_realAddress=findViewById(R.id.et_realAddress_creating);
         et_realContact=findViewById(R.id.et_realContact_creating);
@@ -56,7 +58,6 @@ public class RealEstateCreatingActivity extends AppCompatActivity implements Vie
         chk_lease = findViewById(R.id.chk_lease);
         chk_sale = findViewById(R.id.chk_sale);
         toolbar = findViewById(R.id.toolbar);
-        et_location = findViewById(R.id.et_realLocation_creating);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {

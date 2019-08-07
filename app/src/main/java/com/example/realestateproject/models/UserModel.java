@@ -21,6 +21,15 @@ public class UserModel {
         this.gender = gender;
     }
 
+    public UserModel(String id, String fullName, String birthday, String city, String phoneNumber, int gender) {
+        this.id = id;
+        this.fullName = fullName;
+        this.birthday = birthday;
+        this.city = city;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+    }
+
     public String getId() {
         return id;
     }

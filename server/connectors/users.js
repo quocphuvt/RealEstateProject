@@ -33,4 +33,10 @@ module.exports = class UserApi {
             return data;
         })
     }
+
+    updateUserData(user){
+        userModel.findOneAndUpdate({id: user.id}, user, (err,data) =>  {
+                this.res.json(data); 
+        })
+    }
 }

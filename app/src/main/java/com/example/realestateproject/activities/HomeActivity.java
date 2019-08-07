@@ -167,7 +167,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case R.id.ic_userInfo:
-                //TODO: Change user info
+                startActivity(new Intent(this, UpdateProfileUserActivity.class));
                 break;
             case R.id.ic_signout:
                 SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);

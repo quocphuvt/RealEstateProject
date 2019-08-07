@@ -9,7 +9,7 @@ const userSchema = new Schema({
     city: String,
     phoneNumber: String,
     gender: Number
-});
+}); 
 
 const userModel = mongoose.model("users", userSchema); //users: collection
 
