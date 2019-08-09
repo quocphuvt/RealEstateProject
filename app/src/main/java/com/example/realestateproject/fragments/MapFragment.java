@@ -181,22 +181,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         call.enqueue(new Callback<List<RealEstate>>() {
             @Override
             public void onResponse(Call<List<RealEstate>> call, Response<List<RealEstate>> response) {
-                for (int i = 0; i < response.body().size(); i++) {
-                    RealEstate realEstate = response.body().get(i);
-                    String longtitude = realEstate.getLocation().substring((realEstate.getLocation().indexOf(",")) + 1, realEstate.getLocation().length());
-                    String latitude = realEstate.getLocation().substring(0, realEstate.getLocation().indexOf(","));
-                    Log.d("location", latitude+","+longtitude);
-                    listRealName.add(realEstate.getName());
-                    Marker marker = mMap.addMarker( //Tạo marker
-                            new MarkerOptions()
-                                    .position(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longtitude)))
-                                    .title(String.format("%.0f",realEstate.getPrice())+" VND")
-                                    .snippet(String.format("%.0f",realEstate.getArea())+" m2")
-                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                    if(i == response.body().size() -1){
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longtitude)), 15));
+                if(response.isSuccessful()){
+
+                    for (int i = 0; i < response.body().size(); i++) {
+                        RealEstate realEstate = response.body().get(i);
+                        String longtitude = realEstate.getLocation().substring((realEstate.getLocation().indexOf(",")) + 1, realEstate.getLocation().length());
+                        String latitude = realEstate.getLocation().substring(0, realEstate.getLocation().indexOf(","));
+                        Log.d("location", latitude + "," + longtitude);
+                        listRealName.add(realEstate.getName());
+                        Marker marker = mMap.addMarker( //Tạo marker
+                                new MarkerOptions()
+                                        .position(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longtitude)))
+                                        .title(String.format("%.0f", realEstate.getPrice()) + " VND")
+                                        .snippet(String.format("%.0f", realEstate.getArea()) + " m2")
+                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                        if (i == response.body().size() - 1) {
+                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longtitude)), 15));
+                        }
+                        markers.put(realEstate.getName(), marker);
                     }
-                    markers.put(realEstate.getName(), marker);
+
                 }
             }
 

@@ -14,6 +14,7 @@ module.exports = class RealApi {
     }
     getAllReals (){
         realModel.find({}, (err,data)=>{
+            console.log(data)
             this.res.json(data)
         })
     }

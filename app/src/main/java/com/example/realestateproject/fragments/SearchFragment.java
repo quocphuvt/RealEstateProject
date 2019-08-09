@@ -1,6 +1,7 @@
 package com.example.realestateproject.fragments;
 
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -72,8 +74,23 @@ public class SearchFragment extends Fragment implements ClickRealItemListener {
                 callServer();
             }
         });
-        ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, Constants.CITIES);
+        final ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, Constants.CITIES);
+        sv_location.setThreshold(1);
         sv_location.setAdapter(cityAdapter);
+        sv_location.setOnTouchListener(new View.OnTouchListener() {
+
+            @SuppressLint("ClickableViewAccessibility")
+            @Override
+            public boolean onTouch(View paramView, MotionEvent paramMotionEvent) {
+                if (Constants.CITIES.length > 0) {
+                    // show all suggestions
+                    if (!sv_location.getText().toString().equals(""))
+                        cityAdapter.getFilter().filter(null);
+                    sv_location.showDropDown();
+                }
+                return false;
+            }
+        });
 
         iv_showRealInCity.setOnClickListener(new View.OnClickListener() {
             @Override
