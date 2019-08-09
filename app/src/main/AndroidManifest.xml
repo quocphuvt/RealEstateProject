@@ -35,14 +35,14 @@
             android:label="@string/title_activity_my_real_estates"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.MyClientActivity" />
-        <activity android:name=".activities.ListRealActivity" />
+        <activity android:name=".activities.UpdateProfileUserActivity" />
         <activity android:name=".activities.SignInActivity" />
         <activity android:name=".activities.SplashScreen" />
         <activity android:name=".activities.RegisterActivity" />
         <activity android:name=".activities.RealEstateCreatingActivity" />
         <activity android:name=".MainActivity" />
         <activity
-            android:name=".activities.UpdateProfileUserActivity"
+            android:name=".activities.ListRealActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

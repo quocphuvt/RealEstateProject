@@ -28,5 +28,8 @@ public interface RetroReal {
     @FormUrlEncoded
     Observable<RealEstate> getRealById(@Field("id") String id);
 
+    @POST("/sort_price")
+    Call<List<RealEstate>> sortByPrice();
+
 }
 

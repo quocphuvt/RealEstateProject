@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.realestateproject.R;
+import com.example.realestateproject.activities.ListRealActivity;
 import com.example.realestateproject.interfaces.ClickRealItemListener;
 import com.example.realestateproject.models.RealEstate;
 
@@ -21,6 +22,14 @@ public class ListRealAdapter extends BaseAdapter {
 
     public ListRealAdapter(List<RealEstate> listReals, Context context, ClickRealItemListener clickRealItemListener) {
         this.listReals = listReals;
+        this.context = context;
+        this.clickRealItemListener = clickRealItemListener;
+    }
+
+    public ListRealAdapter(RealEstate body, ListRealActivity listRealActivity) {
+    }
+
+    public ListRealAdapter(Context context, ClickRealItemListener clickRealItemListener) {
         this.context = context;
         this.clickRealItemListener = clickRealItemListener;
     }

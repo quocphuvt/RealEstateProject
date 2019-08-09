@@ -12,8 +12,8 @@ app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
 
 mongoose.connect("mongodb://localhost/RealEstateManager", (err, client) => {
-    if(err){
-        console.log("Unable to connect to MongoDB. Error: "+err)
+    if (err) {
+        console.log("Unable to connect to MongoDB. Error: " + err)
     }
     else {
         app.post("/register", async (request, response, next) => {
@@ -31,14 +31,14 @@ mongoose.connect("mongodb://localhost/RealEstateManager", (err, client) => {
             }
             userApi = new UserApi(response);
             const userExisted = await userApi.checkIdExisted(userData.id);
-            if(userExisted === 1){
+            if (userExisted === 1) {
                 console.log("User was existed");
             }
             else {
                 console.log("Register success");
                 userApi.registerUser(userObject)
             };
-           
+
         });
 
         app.post("/sign_in", (request, response, next) => {
@@ -48,7 +48,7 @@ mongoose.connect("mongodb://localhost/RealEstateManager", (err, client) => {
             userApi.checkUserLogin(userData.id, userData.password);
         });
 
-        app.post("/real_creating",(request, response, next)=>{
+        app.post("/real_creating", (request, response, next) => {
             const realData = request.body;
             console.log(realData);
             const realApi = new RealApi(response);
@@ -56,20 +56,25 @@ mongoose.connect("mongodb://localhost/RealEstateManager", (err, client) => {
 
         })
 
-        app.post("/listreal",(request,response,next)=>{
+        app.post("/listreal", (request, response, next) => {
             const realApi = new RealApi(response);
             realApi.getAllReals();
-            
+
         })
-        app.post("/update_user",(request, response, next)=>{
+        app.post("/update_user", (request, response, next) => {
             const realData = request.body;
             console.log(realData);
             const userApi = new UserApi(response);
             userApi.updateUserData(realData);
 
         })
-    }
-})
+        app.post("/sort_price", (request, response, next) => {
+            const realData = request.body;
+            console.log(realData);
+            const realApi = new RealApi(response);
+            realApi.sortByPrice();
 
-app.listen(8000); //Port of Server
+        })}})
+
+        app.listen(8000); //Port of Server
 

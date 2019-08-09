@@ -24,4 +24,5 @@ public interface RetroUser {
 
     @POST("/update_user")
     Call<UserModel> updateUser(@Body UserModel userModel);
+
 }
