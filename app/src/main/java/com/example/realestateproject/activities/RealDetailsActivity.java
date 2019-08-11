@@ -1,6 +1,7 @@
 package com.example.realestateproject.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.mbms.MbmsErrors;
@@ -8,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -35,6 +37,8 @@ public class RealDetailsActivity extends AppCompatActivity implements View.OnCli
     private Toolbar toolbar;
     private RatingBar ratingBar;
     private ImageView iv_realImg;
+    private LinearLayout layout_makeCall;
+    private String phoneNumber;
 
     private void initView(){
         tv_name = findViewById(R.id.tv_name_realDetail);
@@ -49,6 +53,7 @@ public class RealDetailsActivity extends AppCompatActivity implements View.OnCli
         toolbar=findViewById(R.id.toolbar_realDetail);
         btn_seeUsOnMap= findViewById(R.id.btn_seeUsOnMap);
         iv_realImg = findViewById(R.id.iv_realImg_detail);
+        layout_makeCall = findViewById(R.id.layout_makeCall);
     }
 
     @Override
@@ -60,6 +65,7 @@ public class RealDetailsActivity extends AppCompatActivity implements View.OnCli
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         btn_selected.setOnClickListener(this);
+        layout_makeCall.setOnClickListener(this);
         ratingBar.setRating(3);
         Intent i = getIntent();
         String idReal = i.getStringExtra("id");
@@ -80,6 +86,7 @@ public class RealDetailsActivity extends AppCompatActivity implements View.OnCli
                         tv_price.setText("$ "+String.format("%.0f", realEstate.getPrice()));
                         tv_contact.setText(realEstate.getContactNumber());
                         iv_realImg.setImageBitmap(Utils.decodeBase64Image(realEstate.getImg()));
+                        phoneNumber = realEstate.getContactNumber();
                     }
                 });
     }
@@ -100,6 +107,10 @@ public class RealDetailsActivity extends AppCompatActivity implements View.OnCli
             case R.id.btn_selected_realDetail:
                 break;
             case R.id.btn_seeUsOnMap:
+                break;
+            case R.id.layout_makeCall:
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null));
+                startActivity(intent);
                 break;
         }
     }}

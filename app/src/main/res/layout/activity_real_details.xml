@@ -211,6 +211,7 @@
                             android:layout_height="wrap_content">
 
                             <LinearLayout
+                                android:id="@+id/layout_makeCall"
                                 android:paddingTop="8dp"
                                 android:paddingBottom="8dp"
                                 android:layout_width="match_parent"
@@ -323,7 +324,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="#FF5722"
-        android:text="Select Real"
+        android:text="CONNECT FOR ME NOW"
         android:textColor="#FFFF"
         android:textStyle="bold" />
 </RelativeLayout>

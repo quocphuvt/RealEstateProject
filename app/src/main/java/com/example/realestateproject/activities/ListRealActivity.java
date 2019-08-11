@@ -2,6 +2,7 @@ package com.example.realestateproject.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,6 +26,7 @@ import com.example.realestateproject.models.RealEstate;
 import com.example.realestateproject.retrofits.RetroClient;
 import com.example.realestateproject.retrofits.RetroReal;
 import com.example.realestateproject.supports.Constants;
+import com.example.realestateproject.supports.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,21 +41,15 @@ import retrofit2.Retrofit;
 
 public class ListRealActivity extends AppCompatActivity implements ClickRealItemListener, View.OnClickListener, PopupMenu.OnMenuItemClickListener {
     private ListView lv_reals;
-    private Button btn_sort;
     private Toolbar toolbar;
     private RetroReal retroReal;
-    private Spinner sp_filter;
     private LinearLayout sort_layout, filter_layout;
-    private List<RealEstate> realEstateList;
-    private List<RealEstate> sortResult;
 
     private void initView() {
         lv_reals = findViewById(R.id.lv_reals_listreal);
         toolbar = findViewById(R.id.toolbar);
         sort_layout = findViewById(R.id.sort_layout);
         filter_layout = findViewById(R.id.filter_layout);
-//        btn_sort = findViewById(R.id.btn_sortPirce);
-//        sp_filter = findViewById(R.id.sp_filter);
     }
 
     @Override
@@ -62,64 +58,34 @@ public class ListRealActivity extends AppCompatActivity implements ClickRealItem
         setContentView(R.layout.activity_list_real);
         this.initView();
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
         toolbar.setBackgroundColor(getResources().getColor(R.color.white));
         Intent i = getIntent();
         final String city = i.getStringExtra("city");
-//        btn_sort.setOnClickListener(this);
-        realEstateList = new ArrayList<>();
         filter_layout.setOnClickListener(this);
         sort_layout.setOnClickListener(this);
-        //TODO: SPINNER SHOW REALS
-//        ArrayAdapter<String> filterAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, Constants.RANGE_OF_PRICE);
-//        sp_filter.setAdapter(filterAdapter);
-//        sp_filter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-//                Toast.makeText(ListRealActivity.this, ""+adapterView.getItemAtPosition(i).toString(), Toast.LENGTH_SHORT).show();
-//                int minPrice = getMinAndMaxPrice(adapterView.getItemAtPosition(i).toString(), 0);
-//                int maxPrice = getMinAndMaxPrice(adapterView.getItemAtPosition(i).toString(), 1);
-//                Retrofit retrofit = RetroClient.getInstance();
-//                RetroReal retroReal = retrofit.create(RetroReal.class);
-//                retroReal.filterRealByPrice(minPrice, maxPrice)
-//                        .subscribeOn(Schedulers.io())
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .subscribe(new Consumer<List<RealEstate>>() {
-//                            @Override
-//                            public void accept(List<RealEstate> realEstates) throws Exception {
-//                                for(RealEstate model: realEstates){
-//                                    realEstateList.add(model);
-//                                }
-//                                ListRealAdapter listRealAdapter = new ListRealAdapter(realEstates, ListRealActivity.this, ListRealActivity.this);
-//                                lv_reals.setAdapter(listRealAdapter);
-//                            }
-//                        });
-//
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> adapterView) {
-//
-//            }
-//        });
         Retrofit retrofit = RetroClient.getInstance();
         retroReal = retrofit.create(RetroReal.class);
         //TODO: SHOW ALL REALS
-//        Call<List<RealEstate>> call = retroReal.getListreals();
-//        call.enqueue(new Callback<List<RealEstate>>() {
-//            @Override
-//            public void onResponse(Call<List<RealEstate>> call, Response<List<RealEstate>> response) {
-////                getSupportActionBar().setTitle(city+" "+response.body().size());
-////                Toast.makeText(ListRealActivity.this, ""+response.body(), Toast.LENGTH_SHORT).show();
-//                ListRealAdapter listRealAdapter = new ListRealAdapter(response.body(),ListRealActivity.this, ListRealActivity.this);
-//                lv_reals.setAdapter(listRealAdapter);
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<RealEstate>> call, Throwable t) {
-//
-//            }
-//        });
+        Call<List<RealEstate>> call = retroReal.getListreals();
+        call.enqueue(new Callback<List<RealEstate>>() {
+            @Override
+            public void onResponse(Call<List<RealEstate>> call, Response<List<RealEstate>> response) {
+                String property = response.body().size() < 2 ? " property" : " properties";
+                if (TextUtils.isEmpty(city)) {
+                    getSupportActionBar().setTitle("Have " + response.body().size()+property);
+                } else  getSupportActionBar().setTitle(city + "have " + response.body().size()+property);
+                ListRealAdapter listRealAdapter = new ListRealAdapter(response.body(), ListRealActivity.this, ListRealActivity.this);
+                lv_reals.setAdapter(listRealAdapter);
+
+            }
+
+            @Override
+            public void onFailure(Call<List<RealEstate>> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override
@@ -157,29 +123,17 @@ public class ListRealActivity extends AppCompatActivity implements ClickRealItem
         }
     }
 
-    public void showPopup(View v) {
-        PopupMenu popup = new PopupMenu(this, v);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.popup_menu, popup.getMenu());
-        popup.show();
-        popup.setOnMenuItemClickListener(this);
-    }
-
-    private int getMinAndMaxPrice(String prices, int i) {
-        if (i == 0) { //Min
-            String minPrice = prices.substring(0, prices.indexOf(','));
-            Log.i("min", minPrice);
-            return Integer.parseInt(minPrice);
-        } else {
-            String maxPrice = prices.substring(prices.indexOf(',') + 1, prices.length());
-            Log.i("max", maxPrice);
-            return Integer.parseInt(maxPrice);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        Toast.makeText(this, "click menu ne", Toast.LENGTH_SHORT).show();
         switch (item.getItemId()) {
             case R.id.option1:
                 String price = Constants.RANGE_OF_PRICE[0];
@@ -195,9 +149,6 @@ public class ListRealActivity extends AppCompatActivity implements ClickRealItem
                         .subscribe(new Consumer<List<RealEstate>>() {
                             @Override
                             public void accept(List<RealEstate> realEstates) throws Exception {
-                                for (RealEstate model : realEstates) {
-                                    realEstateList.add(model);
-                                }
                                 ListRealAdapter listRealAdapter = new ListRealAdapter(realEstates, ListRealActivity.this, ListRealActivity.this);
                                 lv_reals.setAdapter(listRealAdapter);
                             }
@@ -215,9 +166,6 @@ public class ListRealActivity extends AppCompatActivity implements ClickRealItem
                         .subscribe(new Consumer<List<RealEstate>>() {
                             @Override
                             public void accept(List<RealEstate> realEstates) throws Exception {
-                                for (RealEstate model : realEstates) {
-                                    realEstateList.add(model);
-                                }
                                 ListRealAdapter listRealAdapter = new ListRealAdapter(realEstates, ListRealActivity.this, ListRealActivity.this);
                                 lv_reals.setAdapter(listRealAdapter);
                             }
@@ -225,6 +173,26 @@ public class ListRealActivity extends AppCompatActivity implements ClickRealItem
                 return true;
             default:
                 return false;
+        }
+    }
+
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.popup_menu, popup.getMenu());
+        popup.show();
+        popup.setOnMenuItemClickListener(this);
+    }
+
+    private int getMinAndMaxPrice(String prices, int i) {
+        if (i == 0) { //Min
+            String minPrice = prices.substring(0, prices.indexOf(','));
+            Log.i("min", minPrice);
+            return Integer.parseInt(minPrice);
+        } else {
+            String maxPrice = prices.substring(prices.indexOf(',') + 1, prices.length());
+            Log.i("max", maxPrice);
+            return Integer.parseInt(maxPrice);
         }
     }
 }
