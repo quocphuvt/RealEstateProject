@@ -1,6 +1,7 @@
 package com.example.realestateproject.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +23,7 @@ import com.example.realestateproject.R;
 import com.example.realestateproject.models.RealEstate;
 import com.example.realestateproject.retrofits.RetroClient;
 import com.example.realestateproject.retrofits.RetroReal;
+import com.example.realestateproject.retrofits.RetroUser;
 import com.example.realestateproject.supports.Utils;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -39,21 +42,26 @@ public class RealDetailsActivity extends AppCompatActivity implements View.OnCli
     private ImageView iv_realImg;
     private LinearLayout layout_makeCall;
     private String phoneNumber;
+    private ImageView iv_favorite;
+    private boolean isLike = false;
+    private String idReal;
+    private String idUser;
 
-    private void initView(){
+    private void initView() {
         tv_name = findViewById(R.id.tv_name_realDetail);
         tv_address = findViewById(R.id.tv_address_realDetail);
         tv_type = findViewById(R.id.tv_type_realDetail);
         tv_description = findViewById(R.id.tv_description_realDetail);
-        btn_selected=findViewById(R.id.btn_selected_realDetail);
-        ratingBar=findViewById(R.id.ratingBar);
-        tv_area=findViewById(R.id.tv_area_realDetail);
-        tv_price=findViewById(R.id.tv_price_realDetail);
-        tv_contact=findViewById(R.id.tv_contact_realDetail);
-        toolbar=findViewById(R.id.toolbar_realDetail);
-        btn_seeUsOnMap= findViewById(R.id.btn_seeUsOnMap);
+        btn_selected = findViewById(R.id.btn_selected_realDetail);
+        ratingBar = findViewById(R.id.ratingBar);
+        tv_area = findViewById(R.id.tv_area_realDetail);
+        tv_price = findViewById(R.id.tv_price_realDetail);
+        tv_contact = findViewById(R.id.tv_contact_realDetail);
+        toolbar = findViewById(R.id.toolbar_realDetail);
+        btn_seeUsOnMap = findViewById(R.id.btn_seeUsOnMap);
         iv_realImg = findViewById(R.id.iv_realImg_detail);
         layout_makeCall = findViewById(R.id.layout_makeCall);
+        iv_favorite = findViewById(R.id.iv_favorite);
     }
 
     @Override
@@ -66,9 +74,12 @@ public class RealDetailsActivity extends AppCompatActivity implements View.OnCli
         getSupportActionBar().setHomeButtonEnabled(true);
         btn_selected.setOnClickListener(this);
         layout_makeCall.setOnClickListener(this);
+        iv_favorite.setOnClickListener(this);
         ratingBar.setRating(3);
         Intent i = getIntent();
-        String idReal = i.getStringExtra("id");
+        idReal = i.getStringExtra("id");
+        SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+        idUser = sharedPreferences.getString("id", "");
         Retrofit retrofit = RetroClient.getInstance();
         RetroReal retroReal = retrofit.create(RetroReal.class);
         retroReal.getRealById(idReal)
@@ -81,9 +92,9 @@ public class RealDetailsActivity extends AppCompatActivity implements View.OnCli
                         tv_name.setText(realEstate.getName());
                         tv_address.setText(realEstate.getAddress());
                         tv_type.setText(realEstate.getType());
-                        tv_description.setText(realEstate.getDescription()+",sdjlskdhfsjdhfkjshdfkjshdjkfsdhsdkjfhskdjhfksjdhfkjsdhfkjsdhfkjsdhfjksdhfksjdhfksdjhfskjdhfskdjhfskdjhfksjdhfskjdhfjksdhfkjsdhfjskdhfkjsdhfkjsdh\nfjksdhfkjsdhfkjsdhfkjashfiuqwheihdsfkjhasdkjhasdkjahsdkjhsdjkfhsdkjfhsdkjhfsjdkhfkjsdhfkjsdhksdjhf\nfjksdhfkjsdhfkjsdhfkjashfiuqwheihdsfkjhasdkjhasdkjahsdkjhsdjkfhsdkjfhsdkjhfsjdkhfkjsdhfkjsdhksdjhf\nfjksdhfkjsdhfkjsdhfkjashfiuqwheihdsfkjhasdkjhasdkjahsdkjhsdjkfhsdkjfhsdkjhfsjdkhfkjsdhfkjsdhksdjhf");
-                        tv_area.setText(String.format("%.0f", realEstate.getArea())+" m2");
-                        tv_price.setText("$ "+String.format("%.0f", realEstate.getPrice()));
+                        tv_description.setText(realEstate.getDescription() + ",sdjlskdhfsjdhfkjshdfkjshdjkfsdhsdkjfhskdjhfksjdhfkjsdhfkjsdhfkjsdhfjksdhfksjdhfksdjhfskjdhfskdjhfskdjhfksjdhfskjdhfjksdhfkjsdhfjskdhfkjsdhfkjsdh\nfjksdhfkjsdhfkjsdhfkjashfiuqwheihdsfkjhasdkjhasdkjahsdkjhsdjkfhsdkjfhsdkjhfsjdkhfkjsdhfkjsdhksdjhf\nfjksdhfkjsdhfkjsdhfkjashfiuqwheihdsfkjhasdkjhasdkjahsdkjhsdjkfhsdkjfhsdkjhfsjdkhfkjsdhfkjsdhksdjhf\nfjksdhfkjsdhfkjsdhfkjashfiuqwheihdsfkjhasdkjhasdkjahsdkjhsdjkfhsdkjfhsdkjhfsjdkhfkjsdhfkjsdhksdjhf");
+                        tv_area.setText(String.format("%.0f", realEstate.getArea()) + " m2");
+                        tv_price.setText("$ " + String.format("%.0f", realEstate.getPrice()));
                         tv_contact.setText(realEstate.getContactNumber());
                         iv_realImg.setImageBitmap(Utils.decodeBase64Image(realEstate.getImg()));
                         phoneNumber = realEstate.getContactNumber();
@@ -93,7 +104,7 @@ public class RealDetailsActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 break;
@@ -112,5 +123,24 @@ public class RealDetailsActivity extends AppCompatActivity implements View.OnCli
                 Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null));
                 startActivity(intent);
                 break;
+            case R.id.iv_favorite:
+                if (isLike) {
+                    iv_favorite.setImageResource(R.drawable.ic_favorite_unactive);
+                    isLike = false;
+                } else {
+                    iv_favorite.setImageResource(R.drawable.ic_favorite_active);
+                    isLike = true;
+                }
         }
-    }}
+    }
+    //TODO: WIP
+    @Override
+    public void finish() {
+        super.finish();
+        Retrofit retrofit = RetroClient.getInstance();
+        RetroUser retroUser = retrofit.create(RetroUser.class);
+        retroUser.setFavoriteReal(idUser, idReal, isLike);
+
+        Toast.makeText(this, "finish ne", Toast.LENGTH_SHORT).show();
+    }
+}
