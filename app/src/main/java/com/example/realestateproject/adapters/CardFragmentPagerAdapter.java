@@ -56,8 +56,10 @@ public class CardFragmentPagerAdapter extends FragmentStatePagerAdapter implemen
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
+        Class[] classes = {MyClientActivity.class, MyRealEstatesActivity.class, HistoryActivity.class};
+        int[] resources = {R.drawable.group, R.drawable.mansion, R.drawable.history};
         Object fragment = super.instantiateItem(container, position);
-        mFragments.set(position, (CardFragment) fragment);
+        mFragments.set(position, new CardFragment(Constants.CARD_TITLE[position], Constants.CARD_SUBTITLE[position], classes[position], resources[position]));
         return fragment;
     }
 

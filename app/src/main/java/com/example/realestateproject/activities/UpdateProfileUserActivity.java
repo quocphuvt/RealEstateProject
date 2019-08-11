@@ -13,29 +13,36 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.features.ReturnMode;
 import com.example.realestateproject.R;
 import com.example.realestateproject.adapters.CityAdapter;
 import com.example.realestateproject.models.UserModel;
 import com.example.realestateproject.retrofits.RetroClient;
 import com.example.realestateproject.retrofits.RetroUser;
 import com.example.realestateproject.supports.Constants;
+import com.example.realestateproject.supports.Utils;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class UpdateProfileUserActivity extends AppCompatActivity implements View.OnClickListener {
-    private TextInputEditText  et_, et_fullName, et_phoneNumber;
+    private TextInputEditText et_fullName, et_phoneNumber;
     private CheckBox chk_male, chk_female;
     private TextView tv_cancel, tv_birthday;
     private Button btn_update;
@@ -44,6 +51,9 @@ public class UpdateProfileUserActivity extends AppCompatActivity implements View
     private Toolbar toolbar;
     private RetroUser retroUser;
     private String city;
+    private ImageView iv_avatar, iv_setAvatar;
+    private String img;
+    private String userId;
 
     private void initialView() {
         btn_update = findViewById(R.id.btn_submit_editUser);
@@ -55,6 +65,8 @@ public class UpdateProfileUserActivity extends AppCompatActivity implements View
         chk_female = findViewById(R.id.chk_female_editUser);
         sp_city = findViewById(R.id.sp_city_editUser);
         toolbar = findViewById(R.id.toolbar);
+        iv_avatar = findViewById(R.id.iv_avatar_edit);
+        iv_setAvatar = findViewById(R.id.iv_setAvatar_edit);
     }
 
     @Override
@@ -84,6 +96,21 @@ public class UpdateProfileUserActivity extends AppCompatActivity implements View
 
             }
         });
+        SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+        userId = sharedPreferences.getString("id", ""); //Get user id when logining successful.
+        getCurrentUser(userId);
+        chk_male.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chooseGender(view);
+            }
+        });
+        chk_female.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chooseGender(view);
+            }
+        });
         btn_update.setOnClickListener(this);
         tv_cancel.setOnClickListener(this);
     }
@@ -92,27 +119,30 @@ public class UpdateProfileUserActivity extends AppCompatActivity implements View
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_submit_editUser:
-                String fullname = et_fullName.getText().toString();
-                String birthday = tv_birthday.getText().toString();
+                String fullname = et_fullName.getText().toString().trim();
+                String birthday = tv_birthday.getText().toString().trim();
                 String phonenumber = et_phoneNumber.getText().toString().trim();
-                SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
-                String userId = sharedPreferences.getString("id", ""); //Get user id when logining successful.
-                UserModel userModel = new UserModel(userId, fullname, birthday, phonenumber, city, gender);
-                Call<UserModel> call = retroUser.updateUserData(userModel);
-                call.enqueue(new Callback<UserModel>() {
-                    @Override
-                    public void onResponse(Call<UserModel> call, Response<UserModel> response) {
-                        if(response.isSuccessful()){
-                            Toast.makeText(UpdateProfileUserActivity.this, "Your profile was changed", Toast.LENGTH_SHORT).show();
-                            finish();
+                if(fullname.isEmpty() || phonenumber.isEmpty() || city.length() == 0){
+                    Toast.makeText(this, "Please type all field", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    UserModel userModel = new UserModel(userId, fullname, birthday, phonenumber, city, gender, img);
+                    Call<UserModel> call = retroUser.updateUserData(userModel);
+                    call.enqueue(new Callback<UserModel>() {
+                        @Override
+                        public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                            if(response.isSuccessful()){
+                                Toast.makeText(UpdateProfileUserActivity.this, "Your profile was changed", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<UserModel> call, Throwable t) {
+                        @Override
+                        public void onFailure(Call<UserModel> call, Throwable t) {
 
-                    }
-                });
+                        }
+                    });
+                }
                 break;
 
 
@@ -141,8 +171,17 @@ public class UpdateProfileUserActivity extends AppCompatActivity implements View
                         calendar.get(Calendar.DAY_OF_MONTH));
                 datePickerDialog.show();
                 break;
+            case R.id.iv_setAvatar_edit:
+                ImagePicker.create(this) // Activity or Fragment
+                        .returnMode(ReturnMode.ALL)
+                        .toolbarFolderTitle("Choose your image")
+                        .toolbarImageTitle("Tap to select")
+                        .single()
+                        .start();
+                break;
         }
     }
+
     private void chooseGender(View view) {
         switch (view.getId()) {
             case R.id.chk_male_editUser:
@@ -158,6 +197,28 @@ public class UpdateProfileUserActivity extends AppCompatActivity implements View
         }
     }
 
+    private void getCurrentUser(String id) {
+        retroUser.getCurrentUser(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<UserModel>() {
+                    @Override
+                    public void accept(UserModel userModel) throws Exception {
+                        et_fullName.setText(userModel.getFullName());
+                        et_phoneNumber.setText(userModel.getPhoneNumber());
+                        iv_avatar.setImageBitmap(Utils.decodeBase64Image(userModel.getAvatar()));
+                        tv_birthday.setText(userModel.getBirthday());
+                        city = userModel.getCity();
+                        if(userModel.getGender() == 0) {
+                            chk_male.setChecked(true);
+                            return;
+                        } else {
+                            chk_female.setChecked(true);
+                            return;
+                        }
+                    }
+                });
+    }
 
     public void setToolbar(String title) {
         setSupportActionBar(toolbar);

@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -35,6 +36,7 @@ import com.example.realestateproject.retrofits.RetroReal;
 import com.example.realestateproject.retrofits.RetroUser;
 import com.example.realestateproject.supports.Constants;
 import com.example.realestateproject.supports.LayoutInterface;
+import com.example.realestateproject.supports.Utils;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.ByteArrayOutputStream;
@@ -194,11 +196,8 @@ public class RealEstateCreatingActivity extends AppCompatActivity implements Vie
         if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
             // or get a single image only
             Image image = ImagePicker.getFirstImageOrNull(data);
-            Bitmap bm = BitmapFactory.decodeFile(image.getPath());
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bm.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
-            byte[] b = baos.toByteArray();
-            img = Base64.encodeToString(b, Base64.DEFAULT);
+            iv_realImg.setImageURI(Uri.parse(image.getPath()));
+            img = Utils.encodeBase64Image(image.getPath());
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

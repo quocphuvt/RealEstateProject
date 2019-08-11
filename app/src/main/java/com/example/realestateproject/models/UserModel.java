@@ -8,10 +8,11 @@ public class UserModel {
     private String city;
     private String phoneNumber;
     private int gender;
+    private String avatar;
     private String _idFavorite;
     private String _idReal;
 
-    public UserModel(String id, String password, String fullName, String birthday, String city, String phoneNumber, int gender) {
+    public UserModel(String id, String password, String fullName, String birthday, String city, String phoneNumber, int gender, String avatar) {
         this.id = id;
         this.password = password;
         this.fullName = fullName;
@@ -19,15 +20,25 @@ public class UserModel {
         this.city = city;
         this.phoneNumber = phoneNumber;
         this.gender = gender;
+        this.avatar = avatar;
     }
 
-    public UserModel(String id, String fullName, String birthday, String city, String phoneNumber, int gender) {
+    public UserModel(String id, String fullName, String birthday, String city, String phoneNumber, int gender, String avatar) {
         this.id = id;
         this.fullName = fullName;
         this.birthday = birthday;
         this.city = city;
         this.phoneNumber = phoneNumber;
         this.gender = gender;
+        this.avatar = avatar;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getId() {

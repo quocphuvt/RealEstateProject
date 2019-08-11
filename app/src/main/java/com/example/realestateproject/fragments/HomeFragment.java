@@ -2,6 +2,7 @@ package com.example.realestateproject.fragments;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -16,15 +17,22 @@ import android.widget.Toast;
 
 import com.example.realestateproject.R;
 import com.example.realestateproject.adapters.CardFragmentPagerAdapter;
+import com.example.realestateproject.models.RealEstate;
 import com.example.realestateproject.retrofits.RetroClient;
 import com.example.realestateproject.retrofits.RetroReal;
 import com.example.realestateproject.supports.Constants;
 import com.example.realestateproject.supports.ShadowTransformer;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.internal.schedulers.NewThreadScheduler;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,25 +59,21 @@ public class HomeFragment extends Fragment {
 
         Retrofit retrofit = RetroClient.getInstance();
         RetroReal retroReal = retrofit.create(RetroReal.class);
-        Call<Integer> call = retroReal.countNumReal();
-        call.enqueue(new Callback<Integer>() {
-            @Override
-            public void onResponse(Call<Integer> call, Response<Integer> response) {
-                if(response.isSuccessful()){
-                    Log.i("count", response.body().toString());
-                    tv_numReal.setText("You have: "+response.body().toString()+" posts");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Integer> call, Throwable t) {
-
-            }
-        });
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user", MODE_PRIVATE);
+        String userId = sharedPreferences.getString("id", ""); //Get user id when logining successful.
+        retroReal.countNumReal(userId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer numReal) throws Exception {
+                        String post = numReal < 2 ? " post" : " posts";
+                        tv_numReal.setText("You have: "+numReal.toString()+ post);
+                    }
+                });
 
         home_viewPager.setAdapter(pagerAdapter);
         home_viewPager.setPageTransformer(false, fragmentCardShadowTransformer);
-        home_viewPager.setOffscreenPageLimit(3);
         home_viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

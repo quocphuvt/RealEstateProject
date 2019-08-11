@@ -16,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.example.realestateproject.R;
 import com.example.realestateproject.supports.CardAdapter;
@@ -40,8 +41,6 @@ public class CardFragment extends Fragment {
         this.iv_resource = iv_resource;
     }
 
-    @Nullable
-    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_card, container, false);

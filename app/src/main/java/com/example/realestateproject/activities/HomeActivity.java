@@ -18,15 +18,26 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.realestateproject.R;
 import com.example.realestateproject.adapters.ViewPagerAdapter;
+import com.example.realestateproject.models.UserModel;
+import com.example.realestateproject.retrofits.RetroClient;
+import com.example.realestateproject.retrofits.RetroUser;
+import com.example.realestateproject.supports.Utils;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.Retrofit;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout mDrawerlayout;
@@ -37,6 +48,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private ViewPager main_viewPager;
     private BottomNavigationView bottom_nav_view;
     private MenuItem prevMenuItem;
+    private View headerLayout;
+    private TextView tv_fullname_header, tv_id_header;
+    private ImageView iv_avatar_header;
+    private RetroUser retroUser;
 
     private void initView(){
         toolbar = findViewById(R.id.toolbar_logo);
@@ -45,6 +60,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         add_fab = findViewById(R.id.add_fab);
         main_viewPager = findViewById(R.id.main_viewPager);
         bottom_nav_view = findViewById(R.id.bottom_nav_view);
+        //Initialize view in header
+        headerLayout = navigationView.getHeaderView(0);
+        tv_fullname_header = headerLayout.findViewById(R.id.tv_fullname_header);
+        tv_id_header = headerLayout.findViewById(R.id.tv_id_header);
+        iv_avatar_header = headerLayout.findViewById(R.id.iv_avatar_header);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +74,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         navigationView.bringToFront();
         navigationView.setNavigationItemSelectedListener(this);
         add_fab.setOnClickListener(this);
-
         mToogle = new ActionBarDrawerToggle(this,mDrawerlayout,R.string.open,R.string.close);
         mDrawerlayout.addDrawerListener(mToogle);
         mToogle.syncState();
@@ -69,9 +88,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             main_viewPager.setCurrentItem(1);
         }
 
+        Retrofit retrofit = RetroClient.getInstance();
+        retroUser = retrofit.create(RetroUser.class);
+
         SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
         String userId = sharedPreferences.getString("id", ""); //Get user id when logining successful.
 
+        getCurrentUser(userId);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         main_viewPager.setOffscreenPageLimit(4);
         main_viewPager.setAdapter(viewPagerAdapter);
@@ -122,6 +145,20 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 return false;
             }
         });
+    }
+
+    private void getCurrentUser(String id) {
+        retroUser.getCurrentUser(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<UserModel>() {
+                    @Override
+                    public void accept(UserModel userModel) throws Exception {
+                        iv_avatar_header.setImageBitmap(Utils.decodeBase64Image(userModel.getAvatar()));
+                        tv_id_header.setText("ID: "+userModel.getId());
+                        tv_fullname_header.setText(userModel.getFullName());
+                    }
+                });
     }
 
     @Override

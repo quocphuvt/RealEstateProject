@@ -35,7 +35,8 @@ mongoose.connect("mongodb://localhost/RealEstateManager", (err, client) => {
                 birthday: userData.birthday,
                 city: userData.city,
                 phoneNumber: userData.phoneNumber,
-                gender: userData.gender
+                gender: userData.gender,
+                avatar: userData.avatar
             }
             userApi = new UserApi(response);
             const userExisted = await userApi.checkIdExisted(userData.id);
@@ -90,7 +91,7 @@ mongoose.connect("mongodb://localhost/RealEstateManager", (err, client) => {
 
         app.post("/num_real", (request, response) => {
             const realApi = new RealApi(response);
-            realApi.countNumReal();
+            realApi.countNumReal(request.body.id);
         })
 
         app.post("/update_user", (request, response, next) => {
@@ -99,6 +100,12 @@ mongoose.connect("mongodb://localhost/RealEstateManager", (err, client) => {
             userApi.updateUserData(realData);
 
         });
+
+        app.post("/get_user", (req, res, next) => {
+            const realData = req.body;
+            const userApi = new UserApi(res);
+            userApi.getCurrentUser(realData.id);
+        })
 
         //Request to index page
         app.get("/login", (req,res) => {
@@ -144,7 +151,7 @@ mongoose.connect("mongodb://localhost/RealEstateManager", (err, client) => {
                     area: reqData.txtArea,
                     city: reqData.slcCity,
                     type: reqData.chkLease != null ? reqData.chkLease : (reqData.chkSale != null ? reqData.chkSale : "LEASE"),
-                    status: "AVAIABLE",
+                    status: "AVAILABLE",
                     location: reqData.txtLocation.replace(/\s/g, ''),
                     img: data,
                     _idUser: req.params.id
