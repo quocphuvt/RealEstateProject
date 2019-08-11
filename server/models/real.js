@@ -13,7 +13,8 @@ const realSchema = new Schema({
     type: String,
     status: String,
     location: String,
-    _idUser: String
+    img: String,
+    _idUser: String,
 });
 
 const realModel = mongoose.model("realEstates", realSchema); 

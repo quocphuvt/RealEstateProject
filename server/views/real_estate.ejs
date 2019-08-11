@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        input,
+        textarea {
+            font-size: 0.8rem;
+            width: 30%;
+        }
+    </style>
+</head>
+
+<body>
+    <% if(user) { %>
+    <form action="/create_real/<%= user.id %>" method="POST" enctype="multipart/form-data">
+        <div style="margin: 100px">
+            <span class="badge badge-info">
+                <h3>Xin chào <%= user.fullName %></h3>
+            </span>
+            <h1>Thêm bất động sản</h1>
+            <input class="form-control" name="txtName" type="text" placeholder="Tên bất động sản" /><br />
+            <input class="form-control" name="txtAddress" type="text" placeholder="Địa chỉ" /><br />
+            <input class="form-control" name="txtContact" type="text" placeholder="Số điện thoại liên lạc" /><br />
+            <input class="form-control" name="txtLocation" type="text" placeholder="Tọa độ để hiện thị Google Map" />
+            <a href="https://www.google.com/maps/" target="_blank">Tôi muốn xem Goolge Map</a>
+            <br />
+            <select class="form-control" name="slcCity">
+                <option value="Hồ Chí Minh">Hồ Chí Minh</option>
+                <option value="Hà Nội">Hà Nội</option>
+                <option value="Hải Phòng">Hải Phòng</option>
+                <option value="Vũng Tàu">Vũng Tàu</option>
+                <option value="Đà Nẵng">Đà Nẵng</option>
+            </select><br />
+            <textarea class="form-control" name="txtDescription" placeholder="Mô tả"></textarea><br />
+            <div class="type column">
+                <label>Loại bài đăng</label>
+                <div class="row">
+                    <div class="row"
+                        style="margin-left: 100px; display: flex; justify-content: center; align-items: center">
+                        <input name="chkLease" type="checkbox" value="LEASE" />
+                        <label>LEASE</label>
+                    </div>
+                    <div class="row"
+                        style="margin-left: 100px; display: flex; justify-content: center; align-items: center">
+                        <input name="chkSale" type="checkbox" value="SALE" />
+                        <label>SALE</label>
+                    </div>
+                </div>
+
+            </div>
+            <script>
+                $('input[type="checkbox"]').on('change', function () {
+                    $('input[type="checkbox"]').not(this).prop('checked', false);
+                });
+            </script>
+
+            <br />
+            <input class="form-control" name="txtArea" type="number" placeholder="Diện tích đơn vị m2" min="0" /><br />
+            <input class="form-control" name="txtPrice" type="number" placeholder="Giá" min="0" /><br />
+            <label>Chọn hình về BDS</label>
+            <input class="form-control-file" name="file" type="file" /><br />
+            <div class="row">
+                <div class="col">
+                    <button type="submit" class="btn btn-primary">Đăng ngay</button>
+                </div>
+                <div class="col" style="text-align: right">
+                    <button type="button" class="btn btn-primary"><a href="/logout"
+                            style="text-decoration: none; color: white">Đăng xuất</a></button>
+
+                </div>
+            </div>
+    </form>
+    <% } else { %>
+    <h1>Vui lòng đăng nhập</h1>
+    <a href="/login">Tôi hiểu rồi</a>
+    <% } %>
+</body>
+
+</html>
