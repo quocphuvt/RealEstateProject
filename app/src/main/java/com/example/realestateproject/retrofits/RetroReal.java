@@ -34,6 +34,5 @@ public interface RetroReal {
 
     @POST("/num_real")
     Call<Integer> countNumReal();
-
 }
 

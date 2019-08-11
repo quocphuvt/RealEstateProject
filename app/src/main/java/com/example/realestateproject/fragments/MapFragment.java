@@ -47,6 +47,7 @@ import com.example.realestateproject.models.UserResponses;
 import com.example.realestateproject.retrofits.RetroClient;
 import com.example.realestateproject.retrofits.RetroReal;
 import com.example.realestateproject.supports.Constants;
+import com.example.realestateproject.supports.Utils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -254,6 +255,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 tv_area.setText("Area: "+String.format("%.0f", realEstate.getArea())+" m2");
                                 tv_price.setText("Price: "+String.format("%.0f", realEstate.getPrice())+" VND");
                                 tv_type.setText("For "+realEstate.getType());
+                                iv_store.setImageBitmap(Utils.decodeBase64Image(realEstate.getImg()));
                             }
                         });
                 TextView tv_title = ((TextView)view.findViewById(R.id.tv_marker_title));

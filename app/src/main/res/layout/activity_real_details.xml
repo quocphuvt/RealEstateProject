@@ -51,13 +51,14 @@
                             android:layout_height="wrap_content">
 
                             <ImageView
-                                android:id="@+id/iV"
+                                android:scaleType="center"
+                                android:id="@+id/iv_realImg_detail"
                                 android:layout_width="wrap_content"
                                 android:layout_height="300dp"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginTop="10dp"
                                 android:layout_marginRight="5dp"
-                                android:background="@drawable/building3"></ImageView>
+                                ></ImageView>
 
                             <androidx.cardview.widget.CardView
                                 android:layout_width="wrap_content"

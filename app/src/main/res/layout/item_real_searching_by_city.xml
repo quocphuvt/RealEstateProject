@@ -7,6 +7,7 @@
         android:layout_width="160dp"
         android:layout_height="match_parent">
         <ImageView
+            android:id="@+id/iv_picture_real"
             android:src="@drawable/building2"
             android:scaleType="centerCrop"
             android:layout_width="160dp"
@@ -40,6 +41,8 @@
             <TextView
                 android:layout_weight="1"
                 android:id="@+id/tv_address_item_real"
+                android:inputType="textMultiLine"
+                android:lines="3"
                 android:text="119 Nguyen Huu Canh"
                 android:paddingLeft="3dp"
                 android:textSize="12sp"

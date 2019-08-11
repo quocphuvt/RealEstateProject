@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -47,10 +48,11 @@ public class ListRealActivity extends AppCompatActivity implements ClickRealItem
         call.enqueue(new Callback<List<RealEstate>>() {
             @Override
             public void onResponse(Call<List<RealEstate>> call, Response<List<RealEstate>> response) {
-                if(city.isEmpty()){
+                if(TextUtils.isEmpty(city)){
                     getSupportActionBar().setTitle("Having "+response.body().size()+" properties...");
+                }else {
+                    getSupportActionBar().setTitle(city+" have "+response.body().size()+" properties...");
                 }
-                getSupportActionBar().setTitle(city+" have "+response.body().size()+" properties...");
 //                Toast.makeText(ListRealActivity.this, ""+response.body(), Toast.LENGTH_SHORT).show();
                 ListRealAdapter listRealAdapter = new ListRealAdapter(response.body(), ListRealActivity.this, ListRealActivity.this);
                 lv_reals.setAdapter(listRealAdapter);

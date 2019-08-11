@@ -7,6 +7,7 @@ import android.telephony.mbms.MbmsErrors;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ import com.example.realestateproject.R;
 import com.example.realestateproject.models.RealEstate;
 import com.example.realestateproject.retrofits.RetroClient;
 import com.example.realestateproject.retrofits.RetroReal;
+import com.example.realestateproject.supports.Utils;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
@@ -32,7 +34,7 @@ public class RealDetailsActivity extends AppCompatActivity implements View.OnCli
     private Button btn_selected, btn_seeUsOnMap;
     private Toolbar toolbar;
     private RatingBar ratingBar;
-
+    private ImageView iv_realImg;
 
     private void initView(){
         tv_name = findViewById(R.id.tv_name_realDetail);
@@ -46,6 +48,7 @@ public class RealDetailsActivity extends AppCompatActivity implements View.OnCli
         tv_contact=findViewById(R.id.tv_contact_realDetail);
         toolbar=findViewById(R.id.toolbar_realDetail);
         btn_seeUsOnMap= findViewById(R.id.btn_seeUsOnMap);
+        iv_realImg = findViewById(R.id.iv_realImg_detail);
     }
 
     @Override
@@ -76,6 +79,7 @@ public class RealDetailsActivity extends AppCompatActivity implements View.OnCli
                         tv_area.setText(String.format("%.0f", realEstate.getArea())+" m2");
                         tv_price.setText("$ "+String.format("%.0f", realEstate.getPrice()));
                         tv_contact.setText(realEstate.getContactNumber());
+                        iv_realImg.setImageBitmap(Utils.decodeBase64Image(realEstate.getImg()));
                     }
                 });
     }
