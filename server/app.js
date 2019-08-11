@@ -107,6 +107,22 @@ mongoose.connect("mongodb://localhost/RealEstateManager", (err, client) => {
             userApi.getCurrentUser(realData.id);
         })
 
+        app.post("/sort_price", (request, response, next) => {
+            const realData = request.body;
+            console.log(realData);
+            console.log(response)
+            const realApi = new RealApi(response);
+            realApi.sortByPrice();
+
+        });
+
+        app.post("/filter_price", (request, response, next) => {
+            const realData = request.body;
+            const realApi = new RealApi(response);
+            realApi.filterRealByPrice(realData.minPrice, realData.maxPrice);
+
+        });
+
         //Request to index page
         app.get("/login", (req,res) => {
             res.render("login");

@@ -7,4 +7,5 @@ public class Constants {
     public static final String[] TYPE ={"SALE", "LEASE"};
     public static final String[] CARD_TITLE = {"My Clients", "My Real estates", "History"};
     public static final String[] CARD_SUBTITLE = {"List clients were traded", "See all your reals", "Show all real history"};
+    public static final String[] RANGE_OF_PRICE = {"0,100000", "100000,30000000"};
 }

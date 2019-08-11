@@ -35,5 +35,12 @@ public interface RetroReal {
     @POST("/num_real")
     @FormUrlEncoded
     Observable<Integer> countNumReal(@Field("id") String id);
+
+    @POST("/sort_price")
+    Call<List<RealEstate>> sortByPrice();
+
+    @POST("/filter_price")
+    @FormUrlEncoded
+    Observable<List<RealEstate>> filterRealByPrice(@Field("minPrice") double minPrice, @Field("maxPrice") double maxPrice);
 }
 
