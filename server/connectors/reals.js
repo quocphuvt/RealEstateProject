@@ -61,4 +61,32 @@ module.exports = class RealApi {
         });
     }
 
+    getHistoryByUserId(userId) {
+        realModel.find({_idUser: userId}, (err, data) => {
+            this.res.json(data);
+        })
+    }
+
+    getAvailableReals() {
+        realModel.find({status: "AVAILABLE"}, (err, data) => {
+            this.res.json(data);
+        })
+    }
+
+    deleteRealById(id) {
+        realModel.deleteOne({_id: new ObjectId(id)}, (err, data) => {
+            if(err) {
+                this.res.json(0)
+            } else this.res.json(1)
+        })
+    }
+
+    updateReal(real) {
+        realModel.findOneAndUpdate({_id: new ObjectId(real.id)}, real, (err, data) => {
+            if(err) {
+                this.res.json(0)
+            } else this.res.json(1)
+        })
+    }
+
 }

@@ -3,12 +3,13 @@ const Schema = mongoose.Schema;
 
 
 const idRealSchema = new Schema({
-    _idReal: String
+    _idReal: String,
+    isLike: Boolean
 })
 
 const favoriteSchema = new Schema({
     _idUser: String,
-    listReals: [
+    favoritedReals: [
         idRealSchema
     ]
 }); 

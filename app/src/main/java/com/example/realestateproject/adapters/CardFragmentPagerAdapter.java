@@ -28,7 +28,7 @@ public class CardFragmentPagerAdapter extends FragmentStatePagerAdapter implemen
         mFragments = new ArrayList<>();
         mBaseElevation = baseElevation;
         Class[] classes = {MyClientActivity.class, MyRealEstatesActivity.class, HistoryActivity.class};
-        int[] resources = {R.drawable.group, R.drawable.mansion, R.drawable.history};
+        int[] resources = {R.drawable.customer, R.drawable.mansion, R.drawable.history};
         for(int i = 0; i< 3; i++){
             addCardFragment(new CardFragment(Constants.CARD_TITLE[i], Constants.CARD_SUBTITLE[i], classes[i], resources[i]));
         }
@@ -57,7 +57,7 @@ public class CardFragmentPagerAdapter extends FragmentStatePagerAdapter implemen
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         Class[] classes = {MyClientActivity.class, MyRealEstatesActivity.class, HistoryActivity.class};
-        int[] resources = {R.drawable.group, R.drawable.mansion, R.drawable.history};
+        int[] resources = {R.drawable.customer, R.drawable.mansion, R.drawable.history};
         Object fragment = super.instantiateItem(container, position);
         mFragments.set(position, new CardFragment(Constants.CARD_TITLE[position], Constants.CARD_SUBTITLE[position], classes[position], resources[position]));
         return fragment;

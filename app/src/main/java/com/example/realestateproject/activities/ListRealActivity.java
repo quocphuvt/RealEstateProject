@@ -90,7 +90,6 @@ public class ListRealActivity extends AppCompatActivity implements ClickRealItem
 
     @Override
     public void onClickItem(String idReal) {
-        Toast.makeText(this, "" + idReal, Toast.LENGTH_SHORT).show();
         Intent i = new Intent(this, RealDetailsActivity.class);
         i.putExtra("id", idReal);
         startActivity(i);
@@ -139,8 +138,6 @@ public class ListRealActivity extends AppCompatActivity implements ClickRealItem
                 String price = Constants.RANGE_OF_PRICE[0];
                 int minPrice = getMinAndMaxPrice(price, 0);
                 int maxPrice = getMinAndMaxPrice(price, 1);
-                Log.i("min", minPrice + "");
-                Log.i("max", maxPrice + "");
                 Retrofit retrofit = RetroClient.getInstance();
                 RetroReal retroReal = retrofit.create(RetroReal.class);
                 retroReal.filterRealByPrice(minPrice, maxPrice)

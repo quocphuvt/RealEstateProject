@@ -137,10 +137,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         main_viewPager.setCurrentItem(2);
                         add_fab.show();
                         break;
-                    case R.id.navigation_contact:
-                        add_fab.show();
-                        main_viewPager.setCurrentItem(3);
-                        break;
                 }
                 return false;
             }

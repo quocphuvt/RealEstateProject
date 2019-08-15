@@ -51,14 +51,24 @@
                             android:layout_height="wrap_content">
 
                             <ImageView
-                                android:scaleType="center"
+                                android:scaleType="centerCrop"
                                 android:id="@+id/iv_realImg_detail"
                                 android:layout_width="wrap_content"
                                 android:layout_height="300dp"
                                 android:layout_marginLeft="5dp"
                                 android:layout_marginTop="10dp"
                                 android:layout_marginRight="5dp"
+                                android:src="@drawable/building2"
                                 ></ImageView>
+
+                            <ImageView
+                                android:id="@+id/iv_favorite"
+                                android:layout_alignParentRight="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_margin="20dp"
+                                android:src="@drawable/ic_favorite_unactive"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp" />
 
                             <androidx.cardview.widget.CardView
                                 android:layout_width="wrap_content"

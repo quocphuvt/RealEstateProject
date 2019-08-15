@@ -42,5 +42,19 @@ public interface RetroReal {
     @POST("/filter_price")
     @FormUrlEncoded
     Observable<List<RealEstate>> filterRealByPrice(@Field("minPrice") double minPrice, @Field("maxPrice") double maxPrice);
+
+    @POST("/history")
+    @FormUrlEncoded
+    Observable<List<RealEstate>> getHistoryByIdUser(@Field("id") String idUser);
+
+    @POST("/get_available_reals")
+    Call<List<RealEstate>> getAvailableReals();
+
+    @POST("/delete_real_by_id")
+    @FormUrlEncoded
+    Observable<Integer> deleteRealById(@Field("id") String idReal);
+
+    @POST("/update_real")
+    Call<Integer> updateReal(@Body RealEstate realEstate);
 }
 

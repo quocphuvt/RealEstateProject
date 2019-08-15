@@ -64,7 +64,6 @@ public class ListRealAdapter extends BaseAdapter {
         tv_seeDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Toast.makeText(context, "Click ne"+realEstate.getId(), Toast.LENGTH_SHORT).show();
                 clickRealItemListener.onClickItem(realEstate.getId());
             }
         });
