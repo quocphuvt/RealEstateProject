@@ -107,7 +107,7 @@ public class RealDetailsActivity extends AppCompatActivity implements View.OnCli
                         tv_name.setText(realEstate.getName());
                         tv_address.setText(realEstate.getAddress());
                         tv_type.setText(realEstate.getType());
-                        tv_description.setText(realEstate.getDescription() + ",sdjlskdhfsjdhfkjshdfkjshdjkfsdhsdkjfhskdjhfksjdhfkjsdhfkjsdhfkjsdhfjksdhfksjdhfksdjhfskjdhfskdjhfskdjhfksjdhfskjdhfjksdhfkjsdhfjskdhfkjsdhfkjsdh\nfjksdhfkjsdhfkjsdhfkjashfiuqwheihdsfkjhasdkjhasdkjahsdkjhsdjkfhsdkjfhsdkjhfsjdkhfkjsdhfkjsdhksdjhf\nfjksdhfkjsdhfkjsdhfkjashfiuqwheihdsfkjhasdkjhasdkjahsdkjhsdjkfhsdkjfhsdkjhfsjdkhfkjsdhfkjsdhksdjhf\nfjksdhfkjsdhfkjsdhfkjashfiuqwheihdsfkjhasdkjhasdkjahsdkjhsdjkfhsdkjfhsdkjhfsjdkhfkjsdhfkjsdhksdjhf");
+                        tv_description.setText(realEstate.getDescription());
                         tv_area.setText(String.format("%.0f", realEstate.getArea()) + " m2");
                         tv_price.setText("$ " + String.format("%.0f", realEstate.getPrice()));
                         tv_contact.setText(realEstate.getContactNumber());
