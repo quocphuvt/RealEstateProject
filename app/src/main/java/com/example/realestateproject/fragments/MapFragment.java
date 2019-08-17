@@ -198,7 +198,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                             .position(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longtitude)))
                                             .title(String.format("%.0f", realEstate.getPrice()) + " VND")
                                             .snippet(String.format("%.0f", realEstate.getArea()) + " m2")
-                                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
                             if (i == userResponses.getRealList().size() - 1) {
                                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longtitude)), 15));
                             }

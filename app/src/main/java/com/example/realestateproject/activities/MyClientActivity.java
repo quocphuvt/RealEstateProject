@@ -60,27 +60,30 @@ public class MyClientActivity extends AppCompatActivity implements ClickRealItem
             public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
                 if (response.isSuccessful()) {
                     UserResponses userResponses = response.body();
+                    favorites = userResponses.getFavorites();
                     if (userResponses.getStatus() == 1) {
                         realEstates = new ArrayList<>();
                         for (int i = 0; i < favorites.getFavoritedReals().size(); i++) {
                             FavoritedReal favoritedReal = favorites.getFavoritedReals().get(i);
-                            Call<UserResponses> callFavorite = retroReal.getRealById(favoritedReal.get_idReal());
-                            callFavorite.enqueue(new Callback<UserResponses>() {
-                                @Override
-                                public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
-                                    if (response.isSuccessful()) {
-                                        UserResponses userResponses = response.body();
-                                        if (userResponses.getStatus() == 1) {
-                                            realEstates.add(userResponses.getRealEstate());
+                            if(favoritedReal.isLike()) {
+                                Call<UserResponses> callFavorite = retroReal.getRealById(favoritedReal.get_idReal());
+                                callFavorite.enqueue(new Callback<UserResponses>() {
+                                    @Override
+                                    public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
+                                        if (response.isSuccessful()) {
+                                            UserResponses userResponses = response.body();
+                                            if (userResponses.getStatus() == 1) {
+                                                realEstates.add(userResponses.getRealEstate());
+                                            }
                                         }
                                     }
-                                }
 
-                                @Override
-                                public void onFailure(Call<UserResponses> call, Throwable t) {
+                                    @Override
+                                    public void onFailure(Call<UserResponses> call, Throwable t) {
 
-                                }
-                            });
+                                    }
+                                });
+                            }
                         }
                         ListRealAdapter listRealAdapter = new ListRealAdapter(realEstates, MyClientActivity.this, MyClientActivity.this);
                         lv_favorite.setAdapter(listRealAdapter);

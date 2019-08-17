@@ -11,6 +11,7 @@
         android:id="@+id/card_title_home"
         style="@style/TextAppearance.AppCompat.Title"
         android:layout_width="match_parent"
+        android:textColor="#2E2E2E"
         android:gravity="center"
         android:layout_height="wrap_content"
         android:text="My clients" />
@@ -19,6 +20,7 @@
         android:id="@+id/card_subtitle_home"
         android:layout_width="match_parent"
         android:layout_marginBottom="5dp"
+        android:textColor="@color/colorPrimaryDark"
         android:textStyle="italic"
         android:layout_height="wrap_content"
         android:text="List users trading" />
@@ -50,7 +52,7 @@
                 <Button
                     android:id="@+id/card_button_home"
                     android:layout_gravity="bottom"
-                    android:textColor="#4CAF50"
+                    android:textColor="@color/colorPrimary"
                     android:background="#Fff"
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
