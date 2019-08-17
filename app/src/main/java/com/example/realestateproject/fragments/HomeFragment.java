@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.example.realestateproject.R;
 import com.example.realestateproject.adapters.CardFragmentPagerAdapter;
 import com.example.realestateproject.models.RealEstate;
+import com.example.realestateproject.models.UserModel;
+import com.example.realestateproject.models.UserResponses;
 import com.example.realestateproject.retrofits.RetroClient;
 import com.example.realestateproject.retrofits.RetroReal;
 import com.example.realestateproject.supports.Constants;
@@ -60,17 +62,29 @@ public class HomeFragment extends Fragment {
         Retrofit retrofit = RetroClient.getInstance();
         RetroReal retroReal = retrofit.create(RetroReal.class);
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user", MODE_PRIVATE);
-        String userId = sharedPreferences.getString("id", ""); //Get user id when logining successful.
-        retroReal.countNumReal(userId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Integer>() {
-                    @Override
-                    public void accept(Integer numReal) throws Exception {
-                        String post = numReal < 2 ? " post" : " posts";
-                        tv_numReal.setText("You have: "+numReal.toString()+ post);
+        String userId = sharedPreferences.getString("id", "");
+        Call<UserResponses> callTotalReals = retroReal.countNumReal(userId);
+        callTotalReals.enqueue(new Callback<UserResponses>() {
+            @Override
+            public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
+                if(response.isSuccessful()) {
+                    UserResponses userResponses = response.body();
+                    if(userResponses.getStatus() == 0) {
+                        tv_numReal.setText(userResponses.getMessage());
                     }
-                });
+                    else {
+                        int numReal = userResponses.getRealList().size();
+                        String post = numReal < 2 ? " post" : " posts";
+                        tv_numReal.setText("You have: "+numReal+post);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserResponses> call, Throwable t) {
+
+            }
+        });
 
         home_viewPager.setAdapter(pagerAdapter);
         home_viewPager.setPageTransformer(false, fragmentCardShadowTransformer);

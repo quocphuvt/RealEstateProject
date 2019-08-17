@@ -14,14 +14,19 @@ import android.widget.Toast;
 import com.example.realestateproject.R;
 import com.example.realestateproject.activities.EditRealActivity;
 import com.example.realestateproject.models.RealEstate;
+import com.example.realestateproject.models.UserResponses;
 import com.example.realestateproject.retrofits.RetroClient;
 import com.example.realestateproject.retrofits.RetroReal;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class MyRealEstatesAdapter extends BaseAdapter {
@@ -69,20 +74,27 @@ public class MyRealEstatesAdapter extends BaseAdapter {
         btn_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                retroReal.deleteRealById(realEstate.getId())
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Consumer<Integer>() {
-                            @Override
-                            public void accept(Integer integer) throws Exception {
-                                if(integer == 0) {
-                                    Toast.makeText(context, "Something went wrong!", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    realEstates.remove(i);
-                                    notifyDataSetChanged();
-                                    Toast.makeText(context, "Your post was deleted", Toast.LENGTH_SHORT).show();}
+                Call<UserResponses> callDeleteReal = retroReal.deleteRealById(realEstate.getId());
+                callDeleteReal.enqueue(new Callback<UserResponses>() {
+                    @Override
+                    public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
+                        if(response.isSuccessful()) {
+                            UserResponses userResponses = response.body();
+                            if( userResponses.getStatus() == 1) {
+                                Snackbar.make(view, userResponses.getMessage(), Snackbar.LENGTH_SHORT).show();
+                                realEstates.remove(i);
                             }
-                        });
+                            else {
+                                Snackbar.make(view, userResponses.getMessage(), Snackbar.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<UserResponses> call, Throwable t) {
+
+                    }
+                });
             }
         });
 

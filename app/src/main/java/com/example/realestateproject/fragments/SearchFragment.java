@@ -26,6 +26,7 @@ import com.example.realestateproject.adapters.RealsForLeaseAdapter;
 import com.example.realestateproject.adapters.RealsForSaleAdapter;
 import com.example.realestateproject.interfaces.ClickRealItemListener;
 import com.example.realestateproject.models.RealEstate;
+import com.example.realestateproject.models.UserResponses;
 import com.example.realestateproject.retrofits.RetroClient;
 import com.example.realestateproject.retrofits.RetroReal;
 import com.example.realestateproject.supports.Constants;
@@ -71,19 +72,17 @@ public class SearchFragment extends Fragment implements ClickRealItemListener {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                callServer();
+                refreshData();
             }
         });
         final ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, Constants.CITIES);
         sv_location.setThreshold(1);
         sv_location.setAdapter(cityAdapter);
         sv_location.setOnTouchListener(new View.OnTouchListener() {
-
             @SuppressLint("ClickableViewAccessibility")
             @Override
             public boolean onTouch(View paramView, MotionEvent paramMotionEvent) {
                 if (Constants.CITIES.length > 0) {
-                    // show all suggestions
                     if (!sv_location.getText().toString().equals(""))
                         cityAdapter.getFilter().filter(null);
                     sv_location.showDropDown();
@@ -100,48 +99,62 @@ public class SearchFragment extends Fragment implements ClickRealItemListener {
                 startActivity(i);
             }
         });
-
-        callServer();
-
-
+        this.refreshData();
         return view;
     }
 
-    private void callServer(){
+    private void refreshData(){
         Retrofit retrofit = RetroClient.getInstance();
         retroReal = retrofit.create(RetroReal.class);
-        Call<List<RealEstate>> callForLease = retroReal.getAllRealsForLease();
-        callForLease.enqueue(new Callback<List<RealEstate>>() {
+        Call<UserResponses> callForLease = retroReal.getAllRealsForLease();
+        callForLease.enqueue(new Callback<UserResponses>() {
             @Override
-            public void onResponse(Call<List<RealEstate>> call, Response<List<RealEstate>> response) {
-                rv_lease.setLayoutManager(new GridLayoutManager(getContext(), 1, RecyclerView.HORIZONTAL, false));
-                realsForLeaseAdapter = new RealsForLeaseAdapter(response.body(), getContext(), SearchFragment.this);
-                rv_lease.setAdapter(realsForLeaseAdapter);
+            public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
+                if(response.isSuccessful()) {
+                    UserResponses userResponses = response.body();
+                    if(userResponses.getStatus() == 1) {
+                        setRealListAdapter(userResponses.getRealList(), 0);
+                    }
+                }
                 if(swipeRefreshLayout.isRefreshing()){
                     swipeRefreshLayout.setRefreshing(false);
                 }
             }
-
             @Override
-            public void onFailure(Call<List<RealEstate>> call, Throwable t) {
+            public void onFailure(Call<UserResponses> call, Throwable t) {
 
             }
         });
 
-        Call<List<RealEstate>> callForSale = retroReal.getAllRealsForSale();
-        callForSale.enqueue(new Callback<List<RealEstate>>() {
+        Call<UserResponses> callForSale = retroReal.getAllRealsForSale();
+        callForSale.enqueue(new Callback<UserResponses>() {
             @Override
-            public void onResponse(Call<List<RealEstate>> call, Response<List<RealEstate>> response) {
-                rv_sale.setLayoutManager(new GridLayoutManager(getContext(), 1, RecyclerView.HORIZONTAL, false));
-                realsForSaleAdapter = new RealsForSaleAdapter(response.body(), getContext(), SearchFragment.this);
-                rv_sale.setAdapter(realsForSaleAdapter);
+            public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
+                if(response.isSuccessful()) {
+                    UserResponses userResponses = response.body();
+                    if(userResponses.getStatus() == 1) {
+                        setRealListAdapter(userResponses.getRealList(), 1);
+                    }
+                }
             }
-
             @Override
-            public void onFailure(Call<List<RealEstate>> call, Throwable t) {
+            public void onFailure(Call<UserResponses> call, Throwable t) {
 
             }
         });
+    }
+
+    private void setRealListAdapter(List<RealEstate> realEstates, int i) {
+        if(i == 0) { //LEASE
+            rv_lease.setLayoutManager(new GridLayoutManager(getContext(), 1, RecyclerView.HORIZONTAL, false));
+            realsForLeaseAdapter = new RealsForLeaseAdapter(realEstates, getContext(), SearchFragment.this);
+            rv_lease.setAdapter(realsForLeaseAdapter);
+        }
+        else if(i == 1) { //SALE
+            rv_sale.setLayoutManager(new GridLayoutManager(getContext(), 1, RecyclerView.HORIZONTAL, false));
+            realsForSaleAdapter = new RealsForSaleAdapter(realEstates, getContext(), SearchFragment.this);
+            rv_sale.setAdapter(realsForSaleAdapter);
+        }
     }
 
     @Override

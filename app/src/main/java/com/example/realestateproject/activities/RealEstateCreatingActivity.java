@@ -31,6 +31,7 @@ import com.esafirm.imagepicker.model.Image;
 import com.example.realestateproject.R;
 import com.example.realestateproject.adapters.CityAdapter;
 import com.example.realestateproject.models.RealEstate;
+import com.example.realestateproject.models.UserResponses;
 import com.example.realestateproject.retrofits.RetroClient;
 import com.example.realestateproject.retrofits.RetroReal;
 import com.example.realestateproject.retrofits.RetroUser;
@@ -160,19 +161,23 @@ public class RealEstateCreatingActivity extends AppCompatActivity implements Vie
                     Toast.makeText(this, "Choose your picture for your real", Toast.LENGTH_SHORT).show();
                 } else {
                     RealEstate realEstate = new RealEstate(realName, realAddress, realContact, realDescription, Double.parseDouble(realPrice), Double.parseDouble(realArea), city, type, status, location, img, userId);
-                    Call<RealEstate> call = retroReal.createReal(realEstate);
-                    call.enqueue(new Callback<RealEstate>() {
+                    Call<UserResponses> call = retroReal.createReal(realEstate);
+                    call.enqueue(new Callback<UserResponses>() {
                         @Override
-                        public void onResponse(Call<RealEstate> call, Response<RealEstate> response) {
+                        public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
                             if (response.isSuccessful()) {
-                                Toast.makeText(RealEstateCreatingActivity.this, "Real post was created!", Toast.LENGTH_SHORT).show();
-                                finish();
-                                Log.i("Result:", response.body().toString());
+                                UserResponses userResponses = response.body();
+                                if( userResponses.getStatus() == 1) {
+                                    Toast.makeText(RealEstateCreatingActivity.this, userResponses.getMessage(), Toast.LENGTH_SHORT).show();
+                                    finish();
+                                    Log.i("Result:", response.body().toString());
+                                }
+                                else Toast.makeText(RealEstateCreatingActivity.this, userResponses.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
 
                         @Override
-                        public void onFailure(Call<RealEstate> call, Throwable t) {
+                        public void onFailure(Call<UserResponses> call, Throwable t) {
                             Toast.makeText(RealEstateCreatingActivity.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });

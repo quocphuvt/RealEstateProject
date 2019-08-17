@@ -23,10 +23,12 @@ import com.esafirm.imagepicker.features.ReturnMode;
 import com.example.realestateproject.R;
 import com.example.realestateproject.adapters.CityAdapter;
 import com.example.realestateproject.models.UserModel;
+import com.example.realestateproject.models.UserResponses;
 import com.example.realestateproject.retrofits.RetroClient;
 import com.example.realestateproject.retrofits.RetroUser;
 import com.example.realestateproject.supports.Constants;
 import com.example.realestateproject.supports.Utils;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.SimpleDateFormat;
@@ -85,7 +87,6 @@ public class UpdateProfileUserActivity extends AppCompatActivity implements View
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(adapterView.getItemAtPosition(i).equals("Choose city...")){
-                    //TODO: SOME THING
                     city="";
                 }
                 else city = adapterView.getItemAtPosition(i).toString();
@@ -97,7 +98,7 @@ public class UpdateProfileUserActivity extends AppCompatActivity implements View
             }
         });
         SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
-        userId = sharedPreferences.getString("id", ""); //Get user id when logining successful.
+        userId = sharedPreferences.getString("id", "");
         getCurrentUser(userId);
         chk_male.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,31 +124,35 @@ public class UpdateProfileUserActivity extends AppCompatActivity implements View
                 String birthday = tv_birthday.getText().toString().trim();
                 String phonenumber = et_phoneNumber.getText().toString().trim();
                 if(fullname.isEmpty() || phonenumber.isEmpty() || city.length() == 0){
-                    Toast.makeText(this, "Please type all field", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(view, "Please type all field", Snackbar.LENGTH_SHORT).show();
                 }
                 else {
                     UserModel userModel = new UserModel(userId, fullname, birthday, phonenumber, city, gender, img);
-                    Call<UserModel> call = retroUser.updateUserData(userModel);
-                    call.enqueue(new Callback<UserModel>() {
+                    Call<UserResponses> call = retroUser.updateUserData(userModel);
+                    call.enqueue(new Callback<UserResponses>() {
                         @Override
-                        public void onResponse(Call<UserModel> call, Response<UserModel> response) {
+                        public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
                             if(response.isSuccessful()){
-                                Toast.makeText(UpdateProfileUserActivity.this, "Your profile was changed", Toast.LENGTH_SHORT).show();
-                                finish();
+                                UserResponses userResponses = response.body();
+                                if(userResponses.getStatus() == 1) {
+                                    Snackbar.make(view, userResponses.getMessage(), Snackbar.LENGTH_SHORT).show();
+                                    finish();
+                                }
+                                else if(userResponses.getStatus() == 0) {
+                                    Snackbar.make(view, userResponses.getMessage(), Snackbar.LENGTH_SHORT).show();
+                                }
+
                             }
                         }
 
                         @Override
-                        public void onFailure(Call<UserModel> call, Throwable t) {
+                        public void onFailure(Call<UserResponses> call, Throwable t) {
 
                         }
                     });
                 }
                 break;
-
-
             case R.id.tv_cancel_editUser:
-                //Doing something
                 finish();
                 break;
             case R.id.tv_birthday_editUser:
@@ -198,12 +203,14 @@ public class UpdateProfileUserActivity extends AppCompatActivity implements View
     }
 
     private void getCurrentUser(String id) {
-        retroUser.getCurrentUser(id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<UserModel>() {
-                    @Override
-                    public void accept(UserModel userModel) throws Exception {
+        Call<UserResponses> callCurrentUser = retroUser.getCurrentUser(id);
+        callCurrentUser.enqueue(new Callback<UserResponses>() {
+            @Override
+            public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
+                if(response.isSuccessful()) {
+                    UserResponses userResponses = response.body();
+                    if(userResponses.getStatus() == 1) {
+                        UserModel userModel = userResponses.getUserModel();
                         et_fullName.setText(userModel.getFullName());
                         et_phoneNumber.setText(userModel.getPhoneNumber());
                         iv_avatar.setImageBitmap(Utils.decodeBase64Image(userModel.getAvatar()));
@@ -217,7 +224,17 @@ public class UpdateProfileUserActivity extends AppCompatActivity implements View
                             return;
                         }
                     }
-                });
+                    else {
+                        Toast.makeText(UpdateProfileUserActivity.this, "Please check your connection", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserResponses> call, Throwable t) {
+
+            }
+        });
     }
 
     public void setToolbar(String title) {

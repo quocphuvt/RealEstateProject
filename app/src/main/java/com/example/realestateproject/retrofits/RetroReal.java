@@ -1,60 +1,65 @@
 package com.example.realestateproject.retrofits;
 
 import com.example.realestateproject.models.RealEstate;
+import com.example.realestateproject.models.UserResponses;
 
 import java.util.List;
 
 import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface RetroReal {
-    @POST("/real_creating")
-    Call<RealEstate> createReal(@Body RealEstate realEstate);
+    @POST("/real/create")
+    Call<UserResponses> createReal(@Body RealEstate realEstate);
 
-    @POST("/list_real")
-    Call<List<RealEstate>> getListreals();
+    @GET("/real/realList/all")
+    Call<UserResponses> getAllReals();
 
-    @POST("/list_real_for_lease")
-    Call<List<RealEstate>> getAllRealsForLease();
+    @GET("/real/realList/sort")
+    Call<UserResponses> sortByPrice();
 
-    @POST("/list_real_for_sale")
-    Call<List<RealEstate>> getAllRealsForSale();
+    @GET("/real/realList/filter")
+    Call<UserResponses> filterRealByPrice(@Query("minPrice") int minPrice,
+                                          @Query("maxPrice") int maxPrice);
 
-    @POST("/real_by_id")
-    @FormUrlEncoded
-    Observable<RealEstate> getRealById(@Field("id") String id);
+    @GET("/real/realList/lease")
+    Call<UserResponses> getAllRealsForLease();
 
-    @POST("/real_by_location")
-    @FormUrlEncoded
-    Observable<RealEstate> getRealByLocation(@Field("location") String location);
+    @GET("/real/realList/sale")
+    Call<UserResponses> getAllRealsForSale();
 
-    @POST("/num_real")
-    @FormUrlEncoded
-    Observable<Integer> countNumReal(@Field("id") String id);
+    @GET("/real/{city}/realList")
+    Call<UserResponses> getRealListByCity(@Path("city") String city);
 
-    @POST("/sort_price")
-    Call<List<RealEstate>> sortByPrice();
+    @GET("/real/{id}")
+    Call<UserResponses> getRealById(@Path("id") String realId);
 
-    @POST("/filter_price")
-    @FormUrlEncoded
-    Observable<List<RealEstate>> filterRealByPrice(@Field("minPrice") double minPrice, @Field("maxPrice") double maxPrice);
+    @GET("/real/location/{location}")
+    Call<UserResponses> getRealByLocation(@Path("location") String location);
 
-    @POST("/history")
-    @FormUrlEncoded
-    Observable<List<RealEstate>> getHistoryByIdUser(@Field("id") String idUser);
+    @GET("/real/{userId}/totalReals")
+    Call<UserResponses> countNumReal(@Path("userId") String idUser);
 
-    @POST("/get_available_reals")
-    Call<List<RealEstate>> getAvailableReals();
+    @GET("/real/{userId}/history")
+    Call<UserResponses> getHistoryByIdUser(@Path("userId") String idUser);
 
-    @POST("/delete_real_by_id")
-    @FormUrlEncoded
-    Observable<Integer> deleteRealById(@Field("id") String idReal);
+    @GET("/real/realList/available")
+    Call<UserResponses> getAvailableReals();
 
-    @POST("/update_real")
-    Call<Integer> updateReal(@Body RealEstate realEstate);
+    @DELETE("/real/{realId}")
+    Call<UserResponses> deleteRealById(@Path("realId") String realId);
+
+    @PUT("/real")
+    Call<UserResponses> updateReal(@Body RealEstate realEstate);
 }
 

@@ -19,6 +19,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.realestateproject.R;
 import com.example.realestateproject.models.RealEstate;
+import com.example.realestateproject.models.UserResponses;
 import com.example.realestateproject.retrofits.RetroClient;
 import com.example.realestateproject.retrofits.RetroReal;
 import com.example.realestateproject.supports.Constants;
@@ -67,16 +68,15 @@ public class EditRealActivity extends AppCompatActivity implements LayoutInterfa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_real);
         initialView();
-        Retrofit retrofitClient = RetroClient.getInstance();
-        retroReal = retrofitClient.create(RetroReal.class);
         this.setToolbar("Edit your post");
-        chk_sale.setOnClickListener(this);
-        chk_lease.setOnClickListener(this);
-        Intent i = getIntent();
-        idReal = i.getStringExtra("id");
         ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, Constants.CITIES);
         cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sp_city.setAdapter(cityAdapter);
+        Intent i = getIntent();
+        idReal = i.getStringExtra("id");
+        Retrofit retrofitClient = RetroClient.getInstance();
+        retroReal = retrofitClient.create(RetroReal.class);
+
         sp_city.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -91,20 +91,22 @@ public class EditRealActivity extends AppCompatActivity implements LayoutInterfa
 
             }
         });
+        chk_sale.setOnClickListener(this);
+        chk_lease.setOnClickListener(this);
         btn_realSubmit.setOnClickListener(this);
         tv_cancel.setOnClickListener(this);
         this.getRealById(idReal);
     }
 
     private void getRealById(String idReal) {
-        Retrofit retrofit = RetroClient.getInstance();
-        RetroReal retroReal = retrofit.create(RetroReal.class);
-        retroReal.getRealById(idReal)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<RealEstate>() {
-                    @Override
-                    public void accept(RealEstate realEstate) throws Exception {
+        Call<UserResponses> callReal = retroReal.getRealById(idReal);
+        callReal.enqueue(new Callback<UserResponses>() {
+            @Override
+            public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
+                if(response.isSuccessful()) {
+                    UserResponses userResponses = response.body();
+                    if(userResponses.getStatus() == 1) {
+                        RealEstate realEstate = userResponses.getRealEstate();
                         getSupportActionBar().setTitle(realEstate.getCity());
                         et_realName.setText(realEstate.getName());
                         et_realAddress.setText(realEstate.getAddress());
@@ -120,7 +122,14 @@ public class EditRealActivity extends AppCompatActivity implements LayoutInterfa
                         location = realEstate.getLocation();
                         type = realEstate.getType();
                     }
-                });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserResponses> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override
@@ -160,18 +169,24 @@ public class EditRealActivity extends AppCompatActivity implements LayoutInterfa
                     Toast.makeText(this, "Choose your type of real", Toast.LENGTH_SHORT).show();
                 } else {
                     RealEstate realEstate = new RealEstate(idReal,realName, realAddress, realContact, realDescription, Double.parseDouble(realPrice), Double.parseDouble(realArea), city, type, status, location, img, userId);
-                    Call<Integer> call = retroReal.updateReal(realEstate);
-                    call.enqueue(new Callback<Integer>() {
+                    Call<UserResponses> call = retroReal.updateReal(realEstate);
+                    call.enqueue(new Callback<UserResponses>() {
                         @Override
-                        public void onResponse(Call<Integer> call, Response<Integer> response) {
+                        public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
                             if (response.isSuccessful()) {
-                                Toast.makeText(EditRealActivity.this, "Real was editted!", Toast.LENGTH_SHORT).show();
-                                finish();
+                                UserResponses userResponses = response.body();
+                                if(userResponses.getStatus() == 1) {
+                                    Toast.makeText(EditRealActivity.this, userResponses.getMessage(), Toast.LENGTH_SHORT).show();
+                                    finish();
+                                }
+                                else if (userResponses.getStatus() == 0) {
+                                    Toast.makeText(EditRealActivity.this, userResponses.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
 
                         @Override
-                        public void onFailure(Call<Integer> call, Throwable t) {
+                        public void onFailure(Call<UserResponses> call, Throwable t) {
                             Toast.makeText(EditRealActivity.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });

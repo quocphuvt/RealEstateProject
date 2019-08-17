@@ -14,6 +14,7 @@ import com.example.realestateproject.interfaces.ClickRealItemListener;
 import com.example.realestateproject.models.FavoritedReal;
 import com.example.realestateproject.models.Favorites;
 import com.example.realestateproject.models.RealEstate;
+import com.example.realestateproject.models.UserResponses;
 import com.example.realestateproject.retrofits.RetroClient;
 import com.example.realestateproject.retrofits.RetroReal;
 import com.example.realestateproject.retrofits.RetroUser;
@@ -58,15 +59,23 @@ public class MyClientActivity extends AppCompatActivity implements ClickRealItem
                     realEstates = new ArrayList<>();
                     for (int i = 0; i < favorites.getFavoritedReals().size(); i++) {
                         FavoritedReal favoritedReal = favorites.getFavoritedReals().get(i);
-                        retroReal.getRealById(favoritedReal.get_idReal())
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(new Consumer<RealEstate>() {
-                                    @Override
-                                    public void accept(RealEstate realEstate) throws Exception {
-                                        realEstates.add(realEstate);
+                        Call<UserResponses> callFavorite = retroReal.getRealById(favoritedReal.get_idReal());
+                        callFavorite.enqueue(new Callback<UserResponses>() {
+                            @Override
+                            public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
+                                if(response.isSuccessful()) {
+                                    UserResponses userResponses = response.body();
+                                    if(userResponses.getStatus() == 1) {
+                                        realEstates.add(userResponses.getRealEstate());
                                     }
-                                });
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<UserResponses> call, Throwable t) {
+
+                            }
+                        });
                     }
                         ListRealAdapter listRealAdapter = new ListRealAdapter(realEstates, MyClientActivity.this, MyClientActivity.this);
                         lv_favorite.setAdapter(listRealAdapter);

@@ -2,6 +2,7 @@ package com.example.realestateproject.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ExpandableListAdapter;
 import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,6 +27,7 @@ import com.example.realestateproject.R;
 import com.example.realestateproject.models.FavoritedReal;
 import com.example.realestateproject.models.Favorites;
 import com.example.realestateproject.models.RealEstate;
+import com.example.realestateproject.models.UserResponses;
 import com.example.realestateproject.retrofits.RetroClient;
 import com.example.realestateproject.retrofits.RetroReal;
 import com.example.realestateproject.retrofits.RetroUser;
@@ -48,17 +51,15 @@ public class RealDetailsActivity extends AppCompatActivity implements View.OnCli
     private Button btn_selected, btn_seeUsOnMap;
     private Toolbar toolbar;
     private RatingBar ratingBar;
-    private ImageView iv_realImg;
+    private ImageView iv_realImg, iv_favorite;
     private LinearLayout layout_makeCall;
-    private String phoneNumber;
-    private ImageView iv_favorite;
+    private String phoneNumber, idReal, idUser;
     private boolean isLike = false;
-    private String idReal;
-    private String idUser;
-    private Retrofit retrofit;
-    private RetroUser retroUser;
     private List<FavoritedReal> favoritedReals = new ArrayList<>();
     private Favorites favorites = null;
+    private Retrofit retrofit;
+    private RetroUser retroUser;
+    private RetroReal retroReal;
 
     private void initView() {
         tv_name = findViewById(R.id.tv_name_realDetail);
@@ -84,25 +85,32 @@ public class RealDetailsActivity extends AppCompatActivity implements View.OnCli
         this.initView();
         retrofit = RetroClient.getInstance();
         retroUser = retrofit.create(RetroUser.class);
+        retroReal = retrofit.create(RetroReal.class);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        btn_selected.setOnClickListener(this);
-        layout_makeCall.setOnClickListener(this);
-        iv_favorite.setOnClickListener(this);
         ratingBar.setRating(3);
+
         Intent i = getIntent();
         idReal = i.getStringExtra("id");
         SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
         idUser = sharedPreferences.getString("id", "");
+        this.getRealById(idReal);
         this.getFavoritedReals();
-        RetroReal retroReal = retrofit.create(RetroReal.class);
-        retroReal.getRealById(idReal)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<RealEstate>() {
-                    @Override
-                    public void accept(RealEstate realEstate) throws Exception {
+        btn_selected.setOnClickListener(this);
+        layout_makeCall.setOnClickListener(this);
+        iv_favorite.setOnClickListener(this);
+    }
+
+    private void getRealById(String idReal) {
+        Call<UserResponses> callReal = retroReal.getRealById(idReal);
+        callReal.enqueue(new Callback<UserResponses>() {
+            @Override
+            public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
+                if(response.isSuccessful()) {
+                    UserResponses userResponses = response.body();
+                    if(userResponses.getStatus() == 1) {
+                        RealEstate realEstate = userResponses.getRealEstate();
                         getSupportActionBar().setTitle(realEstate.getCity());
                         tv_name.setText(realEstate.getName());
                         tv_address.setText(realEstate.getAddress());
@@ -111,10 +119,22 @@ public class RealDetailsActivity extends AppCompatActivity implements View.OnCli
                         tv_area.setText(String.format("%.0f", realEstate.getArea()) + " m2");
                         tv_price.setText("$ " + String.format("%.0f", realEstate.getPrice()));
                         tv_contact.setText(realEstate.getContactNumber());
-                        iv_realImg.setImageBitmap(Utils.decodeBase64Image(realEstate.getImg()));
+                        try{
+                            Bitmap bitmapImg = Utils.decodeBase64Image(realEstate.getImg());
+                            iv_realImg.setImageBitmap(bitmapImg);
+                        }catch (Exception e) {
+                            Log.i("bitmap", e+"");
+                        }
                         phoneNumber = realEstate.getContactNumber();
-                    }
-                });
+                    } else return;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserResponses> call, Throwable t) {
+
+            }
+        });
     }
 
     private void getFavoritedReals() {

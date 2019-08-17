@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.example.realestateproject.adapters.MyRealEstatesAdapter;
 import com.example.realestateproject.models.RealEstate;
+import com.example.realestateproject.models.UserResponses;
 import com.example.realestateproject.retrofits.RetroClient;
 import com.example.realestateproject.retrofits.RetroReal;
 
@@ -24,6 +25,7 @@ import retrofit2.Retrofit;
 
 public class MyRealEstatesActivity extends AppCompatActivity{
     private ListView lv_myRealEstates;
+    private RetroReal retroReal;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,23 +37,27 @@ public class MyRealEstatesActivity extends AppCompatActivity{
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Retrofit retrofit = RetroClient.getInstance();
-        RetroReal retroReal = retrofit.create(RetroReal.class);
-        getAvailableReals(retroReal);
+        retroReal = retrofit.create(RetroReal.class);
+        getAvailableReals();
     }
 
-    private void getAvailableReals(RetroReal retroReal) {
-        Call<List<RealEstate>> call = retroReal.getAvailableReals();
-        call.enqueue(new Callback<List<RealEstate>>() {
+    private void getAvailableReals() {
+        Call<UserResponses> call = retroReal.getAvailableReals();
+        call.enqueue(new Callback<UserResponses>() {
             @Override
-            public void onResponse(Call<List<RealEstate>> call, Response<List<RealEstate>> response) {
+            public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
                 if(response.isSuccessful()){
-                    MyRealEstatesAdapter myRealEstatesAdapter = new MyRealEstatesAdapter(response.body(), MyRealEstatesActivity.this);
-                    lv_myRealEstates.setAdapter(myRealEstatesAdapter);
+                    UserResponses userResponses = response.body();
+                    if( userResponses.getStatus() == 1) {
+                        MyRealEstatesAdapter myRealEstatesAdapter = new MyRealEstatesAdapter(userResponses.getRealList(), MyRealEstatesActivity.this);
+                        lv_myRealEstates.setAdapter(myRealEstatesAdapter);
+                    }
+                    else return;
                 }
             }
 
             @Override
-            public void onFailure(Call<List<RealEstate>> call, Throwable t) {
+            public void onFailure(Call<UserResponses> call, Throwable t) {
 
             }
         });

@@ -27,10 +27,9 @@ import android.widget.Toast;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.model.Image;
-import com.example.realestateproject.MainActivity;
 import com.example.realestateproject.R;
-import com.example.realestateproject.adapters.CityAdapter;
 import com.example.realestateproject.models.UserModel;
+import com.example.realestateproject.models.UserResponses;
 import com.example.realestateproject.retrofits.RetroClient;
 import com.example.realestateproject.retrofits.RetroUser;
 import com.example.realestateproject.supports.Constants;
@@ -38,14 +37,9 @@ import com.example.realestateproject.supports.LayoutInterface;
 import com.example.realestateproject.supports.Utils;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-
-import io.reactivex.disposables.CompositeDisposable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -101,7 +95,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 chooseGender(view);
             }
         });
-        //Init retrofit to class
         Retrofit retrofitClient = RetroClient.getInstance();
         retroUser = retrofitClient.create(RetroUser.class);
         ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, Constants.CITIES);
@@ -111,7 +104,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if(adapterView.getItemAtPosition(i).equals("Choose city...")){
-                    //TODO: SOME THING
                     city="";
                 }
                 else city = adapterView.getItemAtPosition(i).toString();
@@ -146,7 +138,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     Toast.makeText(this, "Please set your avatar", Toast.LENGTH_SHORT).show();
                 } else {
                     UserModel userModel = new UserModel(id, password, fullName, birthday, city, phoneNumber, gender, img);
-                    this.registerUser(userModel);
+                    this.registerUser(userModel, view);
                     Snackbar.make(view, "User was created!", Snackbar.LENGTH_SHORT).show();
                 }
                 break;
@@ -186,26 +178,28 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    private void registerUser(UserModel userModel) {
+    private void registerUser(UserModel userModel, View view) {
         if (TextUtils.isEmpty(userModel.getId()) || TextUtils.isEmpty(userModel.getPassword())) {
             Toast.makeText(this, "Id/Password is required", Toast.LENGTH_SHORT).show();
         } else {
-            Call<UserModel> call = retroUser.registerUser(userModel);
-            call.enqueue(new Callback<UserModel>() {
+            Call<UserResponses> call = retroUser.registerUser(userModel);
+            call.enqueue(new Callback<UserResponses>() {
                 @Override
-                public void onResponse(Call<UserModel> call, Response<UserModel> response) {
-                    if (response.isSuccessful()) {
-                        if(response.body().getId() != null){
-                            Toast.makeText(RegisterActivity.this, "User was created!", Toast.LENGTH_SHORT).show();
-                            finish();
-                            Log.i("Result:", response.body().toString());
+                public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
+                    if(response.isSuccessful()) {
+                        if(response.body().getStatus() == 0) {
+                            Snackbar.make(view, response.body().getMessage(), Snackbar.LENGTH_SHORT).show();
                         }
-                        else Toast.makeText(RegisterActivity.this, "ID was existed", Toast.LENGTH_SHORT).show();
+                        else if (response.body().getStatus() == 1) {
+                            Snackbar.make(view, response.body().getMessage(), Snackbar.LENGTH_SHORT).show();
+                            finish();
+                        }
                     }
                 }
+
                 @Override
-                public void onFailure(Call<UserModel> call, Throwable t) {
-                    Toast.makeText(RegisterActivity.this, ""+t.getMessage(), Toast.LENGTH_SHORT).show();
+                public void onFailure(Call<UserResponses> call, Throwable t) {
+
                 }
             });
         }

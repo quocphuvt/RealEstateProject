@@ -14,25 +14,28 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Part;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface RetroUser {
-    @POST("/register")
-    Call<UserModel> registerUser(@Body UserModel userModel);
+    @POST("/user/register")
+    Call<UserResponses> registerUser(@Body UserModel userModel);
 
-    @POST("/sign_in")
-    @FormUrlEncoded
-    Observable<UserResponses> checkUserLogin(@Field("id") String id, @Field("password") String password);
+    @GET("/user/signIn")
+    Call<UserResponses> checkUserLogin(@Query("id") String id,
+                                       @Query("password") String password);
 
-    @POST("/get_user")
-    @FormUrlEncoded
-    Observable<UserModel> getCurrentUser(@Field("id") String id);
+    @GET("/user/{id}")
+    Call<UserResponses> getCurrentUser(@Path("id") String id);
 
-    @POST("/update_user")
-    Call<UserModel> updateUserData(@Body UserModel userModel);
+    @PUT("/user")
+    Call<UserResponses> updateUserData(@Body UserModel userModel);
 
-    @POST("/favorites")
+    @POST("/user/saveFavorite")
     Call<Favorites> setFavoritedReal(@Body Favorites favorites);
 
-    @GET("/get_favorites")
+    @GET("/user/favoriteList")
     Call<Favorites> getFavoritedReals();
  }

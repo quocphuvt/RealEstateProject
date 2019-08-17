@@ -26,6 +26,7 @@ import com.example.realestateproject.models.UserResponses;
 import com.example.realestateproject.retrofits.RetroClient;
 import com.example.realestateproject.retrofits.RetroUser;
 import com.example.realestateproject.supports.LayoutInterface;
+import com.google.android.material.snackbar.Snackbar;
 
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -81,32 +82,38 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.btn_login_signIn:
                 final String id = et_id.getText().toString().trim();
                 final String password = et_pasword.getText().toString().trim();
-                retroUser.checkUserLogin(id, password)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Consumer<UserResponses>() {
-                            @Override
-                            public void accept(UserResponses userResponses) throws Exception {
-                                if (userResponses.getStatus().equals("id failed")) {
-                                    Toast.makeText(SignInActivity.this, "" + userResponses.getMessage(), Toast.LENGTH_SHORT).show();
-                                } else if (userResponses.getStatus().equals("password failed")) {
-                                    Toast.makeText(SignInActivity.this, "" + userResponses.getMessage(), Toast.LENGTH_SHORT).show();
-                                } else if(userResponses.getStatus().equals("success")){
-                                    SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                                    editor.putString("id", id);
-                                    editor.putString("password", password);
-                                    editor.putBoolean("autoLogin", true);
-                                    if(chk_rememberMe.isChecked()){
-                                        editor.putBoolean("rememberAccount", true);
-                                    }else editor.putBoolean("rememberAccount", false);
-                                    editor.apply();
-                                    Toast.makeText(SignInActivity.this, "" + userResponses.getMessage(), Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(SignInActivity.this, HomeActivity.class));
-                                    finish();
-                                }
+                Call<UserResponses> callSignIn = retroUser.checkUserLogin(id, password);
+                callSignIn.enqueue(new Callback<UserResponses>() {
+                    @Override
+                    public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
+                        if(response.isSuccessful()) {
+                            UserResponses userResponses = response.body();
+                            if (userResponses.getStatus() == -2) {
+                                Snackbar.make(view, userResponses.getMessage(), Snackbar.LENGTH_SHORT).show();
+                            } else if (userResponses.getStatus() == -1) {
+                                Snackbar.make(view, userResponses.getMessage(), Snackbar.LENGTH_SHORT).show();
+                            } else if(userResponses.getStatus() == 1){
+                                SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("id", id);
+                                editor.putString("password", password);
+                                editor.putBoolean("autoLogin", true);
+                                if(chk_rememberMe.isChecked()){
+                                    editor.putBoolean("rememberAccount", true);
+                                }else editor.putBoolean("rememberAccount", false);
+                                editor.apply();
+                                Snackbar.make(view, userResponses.getMessage(), Snackbar.LENGTH_SHORT).show();
+                                startActivity(new Intent(SignInActivity.this, HomeActivity.class));
+                                finish();
                             }
-                        });
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<UserResponses> call, Throwable t) {
+
+                    }
+                });
                 break;
             case R.id.btn_register_signIn:
                 startActivity(new Intent(this, RegisterActivity.class));

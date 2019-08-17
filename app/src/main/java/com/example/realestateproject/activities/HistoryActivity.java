@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.example.realestateproject.adapters.ListRealAdapter;
 import com.example.realestateproject.interfaces.ClickRealItemListener;
 import com.example.realestateproject.models.RealEstate;
+import com.example.realestateproject.models.UserResponses;
 import com.example.realestateproject.retrofits.RetroClient;
 import com.example.realestateproject.retrofits.RetroReal;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -15,6 +16,7 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
@@ -27,6 +29,9 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class HistoryActivity extends AppCompatActivity implements ClickRealItemListener {
@@ -45,21 +50,31 @@ public class HistoryActivity extends AppCompatActivity implements ClickRealItemL
         lv_history = findViewById(R.id.lv_history);
         Retrofit retrofit = RetroClient.getInstance();
         RetroReal retroReal = retrofit.create(RetroReal.class);
-        retroReal.getHistoryByIdUser(idUser)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<RealEstate>>() {
-                    @Override
-                    public void accept(List<RealEstate> realEstates) throws Exception {
-                        ListRealAdapter listRealAdapter = new ListRealAdapter(realEstates, HistoryActivity.this, HistoryActivity.this );
+        Call<UserResponses> callHistory = retroReal.getHistoryByIdUser(idUser);
+        callHistory.enqueue(new Callback<UserResponses>() {
+            @Override
+            public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
+                if(response.isSuccessful()) {
+                    UserResponses userResponses = response.body();
+                    if( userResponses.getStatus() == 1) {
+                        ListRealAdapter listRealAdapter = new ListRealAdapter(userResponses.getRealList(), HistoryActivity.this, HistoryActivity.this );
                         lv_history.setAdapter(listRealAdapter);
                     }
-                });
+                    else if( userResponses.getStatus() == 0) {
+                        Log.i("errors", userResponses.getMessage());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserResponses> call, Throwable t) {
+
+            }
+        });
     }
 
     @Override
     public void onClickItem(String idReal) {
-        Toast.makeText(this, "" + idReal, Toast.LENGTH_SHORT).show();
         Intent i = new Intent(this, RealDetailsActivity.class);
         i.putExtra("id", idReal);
         startActivity(i);

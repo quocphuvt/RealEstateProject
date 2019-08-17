@@ -64,6 +64,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -136,13 +137,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             public void onMapReady(GoogleMap googleMap) {
                 mMap = googleMap;
 
-                UiSettings uisetting = mMap.getUiSettings(); //Lấy giao diện Map
-                uisetting.setCompassEnabled(true); //La bàn
+                UiSettings uisetting = mMap.getUiSettings();
+                uisetting.setCompassEnabled(true);
                 uisetting.setZoomControlsEnabled(true);
                 uisetting.setScrollGesturesEnabled(true);
                 uisetting.setTiltGesturesEnabled(true);
                 uisetting.setMyLocationButtonEnabled(true);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {//bang M
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (getActivity().checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                             && getActivity().checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         xuLyQuyen();
@@ -153,13 +154,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     xuLyQuyen();
                 }
 
-                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL); //đặt kiểu map
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             }
         });
         return view;
     }
 
-    //Hàm chạy khi vào fragment Map
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -170,58 +170,50 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         LocationManager service = (LocationManager) getContext().getSystemService(LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         String provider = service.getBestProvider(criteria, true);
-//        Location location = service.getLastKnownLocation(provider); //lấy vị trí hiện tại
         if (getArguments() != null) {
             String mParam1 = getArguments().getString("location");
-            Log.i("locationne", mParam1);
         }
 
         Retrofit retrofit = RetroClient.getInstance();
         retroReal = retrofit.create(RetroReal.class);
-        Call<List<RealEstate>> call = retroReal.getListreals();
-        call.enqueue(new Callback<List<RealEstate>>() {
+        Call<UserResponses> callAllReals = retroReal.getAllReals();
+        callAllReals.enqueue(new Callback<UserResponses>() {
             @Override
-            public void onResponse(Call<List<RealEstate>> call, Response<List<RealEstate>> response) {
+            public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
                 if(response.isSuccessful()){
-
-                    for (int i = 0; i < response.body().size(); i++) {
-                        RealEstate realEstate = response.body().get(i);
-                        String longtitude = realEstate.getLocation().substring((realEstate.getLocation().indexOf(",")) + 1, realEstate.getLocation().length());
-                        String latitude = realEstate.getLocation().substring(0, realEstate.getLocation().indexOf(","));
-                        Log.d("location", latitude + "," + longtitude);
-                        listRealName.add(realEstate.getName());
-                        Marker marker = mMap.addMarker( //Tạo marker
-                                new MarkerOptions()
-                                        .position(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longtitude)))
-                                        .title(String.format("%.0f", realEstate.getPrice()) + " VND")
-                                        .snippet(String.format("%.0f", realEstate.getArea()) + " m2")
-                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-                        if (i == response.body().size() - 1) {
-                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longtitude)), 15));
+                    UserResponses userResponses = response.body();
+                    if(userResponses.getStatus() == 1) {
+                        for (int i = 0; i < userResponses.getRealList().size(); i++) {
+                            RealEstate realEstate = userResponses.getRealList().get(i);
+                            String realLocation = realEstate.getLocation();
+                            String latitude = "10.790105"; //Default if having error
+                            String longtitude = "106.684607";
+                            if(realLocation instanceof String && realLocation.indexOf(",") > -1){
+                                longtitude = realEstate.getLocation().substring((realEstate.getLocation().indexOf(",")) + 1, realEstate.getLocation().length());
+                                latitude = realEstate.getLocation().substring(0, realEstate.getLocation().indexOf(","));
+                            }
+                            listRealName.add(realEstate.getName());
+                            Marker marker = mMap.addMarker( //Tạo marker
+                                    new MarkerOptions()
+                                            .position(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longtitude)))
+                                            .title(String.format("%.0f", realEstate.getPrice()) + " VND")
+                                            .snippet(String.format("%.0f", realEstate.getArea()) + " m2")
+                                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                            if (i == userResponses.getRealList().size() - 1) {
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longtitude)), 15));
+                            }
+                            markers.put(realEstate.getName(), marker);
                         }
-                        markers.put(realEstate.getName(), marker);
                     }
-
                 }
             }
 
             @Override
-            public void onFailure(Call<List<RealEstate>> call, Throwable t) {
+            public void onFailure(Call<UserResponses> call, Throwable t) {
 
             }
         });
 
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker arg0) {
-                // TODO Auto-generated method stub
-
-
-                return false;
-            }
-
-        });
-        //Nhấn vào Markert hiện info
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
             public View getInfoWindow(Marker arg0) {
@@ -244,20 +236,36 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 double latitude = arg0.getPosition().latitude;
                 double longtitude = arg0.getPosition().longitude;
                 String location = latitude+","+longtitude;
-                retroReal.getRealByLocation(location)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Consumer<RealEstate>() {
-                            @Override
-                            public void accept(RealEstate realEstate) throws Exception {
+                Call<UserResponses> callRealByLocation = retroReal.getRealByLocation(location);
+                callRealByLocation.enqueue(new Callback<UserResponses>() {
+                    @Override
+                    public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
+                        if(response.isSuccessful()) {
+                            UserResponses userResponses = response.body();
+                            if(userResponses.getStatus() == 1) {
+                                RealEstate realEstate = userResponses.getRealEstate();
                                 tv_nameStore.setText(realEstate.getName());
                                 tv_address.setText("Address: "+realEstate.getAddress());
                                 tv_area.setText("Area: "+String.format("%.0f", realEstate.getArea())+" m2");
                                 tv_price.setText("Price: "+String.format("%.0f", realEstate.getPrice())+" VND");
                                 tv_type.setText("For "+realEstate.getType());
-                                iv_store.setImageBitmap(Utils.decodeBase64Image(realEstate.getImg()));
+                                try{
+                                    Bitmap bitmapImg = Utils.decodeBase64Image(realEstate.getImg());
+                                    iv_store.setImageBitmap(bitmapImg);
+                                } catch (Exception e) {
+                                    Log.i("bitmapError", e+"");
+                                }
+                            } else {
+                                Snackbar.make(view, userResponses.getMessage(), Snackbar.LENGTH_SHORT).show();
                             }
-                        });
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<UserResponses> call, Throwable t) {
+
+                    }
+                });
                 TextView tv_title = ((TextView)view.findViewById(R.id.tv_marker_title));
                 tv_title.setText(arg0.getTitle());
                 TextView tv_snipset = ((TextView)view.findViewById(R.id.tv_marker_snipset));
@@ -265,21 +273,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 return view;
             }
         });
-        //Nhấn vào info hiện detail info
-        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
 
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(final Marker arg0) {
                 // TODO Auto-generated method stub
                 dialog = new Dialog(getContext());
                 dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
                 dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-// layout to display
                 dialog.setContentView(R.layout.markerdetail);
                 Button b = (Button) dialog.findViewById(R.id.button1);
-
                 b.setOnClickListener(new View.OnClickListener() {
-
                     @Override
                     public void onClick(View v) {
                         // TODO Auto-generated method stub
@@ -287,32 +291,39 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         double latitude = arg0.getPosition().latitude;
                         double longtitude = arg0.getPosition().longitude;
                         String location = latitude+","+longtitude;
-                        retroReal.getRealByLocation(location)
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(new Consumer<RealEstate>() {
-                                    @Override
-                                    public void accept(RealEstate realEstate) throws Exception {
+                        Call<UserResponses> callRealByLocation = retroReal.getRealByLocation(location);
+                        callAllReals.enqueue(new Callback<UserResponses>() {
+                            @Override
+                            public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
+                                if(response.isSuccessful()) {
+                                    UserResponses userResponses = response.body();
+                                    if(userResponses.getStatus() == 1) {
                                         Intent i = new Intent(getContext(), RealDetailsActivity.class);
-                                        i.putExtra("id", realEstate.getId());
+                                        i.putExtra("id", userResponses.getRealEstate().getId());
                                         startActivity(i);
                                     }
-                                });
+                                    else {
+                                        Snackbar.make(v, userResponses.getMessage(), Snackbar.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<UserResponses> call, Throwable t) {
+
+                            }
+                        });
                     }
                 });
-// set color transpartent
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 dialog.show();
-
-
             }
         });
-
         final ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, listRealName);
         sv_location.setThreshold(1);
         sv_location.setAdapter(cityAdapter);
         sv_location.setOnTouchListener(new View.OnTouchListener() {
-
             @SuppressLint("ClickableViewAccessibility")
             @Override
             public boolean onTouch(View paramView, MotionEvent paramMotionEvent) {
