@@ -38,6 +38,7 @@ public class MyClientActivity extends AppCompatActivity implements ClickRealItem
     private RetroReal retroReal;
     private Favorites favorites = null;
     private List<RealEstate> realEstates;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,40 +51,42 @@ public class MyClientActivity extends AppCompatActivity implements ClickRealItem
         retrofit = RetroClient.getInstance();
         retroUser = retrofit.create(RetroUser.class);
         retroReal = retrofit.create(RetroReal.class);
-        Call<Favorites> callFavoritedRealsGetting = retroUser.getFavoritedReals();
-        callFavoritedRealsGetting.enqueue(new Callback<Favorites>() {
+        Call<UserResponses> callFavoritedRealsGetting = retroUser.getFavoritedReals();
+        callFavoritedRealsGetting.enqueue(new Callback<UserResponses>() {
             @Override
-            public void onResponse(Call<Favorites> call, Response<Favorites> response) {
-                favorites = response.body();
-                if (response.body() != null) {
-                    realEstates = new ArrayList<>();
-                    for (int i = 0; i < favorites.getFavoritedReals().size(); i++) {
-                        FavoritedReal favoritedReal = favorites.getFavoritedReals().get(i);
-                        Call<UserResponses> callFavorite = retroReal.getRealById(favoritedReal.get_idReal());
-                        callFavorite.enqueue(new Callback<UserResponses>() {
-                            @Override
-                            public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
-                                if(response.isSuccessful()) {
-                                    UserResponses userResponses = response.body();
-                                    if(userResponses.getStatus() == 1) {
-                                        realEstates.add(userResponses.getRealEstate());
+            public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
+                if (response.isSuccessful()) {
+                    UserResponses userResponses = response.body();
+                    if (userResponses.getStatus() == 1) {
+                        realEstates = new ArrayList<>();
+                        for (int i = 0; i < favorites.getFavoritedReals().size(); i++) {
+                            FavoritedReal favoritedReal = favorites.getFavoritedReals().get(i);
+                            Call<UserResponses> callFavorite = retroReal.getRealById(favoritedReal.get_idReal());
+                            callFavorite.enqueue(new Callback<UserResponses>() {
+                                @Override
+                                public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
+                                    if (response.isSuccessful()) {
+                                        UserResponses userResponses = response.body();
+                                        if (userResponses.getStatus() == 1) {
+                                            realEstates.add(userResponses.getRealEstate());
+                                        }
                                     }
                                 }
-                            }
 
-                            @Override
-                            public void onFailure(Call<UserResponses> call, Throwable t) {
+                                @Override
+                                public void onFailure(Call<UserResponses> call, Throwable t) {
 
-                            }
-                        });
-                    }
+                                }
+                            });
+                        }
                         ListRealAdapter listRealAdapter = new ListRealAdapter(realEstates, MyClientActivity.this, MyClientActivity.this);
                         lv_favorite.setAdapter(listRealAdapter);
+                    }
                 }
             }
 
             @Override
-            public void onFailure(Call<Favorites> call, Throwable t) {
+            public void onFailure(Call<UserResponses> call, Throwable t) {
 
             }
         });
@@ -91,7 +94,7 @@ public class MyClientActivity extends AppCompatActivity implements ClickRealItem
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 break;

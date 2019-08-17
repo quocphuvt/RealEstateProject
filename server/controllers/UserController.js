@@ -65,7 +65,7 @@ router.put("/", async (request, response) => {
 
 router.post("/saveFavorite", async (request, response) => {
     const reqData = request.body;
-    const savedFavorite = await UserService.setFavoriteReal(reqData);
+    const savedFavorite = await UserService.getFavoriteReal(reqData);
     if (!savedFavorite) {
         UserService.createFavoriteReal(reqData);
     } else {
@@ -74,8 +74,11 @@ router.post("/saveFavorite", async (request, response) => {
 })
 
 router.get("/favoriteList", async (request, response) => {
-    const favoriteList = await UserService.getFavoritedReal();
-    response.json(favoriteList);
+    const favoriteList = await UserService.getFavoritedReals();
+    if(favoriteList) {
+        return response.json({ status: 1, favorites: favoriteList});
+    }
+    return response.json({ status: 0 });
 })
 
 module.exports = router;

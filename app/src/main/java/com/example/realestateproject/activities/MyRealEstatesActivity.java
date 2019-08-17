@@ -1,5 +1,6 @@
 package com.example.realestateproject.activities;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.example.realestateproject.adapters.MyRealEstatesAdapter;
@@ -36,13 +37,15 @@ public class MyRealEstatesActivity extends AppCompatActivity{
         getSupportActionBar().setTitle("All real was posting");
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+        String userId = sharedPreferences.getString("id", "");
         Retrofit retrofit = RetroClient.getInstance();
         retroReal = retrofit.create(RetroReal.class);
-        getAvailableReals();
+        getAvailableReals(userId);
     }
 
-    private void getAvailableReals() {
-        Call<UserResponses> call = retroReal.getAvailableReals();
+    private void getAvailableReals(String userId) {
+        Call<UserResponses> call = retroReal.getAvailableReals(userId);
         call.enqueue(new Callback<UserResponses>() {
             @Override
             public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {

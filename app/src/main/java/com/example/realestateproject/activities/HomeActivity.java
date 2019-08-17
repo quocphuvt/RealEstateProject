@@ -49,7 +49,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private MenuItem prevMenuItem;
     private View headerLayout;
     private TextView tv_fullname_header, tv_id_header;
-    private ImageView iv_avatar_header;
+    private ImageView iv_avatar_header, iv_refresh;
     private RetroUser retroUser;
 
     private void initView(){
@@ -59,6 +59,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         add_fab = findViewById(R.id.add_fab);
         main_viewPager = findViewById(R.id.main_viewPager);
         bottom_nav_view = findViewById(R.id.bottom_nav_view);
+        iv_refresh = toolbar.findViewById(R.id.ic_refresh);
         //Initialize view in header
         headerLayout = navigationView.getHeaderView(0);
         tv_fullname_header = headerLayout.findViewById(R.id.tv_fullname_header);
@@ -83,7 +84,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
         Intent i = getIntent();
         if(i.getBooleanExtra("see_map", true)) {
-            Toast.makeText(this, "see map ne", Toast.LENGTH_SHORT).show();
             main_viewPager.setCurrentItem(1);
         }
 
@@ -139,6 +139,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 return false;
             }
         });
+
+        iv_refresh.setOnClickListener(this);
     }
 
     private void getCurrentUser(String id) {
@@ -201,6 +203,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.add_fab:
                 startActivity(new Intent(this, RealEstateCreatingActivity.class));
                 break;
+            case R.id.ic_refresh:
+                Intent refresh = new Intent(this, HomeActivity.class);
+                startActivity(refresh);
+                this.finish();
         }
     }
 

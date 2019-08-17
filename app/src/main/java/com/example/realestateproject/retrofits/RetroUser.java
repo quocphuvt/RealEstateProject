@@ -34,8 +34,8 @@ public interface RetroUser {
     Call<UserResponses> updateUserData(@Body UserModel userModel);
 
     @POST("/user/saveFavorite")
-    Call<Favorites> setFavoritedReal(@Body Favorites favorites);
+    Call<UserResponses> setFavoritedReal(@Body Favorites favorites);
 
     @GET("/user/favoriteList")
-    Call<Favorites> getFavoritedReals();
+    Call<UserResponses> getFavoritedReals();
  }

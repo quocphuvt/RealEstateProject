@@ -138,25 +138,28 @@ public class RealDetailsActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void getFavoritedReals() {
-        Call<Favorites> callFavoritedRealsGetting = retroUser.getFavoritedReals();
-        callFavoritedRealsGetting.enqueue(new Callback<Favorites>() {
+        Call<UserResponses> callFavoritedRealsGetting = retroUser.getFavoritedReals();
+        callFavoritedRealsGetting.enqueue(new Callback<UserResponses>() {
             @Override
-            public void onResponse(Call<Favorites> call, Response<Favorites> response) {
-                if (response.body() != null) {
-                    favorites = response.body();
-                    for (int i = 0; i < favorites.getFavoritedReals().size(); i++) {
-                        FavoritedReal favoritedReal = favorites.getFavoritedReals().get(i);
-                        if (favoritedReal.get_idReal().equals(idReal)) {
-                            isLike = favoritedReal.isLike();
-                            iv_favorite.setImageResource(favoritedReal.isLike() ? R.drawable.ic_favorite_active : R.drawable.ic_favorite_unactive);
-                            break;
+            public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
+                if (response.isSuccessful()) {
+                    UserResponses userResponses = response.body();
+                    if(userResponses.getStatus() == 1) {
+                        favorites = userResponses.getFavorites();
+                        for (int i = 0; i < favorites.getFavoritedReals().size(); i++) {
+                            FavoritedReal favoritedReal = favorites.getFavoritedReals().get(i);
+                            if (favoritedReal.get_idReal().equals(idReal)) {
+                                isLike = favoritedReal.isLike();
+                                iv_favorite.setImageResource(favoritedReal.isLike() ? R.drawable.ic_favorite_active : R.drawable.ic_favorite_unactive);
+                                break;
+                            }
                         }
                     }
                 }
             }
 
             @Override
-            public void onFailure(Call<Favorites> call, Throwable t) {
+            public void onFailure(Call<UserResponses> call, Throwable t) {
 
             }
         });
@@ -215,17 +218,17 @@ public class RealDetailsActivity extends AppCompatActivity implements View.OnCli
             favoritedReals.add(new FavoritedReal(idReal, isLike)); //Use for get first time
             favorites = new Favorites(idUser, favoritedReals);
         }
-        Call<Favorites> call = retroUser.setFavoritedReal(favorites);
-        call.enqueue(new Callback<Favorites>() {
+        Call<UserResponses> call = retroUser.setFavoritedReal(favorites);
+        call.enqueue(new Callback<UserResponses>() {
             @Override
-            public void onResponse(Call<Favorites> call, Response<Favorites> response) {
+            public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
                 if (response.isSuccessful()) {
-                    Log.i("favorite", response.body().getFavoritedReals().toString());
+                    return;
                 }
             }
 
             @Override
-            public void onFailure(Call<Favorites> call, Throwable t) {
+            public void onFailure(Call<UserResponses> call, Throwable t) {
 
             }
         });

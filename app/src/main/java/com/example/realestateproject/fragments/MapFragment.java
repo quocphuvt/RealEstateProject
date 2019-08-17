@@ -292,7 +292,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         double longtitude = arg0.getPosition().longitude;
                         String location = latitude+","+longtitude;
                         Call<UserResponses> callRealByLocation = retroReal.getRealByLocation(location);
-                        callAllReals.enqueue(new Callback<UserResponses>() {
+                        callRealByLocation.enqueue(new Callback<UserResponses>() {
                             @Override
                             public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
                                 if(response.isSuccessful()) {

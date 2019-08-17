@@ -29,9 +29,9 @@ router.get("/realList/all", async (request, response, next) => {
 router.get("/realList/sort", async (request, response, next) => {
     const sortedReals = await RealService.sortByPrice();
     if (sortedReals) {
-        return request.json({status: 1, realList: sortedReals})
+        return response.json({status: 1, realList: sortedReals})
     } 
-    return request.json({ status: 0})
+    return response.json({ status: 0})
 });
 
 router.get("/realList/filter", async (request, response, next) => {
@@ -75,9 +75,9 @@ router.get("/:city/realList", async (request, response) => {
     const cityName = request.params.city;
     const reals = await RealService.getRealListByCity(cityName);
     if (reals) {
-        return request.json({ status: 1, realList: reals });
+        return response.json({ status: 1, realList: reals });
     }
-    return request.json({ status: 0 })
+    return response.json({ status: 0 })
 })
 
 router.get("/:userId/totalReals", async (request, response) => {
@@ -100,8 +100,9 @@ router.get("/:userId/history", async (request, response) => {
     return response.json({ status: 0, message: "Invalid user id" });
 })
 
-router.get("/realList/available", async (request, response) => {
-    const reals = await RealService.getAllAvailableReals();
+router.get("/:userId/realList/available", async (request, response) => {
+    const userId = request.params.userId;
+    const reals = await RealService.getAllAvailableReals(userId);
     if (reals) {
         return response.json({ status: 1, realList: reals}); 
     }

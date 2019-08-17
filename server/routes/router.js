@@ -57,7 +57,9 @@ router.post("/create_real/:id", upload.single("file"), (req, res, next) => {
             _idUser: req.params.id
         }
         const createdReal = await RealService.createReal(real);
-        const removedImgFile = await fs.unlink(req.file.path);
+        const removedImgFile = await fs.unlink(req.file.path, err =>{
+            console.log("unlink: "+err);
+        });
     })
     res.redirect("/");
 })
