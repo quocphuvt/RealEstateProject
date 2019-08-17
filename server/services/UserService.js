@@ -36,7 +36,7 @@ exports.getFavoriteReal = async (favoriteData) => {
     return favoritedReal;
 }
 
-exports.getFavoritedReals = async () => {
-    const favoritedReals = await FavoriteModel.findOne({}).exec();
+exports.getFavoritedReals = async (id) => {
+    const favoritedReals = await FavoriteModel.findOne({_idUser: id}).exec();
     return favoritedReals;
 }

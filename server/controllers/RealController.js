@@ -13,7 +13,6 @@ router.post("/create", async (request, response, next) => {
 
 router.get("/:id", async (request, response) => {
     const id = request.params.id;
-    console.log(id)
     const real = await RealService.getReal(id);
     if (real) {
        return response.json({ status: 1, realEstate: real });

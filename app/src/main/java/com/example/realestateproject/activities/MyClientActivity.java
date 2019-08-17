@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -48,10 +49,12 @@ public class MyClientActivity extends AppCompatActivity implements ClickRealItem
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+        SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+        String idUser = sharedPreferences.getString("id", "");
         retrofit = RetroClient.getInstance();
         retroUser = retrofit.create(RetroUser.class);
         retroReal = retrofit.create(RetroReal.class);
-        Call<UserResponses> callFavoritedRealsGetting = retroUser.getFavoritedReals();
+        Call<UserResponses> callFavoritedRealsGetting = retroUser.getFavoritedReals(idUser);
         callFavoritedRealsGetting.enqueue(new Callback<UserResponses>() {
             @Override
             public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {

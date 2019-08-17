@@ -58,7 +58,6 @@ exports.getPostHistory = async (userId) => {
 }
 
 exports.getAllAvailableReals = async (userId) => {
-    console.log(userId);
     const reals = RealModel.find({ _idUser: userId, status: "AVAILABLE" }).exec();
     return reals;
 }

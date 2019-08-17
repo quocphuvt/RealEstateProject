@@ -36,6 +36,6 @@ public interface RetroUser {
     @POST("/user/saveFavorite")
     Call<UserResponses> setFavoritedReal(@Body Favorites favorites);
 
-    @GET("/user/favoriteList")
-    Call<UserResponses> getFavoritedReals();
+    @GET("/user/{id}/favoriteList")
+    Call<UserResponses> getFavoritedReals(@Path("id") String userId);
  }

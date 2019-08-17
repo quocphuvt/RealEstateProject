@@ -73,8 +73,9 @@ router.post("/saveFavorite", async (request, response) => {
     }
 })
 
-router.get("/favoriteList", async (request, response) => {
-    const favoriteList = await UserService.getFavoritedReals();
+router.get("/:id/favoriteList", async (request, response) => {
+    const id = request.params.id;
+    const favoriteList = await UserService.getFavoritedReals(id);
     if(favoriteList) {
         return response.json({ status: 1, favorites: favoriteList});
     }

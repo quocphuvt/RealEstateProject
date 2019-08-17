@@ -138,7 +138,7 @@ public class RealDetailsActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void getFavoritedReals() {
-        Call<UserResponses> callFavoritedRealsGetting = retroUser.getFavoritedReals();
+        Call<UserResponses> callFavoritedRealsGetting = retroUser.getFavoritedReals(idUser);
         callFavoritedRealsGetting.enqueue(new Callback<UserResponses>() {
             @Override
             public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
@@ -202,17 +202,16 @@ public class RealDetailsActivity extends AppCompatActivity implements View.OnCli
     public void finish() {
         super.finish();
         if (favorites != null) {
-            boolean isNotExist = false;
+            boolean isExist = false;
             for (int i = 0; i < favorites.getFavoritedReals().size(); i++) {
                 FavoritedReal favoritedReal = favorites.getFavoritedReals().get(i);
                 if (favoritedReal.get_idReal().equals(idReal)) {
                     favorites.getFavoritedReals().set(i, new FavoritedReal(idReal, isLike));
-                } else {
-                    if (i == favorites.getFavoritedReals().size() - 1) {
-                        favorites.getFavoritedReals().add(new FavoritedReal(idReal, isLike));
-                        break;
-                    }
+                    isExist = true;
                 }
+            }
+            if(isExist == false) {
+                favorites.getFavoritedReals().add(new FavoritedReal(idReal, isLike));
             }
         } else {
             favoritedReals.add(new FavoritedReal(idReal, isLike)); //Use for get first time

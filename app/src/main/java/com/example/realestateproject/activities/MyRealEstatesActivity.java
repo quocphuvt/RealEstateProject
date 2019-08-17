@@ -44,6 +44,14 @@ public class MyRealEstatesActivity extends AppCompatActivity{
         getAvailableReals(userId);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+        String userId = sharedPreferences.getString("id", "");
+        getAvailableReals(userId);
+    }
+
     private void getAvailableReals(String userId) {
         Call<UserResponses> call = retroReal.getAvailableReals(userId);
         call.enqueue(new Callback<UserResponses>() {
