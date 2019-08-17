@@ -1,36 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
+<<<<<<< HEAD
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+=======
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+>>>>>>> dc4295590295785dec8f9cec118726040f0ae54b
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+<<<<<<< HEAD
+=======
+    android:background="#FFFFFF"
+>>>>>>> dc4295590295785dec8f9cec118726040f0ae54b
     android:orientation="vertical"
     android:background="#FFFFFF"
     tools:context=".activities.RealDetailsActivity" >
 
+<<<<<<< HEAD
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+=======
+>>>>>>> dc4295590295785dec8f9cec118726040f0ae54b
     <LinearLayout
         android:orientation="vertical"
         android:paddingBottom="60dp"
         android:layout_width="match_parent"
+<<<<<<< HEAD
         android:layout_height="match_parent">
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar3"
+=======
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_realDetail"
+>>>>>>> dc4295590295785dec8f9cec118726040f0ae54b
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
+<<<<<<< HEAD
             app:title="Choose your stay"
             app:titleTextColor="#FDFDFD" >
         </androidx.appcompat.widget.Toolbar>
+=======
+            app:title="Ho Chi Minh"
+            app:titleTextColor="#FDFDFD"></androidx.appcompat.widget.Toolbar>
+>>>>>>> dc4295590295785dec8f9cec118726040f0ae54b
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+<<<<<<< HEAD
             android:layout_weight="1"
             android:orientation="vertical">
             <RelativeLayout
@@ -244,3 +269,317 @@
             android:textColor="#FFFF"
             android:textStyle="bold" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+=======
+            android:orientation="vertical">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#E9E8E8"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingBottom="60dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:scaleType="centerCrop"
+                                android:id="@+id/iv_realImg_detail"
+                                android:layout_width="wrap_content"
+                                android:layout_height="300dp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginRight="5dp"
+                                android:src="@drawable/building2"
+                                ></ImageView>
+
+                            <ImageView
+                                android:id="@+id/iv_favorite"
+                                android:layout_alignParentRight="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_margin="20dp"
+                                android:src="@drawable/ic_favorite_unactive"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp" />
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_margin="20dp"
+                                app:cardBackgroundColor="#FF5722">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:padding="5dp">
+
+                                    <TextView
+                                        android:id="@+id/tv_type_realDetail"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="FOR LEASE"
+                                        android:textColor="@color/white"
+                                        android:textSize="20sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+                            </androidx.cardview.widget.CardView>
+
+                            <Button
+                                android:id="@+id/btn_seeUsOnMap"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:background="@drawable/transparent_button"
+                                android:drawableTop="@drawable/ic_see"
+                                android:text="See us on map"
+                                android:textColor="@color/white" />
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="5dp"
+                        app:cardBackgroundColor="#FFFFFF"
+                        app:cardCornerRadius="5dp"
+                        app:cardElevation="5dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tv_name_realDetail"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="15dp"
+                                android:layout_marginTop="10dp"
+                                android:text="New World Sai Gon Hotel"
+                                android:textColor="#334856"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+
+                            <RatingBar
+                                android:id="@+id/ratingBar"
+                                style="?android:attr/ratingBarStyleIndicator"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="15dp"
+                                android:clickable="true"
+                                android:numStars="5"
+                                android:outlineSpotShadowColor="#C2BDBD"
+                                android:theme="@style/RatingBar" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="15dp"
+                                    android:gravity="center"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:id="@+id/tv_price_realDetail"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:layout_marginBottom="5dp"
+                                        android:layout_weight="1"
+                                        android:text="$135"
+                                        android:textColor="#B9740C"
+                                        android:textSize="35sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="15dp"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_marginRight="15dp"
+                                    android:layout_marginBottom="10dp"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center">
+
+                                        <ImageView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginRight="5dp"
+                                            android:layout_weight="0"
+                                            android:src="@drawable/ic_location" />
+
+                                        <TextView
+                                            android:id="@+id/tv_address_realDetail"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_weight="1"
+                                            android:text="117/97 Nguyễn Hữu Cảnh, Quận Bình Thạnh, Tp. Hồ Chí Minh"
+                                            android:textColor="#334856"
+                                            android:textSize="15sp" />
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <LinearLayout
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp">
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_weight="1"
+                            android:layout_marginRight="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <LinearLayout
+                                android:id="@+id/layout_makeCall"
+                                android:paddingTop="8dp"
+                                android:paddingBottom="8dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="#fff"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    app:srcCompat="@drawable/ic_phone_black_24dp" />
+
+                                <TextView
+                                    android:id="@+id/tv_contact_realDetail"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:text="091867845"
+                                    android:textColor="#334856"
+                                    android:textSize="15sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <LinearLayout
+                                android:paddingTop="8dp"
+                                android:paddingBottom="8dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@color/white"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    app:srcCompat="@drawable/ic_area" />
+
+                                <TextView
+                                    android:id="@+id/tv_area_realDetail"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:text="15 m2"
+                                    android:textColor="#0bbf80"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+                    </LinearLayout>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="5dp"
+                        app:cardBackgroundColor="#FFFFFF"
+                        app:cardCornerRadius="5dp"
+                        app:cardElevation="5dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:layout_marginLeft="10dp"
+                                android:text="Description"
+                                android:textColor="#334856"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_description_realDetail"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="15dp"
+                                android:layout_marginRight="15dp"
+                                android:layout_marginBottom="8dp"
+                                android:text="Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied."
+                                android:textColor="#334856"
+                                android:textSize="15sp" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical" />
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_selected_realDetail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#FF5722"
+        android:text="CONNECT FOR ME NOW"
+        android:textColor="#FFFF"
+        android:textStyle="bold" />
+</RelativeLayout>
+>>>>>>> dc4295590295785dec8f9cec118726040f0ae54b

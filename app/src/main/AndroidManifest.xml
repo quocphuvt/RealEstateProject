@@ -15,6 +15,7 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:allowBackup="true"
@@ -24,7 +25,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+<<<<<<< HEAD
         <activity android:name=".activities.HomeActivity"></activity>
+=======
+        <activity android:name=".activities.EditRealActivity"></activity>
+        <activity android:name=".activities.UpdateProfileUserActivity" />
+>>>>>>> dc4295590295785dec8f9cec118726040f0ae54b
         <activity android:name=".activities.RealDetailsActivity" />
         <activity
             android:name=".activities.HistoryActivity"

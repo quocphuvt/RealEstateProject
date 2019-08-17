@@ -3,30 +3,40 @@ package com.example.realestateproject.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.appcompat.widget.Toolbar;;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager.widget.ViewPager;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.realestateproject.R;
 import com.example.realestateproject.adapters.ViewPagerAdapter;
-import com.google.android.material.bottomappbar.BottomAppBar;
+import com.example.realestateproject.models.UserModel;
+import com.example.realestateproject.models.UserResponses;
+import com.example.realestateproject.retrofits.RetroClient;
+import com.example.realestateproject.retrofits.RetroUser;
+import com.example.realestateproject.supports.Utils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener, NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout mDrawerlayout;
@@ -37,6 +47,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private ViewPager main_viewPager;
     private BottomNavigationView bottom_nav_view;
     private MenuItem prevMenuItem;
+    private View headerLayout;
+    private TextView tv_fullname_header, tv_id_header;
+    private ImageView iv_avatar_header;
+    private RetroUser retroUser;
 
     private void initView(){
         toolbar = findViewById(R.id.toolbar_logo);
@@ -45,6 +59,11 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         add_fab = findViewById(R.id.add_fab);
         main_viewPager = findViewById(R.id.main_viewPager);
         bottom_nav_view = findViewById(R.id.bottom_nav_view);
+        //Initialize view in header
+        headerLayout = navigationView.getHeaderView(0);
+        tv_fullname_header = headerLayout.findViewById(R.id.tv_fullname_header);
+        tv_id_header = headerLayout.findViewById(R.id.tv_id_header);
+        iv_avatar_header = headerLayout.findViewById(R.id.iv_avatar_header);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +73,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         navigationView.bringToFront();
         navigationView.setNavigationItemSelectedListener(this);
         add_fab.setOnClickListener(this);
-
         mToogle = new ActionBarDrawerToggle(this,mDrawerlayout,R.string.open,R.string.close);
         mDrawerlayout.addDrawerListener(mToogle);
         mToogle.syncState();
@@ -63,9 +81,19 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_date);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
-        String userId = sharedPreferences.getString("id", ""); //Get user id when logining successful.
+        Intent i = getIntent();
+        if(i.getBooleanExtra("see_map", true)) {
+            Toast.makeText(this, "see map ne", Toast.LENGTH_SHORT).show();
+            main_viewPager.setCurrentItem(1);
+        }
 
+        Retrofit retrofit = RetroClient.getInstance();
+        retroUser = retrofit.create(RetroUser.class);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+        String userId = sharedPreferences.getString("id", "");
+
+        this.getCurrentUser(userId);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         main_viewPager.setOffscreenPageLimit(4);
         main_viewPager.setAdapter(viewPagerAdapter);
@@ -82,7 +110,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     bottom_nav_view.getMenu().getItem(0).setChecked(false);
                 }
-                Log.d("page", "onPageSelected: " + position);
                 bottom_nav_view.getMenu().getItem(position).setChecked(true);
                 prevMenuItem = bottom_nav_view.getMenu().getItem(position);
             }
@@ -108,12 +135,35 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         main_viewPager.setCurrentItem(2);
                         add_fab.show();
                         break;
-                    case R.id.navigation_contact:
-                        add_fab.show();
-                        main_viewPager.setCurrentItem(3);
-                        break;
                 }
                 return false;
+            }
+        });
+    }
+
+    private void getCurrentUser(String id) {
+        Call<UserResponses> callCurrentUser = retroUser.getCurrentUser(id);
+        callCurrentUser.enqueue(new Callback<UserResponses>() {
+            @Override
+            public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
+                if(response.isSuccessful()) {
+                    UserResponses userResponses = response.body();
+                    if(userResponses.getStatus() == 1) {
+                        UserModel userModel = userResponses.getUserModel();
+                        iv_avatar_header.setImageBitmap(Utils.decodeBase64Image(userModel.getAvatar()));
+                        tv_id_header.setText("ID: "+userModel.getId());
+                        tv_fullname_header.setText(userModel.getFullName());
+                    }
+                    else if (userResponses.getStatus() == 0) {
+                        tv_id_header.setText("ID: Unknown");
+                        tv_fullname_header.setText("Unknown");
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserResponses> call, Throwable t) {
+
             }
         });
     }
@@ -121,7 +171,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
         mToogle.syncState();
     }
 
@@ -141,8 +190,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 mDrawerlayout.openDrawer(GravityCompat.START);
                 return true;
             default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
 
         }
@@ -161,14 +208,16 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case R.id.ic_userInfo:
-                //TODO: Change user info
+                startActivity(new Intent(this, UpdateProfileUserActivity.class));
                 break;
             case R.id.ic_signout:
-                //TODO: User sign out
+                SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("autoLogin", false);
+                editor.apply();
                 startActivity(new Intent(this, SignInActivity.class));
                 break;
             case R.id.ic_about:
-                //TODO: Show team's infomation
                 Toast.makeText(this, "Develope by team 2", Toast.LENGTH_SHORT).show();
                 break;
         }

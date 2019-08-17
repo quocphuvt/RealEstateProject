@@ -5,7 +5,7 @@ public class Constants {
     public static final String[] CITIES = {"Choose city...","Hồ chí Minh", "Hà Nội", "Vũng Tàu", "Hải Phòng", "Đà Nẵng", "Cần Thơ"};
     public static final String[] STATUS = {"AVAILABLE", "EXPIRED"};
     public static final String[] TYPE ={"SALE", "LEASE"};
-    public static final String[] CARD_TITLE = {"My Clients", "My Real estates", "History"};
-    public static final String[] CARD_SUBTITLE = {"List clients were traded", "See all your reals", "Show all real history"};
-    public static final String[] REAL_IN_HOCHIMINH = {"10.783659, 106.620889", "10.782363, 106.618314", "10.784355, 106.617617", "10.785904, 106.619462"};
+    public static final String[] CARD_TITLE = {"Favorite", "My Real estates", "History"};
+    public static final String[] CARD_SUBTITLE = {"List Favorited Reals", "See all your reals", "Show all real history"};
+    public static final String[] RANGE_OF_PRICE = {"0,100000", "100000,3000000", "3000000, 10000000", "10000000, 100000000", "> 100000000"};
 }

@@ -12,9 +12,11 @@ const realSchema = new Schema({
     city: String,
     type: String,
     status: String,
-    _idUser: String
+    location: String,
+    img: String,
+    _idUser: String,
 });
 
 const realModel = mongoose.model("realEstates", realSchema); 
-
+    
 module.exports = realModel;

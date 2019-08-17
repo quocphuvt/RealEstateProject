@@ -18,11 +18,4 @@
         android:id="@+id/navigation_search"
         android:icon="@drawable/ic_search_black_24dp"
         android:title="Search" />
-
-    <item
-        app:showAsAction="always"
-        android:id="@+id/navigation_contact"
-        android:icon="@drawable/ic_contacts_black_24dp"
-        android:title="Contact" />
-
 </menu>

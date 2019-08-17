@@ -1,8 +1,10 @@
 package com.example.realestateproject.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -13,11 +15,14 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,13 +30,24 @@ import android.widget.Toast;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.realestateproject.R;
+import com.example.realestateproject.activities.HomeActivity;
+import com.example.realestateproject.activities.ListRealActivity;
+import com.example.realestateproject.activities.RealDetailsActivity;
+import com.example.realestateproject.activities.SignInActivity;
+import com.example.realestateproject.adapters.ListRealAdapter;
+import com.example.realestateproject.models.RealEstate;
+import com.example.realestateproject.models.UserResponses;
+import com.example.realestateproject.retrofits.RetroClient;
+import com.example.realestateproject.retrofits.RetroReal;
 import com.example.realestateproject.supports.Constants;
+import com.example.realestateproject.supports.Utils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -48,11 +64,20 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -62,20 +87,23 @@ import static android.content.Context.LOCATION_SERVICE;
  */
 public class MapFragment extends Fragment implements OnMapReadyCallback {
     public static GoogleMap mMap;
-    public static Map<String,Marker> markers = new HashMap<>();
-    private ArrayList<Marker> list_marker = new ArrayList<>();
+    public static Map<String, Marker> markers = new HashMap<>();
+    private ArrayList<String> listRealName = new ArrayList<>();
     private Dialog dialog;
     private MapView mapView;
-    private SearchView sv_location;
+    private AppCompatAutoCompleteTextView sv_location;
     public static BottomSheetBehavior mBottomSheetBehavior;
     private View bottomSheet;
+    private RetroReal retroReal;
+    private ImageView iv_searchMarker;
+
     public static MapFragment newInstance() {
         return new MapFragment();
     }
+
     public MapFragment() {
         // Required empty public constructor
     }
-
 
 
     @Override
@@ -84,8 +112,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         bottomSheet = view.findViewById(R.id.bottom_sheet);
-        sv_location =view.findViewById(R.id.sv_location);
-
+        sv_location = view.findViewById(R.id.sv_location_map);
+        iv_searchMarker = view.findViewById(R.id.iv_showMarker_search);
         mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         mBottomSheetBehavior.setPeekHeight(0);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
@@ -96,7 +124,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
         });
-        mapView = (MapView)view.findViewById(R.id.mapView);
+        mapView = (MapView) view.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState); //Khởi tạo mapView
         mapView.onResume();
         try {
@@ -109,13 +137,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             public void onMapReady(GoogleMap googleMap) {
                 mMap = googleMap;
 
-                UiSettings uisetting = mMap.getUiSettings(); //Lấy giao diện Map
-                uisetting.setCompassEnabled(true); //La bàn
+                UiSettings uisetting = mMap.getUiSettings();
+                uisetting.setCompassEnabled(true);
                 uisetting.setZoomControlsEnabled(true);
                 uisetting.setScrollGesturesEnabled(true);
                 uisetting.setTiltGesturesEnabled(true);
                 uisetting.setMyLocationButtonEnabled(true);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {//bang M
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (getActivity().checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                             && getActivity().checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         xuLyQuyen();
@@ -126,12 +154,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     xuLyQuyen();
                 }
 
-                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL); //đặt kiểu map
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             }
         });
         return view;
     }
-    //Hàm chạy khi vào fragment Map
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -139,39 +167,54 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     public void xuLyQuyen() {
         mMap.setMyLocationEnabled(true);
-        LocationManager service = (LocationManager)getContext().getSystemService(LOCATION_SERVICE);
+        LocationManager service = (LocationManager) getContext().getSystemService(LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         String provider = service.getBestProvider(criteria, true);
-        Location location = service.getLastKnownLocation(provider); //lấy vị trí hiện tại
-        LatLng vitri = new LatLng(location.getLatitude(),location.getLongitude()); //Lấy tọa độ Latitude: kinh độ + Longitude: Vĩ độ
-        //Tạo marker tại vị trí hiện tại
-
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(vitri, 15));;//zoom tới vị trí marker với độ zoom 15
-
-        for(int i = 0; i< Constants.REAL_IN_HOCHIMINH.length; i++) {
-            String longtitude = Constants.REAL_IN_HOCHIMINH[i].substring((Constants.REAL_IN_HOCHIMINH[i].indexOf(",")) + 1, Constants.REAL_IN_HOCHIMINH[i].length());
-            String latitude = Constants.REAL_IN_HOCHIMINH[i].substring(0, Constants.REAL_IN_HOCHIMINH[i].indexOf(","));
-            Marker marker = mMap.addMarker( //Tạo marker
-                    new MarkerOptions()
-                            .position(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longtitude)))
-                            .title("300.000d")
-                            .snippet("test")
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+        if (getArguments() != null) {
+            String mParam1 = getArguments().getString("location");
         }
 
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+        Retrofit retrofit = RetroClient.getInstance();
+        retroReal = retrofit.create(RetroReal.class);
+        Call<UserResponses> callAllReals = retroReal.getAllReals();
+        callAllReals.enqueue(new Callback<UserResponses>() {
             @Override
-            public boolean onMarkerClick(Marker arg0) {
-                // TODO Auto-generated method stub
-
-
-                return false;
+            public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
+                if(response.isSuccessful()){
+                    UserResponses userResponses = response.body();
+                    if(userResponses.getStatus() == 1) {
+                        for (int i = 0; i < userResponses.getRealList().size(); i++) {
+                            RealEstate realEstate = userResponses.getRealList().get(i);
+                            String realLocation = realEstate.getLocation();
+                            String latitude = "10.790105"; //Default if having error
+                            String longtitude = "106.684607";
+                            if(realLocation instanceof String && realLocation.indexOf(",") > -1){
+                                longtitude = realEstate.getLocation().substring((realEstate.getLocation().indexOf(",")) + 1, realEstate.getLocation().length());
+                                latitude = realEstate.getLocation().substring(0, realEstate.getLocation().indexOf(","));
+                            }
+                            listRealName.add(realEstate.getName());
+                            Marker marker = mMap.addMarker( //Tạo marker
+                                    new MarkerOptions()
+                                            .position(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longtitude)))
+                                            .title(String.format("%.0f", realEstate.getPrice()) + " VND")
+                                            .snippet(String.format("%.0f", realEstate.getArea()) + " m2")
+                                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                            if (i == userResponses.getRealList().size() - 1) {
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longtitude)), 15));
+                            }
+                            markers.put(realEstate.getName(), marker);
+                        }
+                    }
+                }
             }
 
-        });
-        //Nhấn vào Markert hiện info
-        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public void onFailure(Call<UserResponses> call, Throwable t) {
 
+            }
+        });
+
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
             public View getInfoWindow(Marker arg0) {
                 return null;
@@ -183,22 +226,44 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 View view = getActivity().getLayoutInflater()
                         .inflate(R.layout.markerinfo, null);
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                final TextView tv_nameStore = bottomSheet.findViewById(R.id.tv_namestore_sheet);
+                final TextView tv_nameStore = bottomSheet.findViewById(R.id.tv_nameReal_sheet);
                 final TextView tv_address = bottomSheet.findViewById(R.id.tv_address_sheet);
-                final TextView tv_location = bottomSheet.findViewById(R.id.tv_location_sheet);
-                TextView btn_goto = bottomSheet.findViewById(R.id.btn_goto_sheet);
+                final TextView tv_area = bottomSheet.findViewById(R.id.tv_area_sheet);
                 final ImageView iv_store = bottomSheet.findViewById(R.id.iv_store_sheet);
-                final TextView tv_phone = bottomSheet.findViewById(R.id.tv_phone_sheet);
-                final TextView tv_description = bottomSheet.findViewById(R.id.tv_discription_sheet);
+                final TextView tv_price = bottomSheet.findViewById(R.id.tv_price_sheet);
+                final TextView tv_type = bottomSheet.findViewById(R.id.tv_type_sheet);
                 //
                 double latitude = arg0.getPosition().latitude;
                 double longtitude = arg0.getPosition().longitude;
-                btn_goto.setOnClickListener(new View.OnClickListener() {
+                String location = latitude+","+longtitude;
+                Call<UserResponses> callRealByLocation = retroReal.getRealByLocation(location);
+                callRealByLocation.enqueue(new Callback<UserResponses>() {
                     @Override
-                    public void onClick(View v) {
-//                        Intent i = new Intent(getContext(), StoreUserActivity.class);
-//                        i.putExtra("key_store",key_store);
-//                        startActivity(i);
+                    public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
+                        if(response.isSuccessful()) {
+                            UserResponses userResponses = response.body();
+                            if(userResponses.getStatus() == 1) {
+                                RealEstate realEstate = userResponses.getRealEstate();
+                                tv_nameStore.setText(realEstate.getName());
+                                tv_address.setText("Address: "+realEstate.getAddress());
+                                tv_area.setText("Area: "+String.format("%.0f", realEstate.getArea())+" m2");
+                                tv_price.setText("Price: "+String.format("%.0f", realEstate.getPrice())+" VND");
+                                tv_type.setText("For "+realEstate.getType());
+                                try{
+                                    Bitmap bitmapImg = Utils.decodeBase64Image(realEstate.getImg());
+                                    iv_store.setImageBitmap(bitmapImg);
+                                } catch (Exception e) {
+                                    Log.i("bitmapError", e+"");
+                                }
+                            } else {
+                                Snackbar.make(view, userResponses.getMessage(), Snackbar.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<UserResponses> call, Throwable t) {
+
                     }
                 });
                 TextView tv_title = ((TextView)view.findViewById(R.id.tv_marker_title));
@@ -208,74 +273,94 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 return view;
             }
         });
-        //Nhấn vào info hiện detail info
-        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
 
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
-            public void onInfoWindowClick(Marker arg0) {
+            public void onInfoWindowClick(final Marker arg0) {
                 // TODO Auto-generated method stub
                 dialog = new Dialog(getContext());
                 dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
                 dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-// layout to display
                 dialog.setContentView(R.layout.markerdetail);
-                Button b=(Button)dialog.findViewById(R.id.button1);
-
+                Button b = (Button) dialog.findViewById(R.id.button1);
                 b.setOnClickListener(new View.OnClickListener() {
-
                     @Override
                     public void onClick(View v) {
                         // TODO Auto-generated method stub
                         dialog.cancel();
+                        double latitude = arg0.getPosition().latitude;
+                        double longtitude = arg0.getPosition().longitude;
+                        String location = latitude+","+longtitude;
+                        Call<UserResponses> callRealByLocation = retroReal.getRealByLocation(location);
+                        callAllReals.enqueue(new Callback<UserResponses>() {
+                            @Override
+                            public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
+                                if(response.isSuccessful()) {
+                                    UserResponses userResponses = response.body();
+                                    if(userResponses.getStatus() == 1) {
+                                        Intent i = new Intent(getContext(), RealDetailsActivity.class);
+                                        i.putExtra("id", userResponses.getRealEstate().getId());
+                                        startActivity(i);
+                                    }
+                                    else {
+                                        Snackbar.make(v, userResponses.getMessage(), Snackbar.LENGTH_SHORT).show();
+                                    }
+                                }
 
-                        Toast.makeText(getActivity(), "nhan nut",Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(Call<UserResponses> call, Throwable t) {
+
+                            }
+                        });
                     }
                 });
-// set color transpartent
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                 dialog.show();
-
-
             }
         });
-
-        sv_location.setOnQueryTextListener(new SearchView.OnQueryTextListener() { //Tìm marker theo key Map
+        final ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, listRealName);
+        sv_location.setThreshold(1);
+        sv_location.setAdapter(cityAdapter);
+        sv_location.setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
             @Override
-            public boolean onQueryTextSubmit(String s) {
+            public boolean onTouch(View paramView, MotionEvent paramMotionEvent) {
+                if (listRealName.size() > 0) {
+                    // show all suggestions
+                    if (!sv_location.getText().toString().equals(""))
+                        cityAdapter.getFilter().filter(null);
+                    sv_location.showDropDown();
+                }
                 return false;
             }
-
+        });
+        iv_searchMarker.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onQueryTextChange(String s) {
-
+            public void onClick(View view) {
                 try {
-                    Marker marker = markers.get(s);
+                    Marker marker = markers.get(sv_location.getText().toString().trim());
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 15f));
                 }catch (Exception e){
 
                 }
-                return false;
-
             }
         });
 
-
-
-
-
     }
+
     //Hàm xử lý quyền
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
-    {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Toast.makeText(getContext(), "xx", Toast.LENGTH_SHORT).show();
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-        {
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(getContext(), "xin duoc quyen roi", Toast.LENGTH_SHORT).show();
             xuLyQuyen();
         }
     }
+
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, @DrawableRes int vectorDrawableResourceId) { //Đặt custom marker
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorDrawableResourceId);
         vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());

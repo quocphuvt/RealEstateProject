@@ -9,178 +9,204 @@
     tools:context=".activities.RegisterActivity">
 
     <include layout="@layout/toolbar" />
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:gravity="center"
-            android:text="Create new account"
-            android:textColor="#CCCCCC"
-            android:textSize="20sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:orientation="vertical">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_id_reg"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="ID"
-                android:textColor="#fff"
-                android:textColorHint="#B0B0B0"
-                android:textSize="12sp" />
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_password_reg"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Password"
-                android:inputType="textPassword"
-                android:textColor="#fff"
-                android:textColorHint="#B0B0B0"
-                android:textSize="12sp" />
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_fullName_reg"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Full name"
-                android:textColor="#fff"
-                android:textColorHint="#B0B0B0"
-                android:textSize="12sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:text="City"
-                android:textColor="#B0B0B0"
-                android:textSize="12sp" />
-
-            <Spinner
-                android:id="@+id/sp_city_reg"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Full name"
-                android:textColor="#fff"
-                android:textColorHint="#B0B0B0"
-                android:textSize="12sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center">
-
-                <TextView
-                    android:id="@+id/tv_birthday_reg"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="Choose your birthday..."
-                    android:paddingLeft="4dp"
-                    android:textColor="#fff"
-                    android:textColorHint="#B0B0B0"
-                    android:textSize="12sp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:src="@drawable/ic_date_range_grey_24dp" />
-            </LinearLayout>
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_phoneNumber_reg"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Phone number"
-                android:textColor="#fff"
-                android:textColorHint="#B0B0B0"
-                android:textSize="12sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:text="Gender: "
-                android:textColor="#B0B0B0"
-                android:textSize="12sp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="30dp"
-                android:paddingRight="30dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center">
-
-                    <CheckBox
-                        android:id="@+id/chk_male"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="#fff"
-                        android:text="Male"
-                        android:textColor="#FFFFFF"
-                        android:textSize="12sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center">
-
-                    <CheckBox
-                        android:id="@+id/chk_female"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="#fff"
-                        android:text="Female"
-                        android:textColor="#FFFFFF"
-                        android:textSize="12sp" />
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-
+        android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/btn_submit_reg"
-                android:text="Register"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#fff"
-                android:gravity="center"
-                android:padding="10dp"></Button>
+            android:orientation="vertical"
+            android:paddingLeft="15dp"
+            android:paddingBottom="30dp"
+            android:paddingRight="15dp">
 
             <TextView
-                android:id="@+id/tv_cancel_reg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:text="Create new account"
+                android:textColor="#CCCCCC"
+                android:textSize="20sp" />
+            <RelativeLayout
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_centerInParent="true"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/iv_avatar_reg"
+                    android:layout_width="125dp"
+                    android:layout_height="125dp"
+                    android:src="@drawable/building"
+                    app:civ_border_width="2dp"
+                    app:civ_border_color="#FFf"/>
+                <ImageView
+                    android:id="@+id/iv_setAvatar_reg"
+                    android:layout_alignBottom="@+id/iv_avatar_reg"
+                    android:layout_alignRight="@+id/iv_avatar_reg"
+                    android:src="@mipmap/ic_image"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp" />
+
+            </RelativeLayout>
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:gravity="center"
-                android:text="Cancel"
-                android:textColor="#fff"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                android:orientation="vertical">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_id_reg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="ID"
+                    android:textColor="#fff"
+                    android:textColorHint="#B0B0B0"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_password_reg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Password"
+                    android:inputType="textPassword"
+                    android:textColor="#fff"
+                    android:textColorHint="#B0B0B0"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_fullName_reg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Full name"
+                    android:textColor="#fff"
+                    android:textColorHint="#B0B0B0"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:text="City"
+                    android:textColor="#B0B0B0"
+                    android:textSize="14sp" />
+
+                <Spinner
+                    android:id="@+id/sp_city_reg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Full name"
+                    android:textColor="#fff"
+                    android:textColorHint="#B0B0B0"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tv_birthday_reg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="Choose your birthday..."
+                        android:paddingLeft="4dp"
+                        android:textColor="#fff"
+                        android:textColorHint="#B0B0B0"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:src="@drawable/ic_date_range_grey_24dp" />
+                </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_phoneNumber_reg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Phone number"
+                    android:textColor="#fff"
+                    android:textColorHint="#B0B0B0"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:text="Gender: "
+                    android:textColor="#B0B0B0"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center">
+
+                        <CheckBox
+                            android:id="@+id/chk_male"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="#fff"
+                            android:text="Male"
+                            android:textColor="#FFFFFF"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center">
+
+                        <CheckBox
+                            android:id="@+id/chk_female"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="#fff"
+                            android:text="Female"
+                            android:textColor="#FFFFFF"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btn_submit_reg"
+                    android:text="Register"
+                    android:layout_marginTop="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:gravity="center"
+                    android:padding="10dp"></Button>
+
+                <TextView
+                    android:id="@+id/tv_cancel_reg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:text="Cancel"
+                    android:textColor="#fff"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </ScrollView>
 </LinearLayout>

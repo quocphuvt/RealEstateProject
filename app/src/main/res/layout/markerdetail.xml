@@ -11,5 +11,5 @@
         android:layout_height="wrap_content"
         android:background="#4896b7"
         android:textColor="#ededed"
-        android:text="GO TO STORE" />
+        android:text="SHOW ME DETAILS" />
 </LinearLayout>

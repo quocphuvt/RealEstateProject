@@ -8,9 +8,10 @@ const userSchema = new Schema({
     birthday: String,
     city: String,
     phoneNumber: String,
-    gender: Number
-});
+    gender: Number,
+    avatar: String
+}); 
 
-const userModel = mongoose.model("users", userSchema); //users: collection
+const userModel = mongoose.model("users", userSchema);
 
 module.exports = userModel;

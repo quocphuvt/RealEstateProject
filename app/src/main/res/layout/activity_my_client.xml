@@ -4,12 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:orientation="vertical"
     tools:context=".activities.MyClientActivity">
-    <TextView
-        android:gravity="center"
-        android:textSize="30sp"
-        android:text="Comming soon"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
+            app:title="Favorite"
+            app:titleTextColor="#fff"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+    <ListView
+        android:id="@+id/lv_favorite"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"></ListView>
+
 </LinearLayout>

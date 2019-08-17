@@ -9,6 +9,7 @@
     tools:context=".activities.UpdateProfileUserActivity">
 
     <include layout="@layout/toolbar" />
+<<<<<<< HEAD
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,10 +41,25 @@
                 android:textColor="#fff"
                 android:textColorHint="#B0B0B0"
                 android:textSize="12sp" />
+=======
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="15dp"
+            android:paddingBottom="30dp"
+            android:paddingRight="15dp">
+>>>>>>> dc4295590295785dec8f9cec118726040f0ae54b
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+<<<<<<< HEAD
                 android:layout_marginLeft="4dp"
                 android:text="City"
                 android:textColor="#B0B0B0"
@@ -57,10 +73,18 @@
                 android:textColor="#fff"
                 android:textColorHint="#B0B0B0"
                 android:textSize="12sp" />
+=======
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:text="Update your profile"
+                android:textColor="#CCCCCC"
+                android:textSize="20sp" />
+>>>>>>> dc4295590295785dec8f9cec118726040f0ae54b
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+<<<<<<< HEAD
                 android:gravity="center">
 
                 <TextView
@@ -70,10 +94,44 @@
                     android:layout_weight="1"
                     android:hint="Choose your birthday..."
                     android:paddingLeft="4dp"
+=======
+                android:layout_marginTop="30dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_marginTop="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_centerInParent="true"
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/iv_avatar_edit"
+                        android:layout_width="125dp"
+                        android:layout_height="125dp"
+                        android:src="@drawable/building"
+                        app:civ_border_width="2dp"
+                        app:civ_border_color="#fff"/>
+                    <ImageView
+                        android:id="@+id/iv_setAvatar_edit"
+                        android:layout_alignBottom="@+id/iv_avatar_edit"
+                        android:layout_alignRight="@+id/iv_avatar_edit"
+                        android:src="@mipmap/ic_image"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp" />
+                </RelativeLayout>
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_fullName_editUser"
+                    android:layout_marginTop="40dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Full name"
+>>>>>>> dc4295590295785dec8f9cec118726040f0ae54b
                     android:textColor="#fff"
                     android:textColorHint="#B0B0B0"
                     android:textSize="12sp" />
 
+<<<<<<< HEAD
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -103,10 +161,29 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="30dp"
                 android:paddingRight="30dp">
+=======
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:text="City"
+                    android:textColor="#B0B0B0"
+                    android:textSize="12sp" />
+
+                <Spinner
+                    android:id="@+id/sp_city_editUser"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Full name"
+                    android:textColor="#fff"
+                    android:textColorHint="#B0B0B0"
+                    android:textSize="12sp" />
+>>>>>>> dc4295590295785dec8f9cec118726040f0ae54b
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+<<<<<<< HEAD
                     android:layout_weight="1"
                     android:gravity="center">
 
@@ -164,4 +241,111 @@
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
+=======
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tv_birthday_editUser"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="Choose your birthday..."
+                        android:paddingLeft="4dp"
+                        android:textColor="#fff"
+                        android:textColorHint="#B0B0B0"
+                        android:textSize="12sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:src="@drawable/ic_date_range_grey_24dp" />
+                </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_phoneNumber_editUser"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Phone number"
+                    android:textColor="#fff"
+                    android:textColorHint="#B0B0B0"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:text="Gender: "
+                    android:textColor="#B0B0B0"
+                    android:textSize="12sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center">
+
+                        <CheckBox
+                            android:id="@+id/chk_male_editUser"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="#fff"
+                            android:text="Male"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center">
+
+                        <CheckBox
+                            android:id="@+id/chk_female_editUser"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="#fff"
+                            android:text="Female"
+                            android:textColor="#FFFFFF"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btn_submit_editUser"
+                    android:text="Update"
+                    android:layout_marginTop="50dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#fff"
+                    android:gravity="center"
+                    android:padding="10dp"></Button>
+
+                <TextView
+                    android:id="@+id/tv_cancel_editUser"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:text="Cancel"
+                    android:textColor="#fff"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+>>>>>>> dc4295590295785dec8f9cec118726040f0ae54b
 </LinearLayout>

@@ -12,33 +12,35 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="0dp" />
     <androidx.cardview.widget.CardView
-        android:layout_margin="10dp"
+        android:layout_margin="12sp"
         app:cardCornerRadius="5dp"
         android:paddingRight="5dp"
-        app:cardMaxElevation="10dp"
-        android:elevation="10dp"
+        app:cardMaxElevation="12sp"
+        android:elevation="12sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <androidx.appcompat.widget.SearchView
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:padding="5dp"
                 android:layout_weight="1"
                 android:theme="@style/AppSearchView"
                 app:iconifiedByDefault="false"
                 app:searchIcon="@null"
                 android:background="#fff"
-                android:id="@+id/sv_location"
+                android:id="@+id/sv_location_map"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
             <LinearLayout
-                android:padding="10dp"
+                android:padding="12sp"
                 android:layout_weight="0"
                 android:background="#C4714B"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <ImageView
+                    android:id="@+id/iv_showMarker_search"
                     android:src="@drawable/ic_search_white_24dp"
                     android:layout_width="20dp"
                     android:layout_height="20dp" />
@@ -57,6 +59,22 @@
             android:layout_height="170dp"
             >
 
+            <TextView
+                android:id="@+id/tv_type_sheet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="5dp"
+                android:text="For lease"
+                android:textColor="#FF5722"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/iv_store_sheet"
+                app:layout_constraintEnd_toEndOf="@+id/iv_store_sheet"
+                app:layout_constraintHorizontal_bias="0.482"
+                app:layout_constraintStart_toStartOf="@+id/iv_store_sheet"
+                app:layout_constraintTop_toBottomOf="@+id/iv_store_sheet"
+                app:layout_constraintVertical_bias="0.0" />
+
             <ImageView
                 android:id="@+id/iv_store_sheet"
                 android:layout_width="86dp"
@@ -66,25 +84,25 @@
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="40dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_date"
+                android:src="@drawable/building2"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.031"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_namestore_sheet" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_nameReal_sheet" />
 
 
             <TextView
-                android:id="@+id/tv_namestore_sheet"
+                android:id="@+id/tv_nameReal_sheet"
                 android:layout_width="match_parent"
-                android:background="#752525"
+                android:background="#fff"
                 android:paddingBottom="2dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
-                android:text="Store: "
+                android:text="New world Sai Gon"
                 android:textColor="#365874"
-                android:textSize="12dp"
+                android:textSize="15dp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -96,23 +114,25 @@
                 android:id="@+id/tv_address_sheet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="112dp"
                 android:layout_marginLeft="112dp"
-                android:layout_marginTop="10dp"
+                android:paddingRight="5dp"
+                android:layout_marginTop="8dp"
                 android:background="#Fff"
                 android:lines="2"
-                android:textColor="#31686e"
                 android:text="Address:"
-                android:textSize="10dp"
-                app:layout_constraintStart_toEndOf="@+id/iv_store_sheet"
-                app:layout_constraintTop_toBottomOf="@+id/tv_namestore_sheet" />
+                android:textColor="#31686e"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_nameReal_sheet" />
 
             <TextView
-                android:id="@+id/tv_location_sheet"
+                android:id="@+id/tv_area_sheet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="Location:"
-                android:textSize="10dp"
+                android:text="Area: 20 m2"
+                android:textSize="12sp"
                 android:textColor="#31686e"
                 android:layout_marginLeft="112dp"
                 app:layout_constraintEnd_toEndOf="@+id/tv_address_sheet"
@@ -121,86 +141,50 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_address_sheet" />
 
             <TextView
-                android:id="@+id/tv_phone_sheet"
+                android:id="@+id/tv_price_sheet"
                 android:layout_width="match_parent"
                 android:layout_height="14dp"
                 android:layout_marginTop="4dp"
-                android:text="Phonenumber:"
-                android:textSize="10dp"
+                android:text="Price: 3000000 VND"
+                android:textSize="12sp"
                 android:textColor="#31686e"
-                app:layout_constraintEnd_toEndOf="@+id/tv_location_sheet"
+                app:layout_constraintEnd_toEndOf="@+id/tv_area_sheet"
                 app:layout_constraintHorizontal_bias="0.0"
                 android:layout_marginLeft="112dp"
-                app:layout_constraintStart_toStartOf="@+id/tv_location_sheet"
-                app:layout_constraintTop_toBottomOf="@+id/tv_location_sheet" />
+                app:layout_constraintStart_toStartOf="@+id/tv_area_sheet"
+                app:layout_constraintTop_toBottomOf="@+id/tv_area_sheet" />
 
-            <TextView
-                android:id="@+id/tv_discription_sheet"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Description:"
-                android:textSize="10dp"
-                android:lines="3"
-                android:textColor="#31686e"
-                android:layout_marginTop="4dp"
-                android:layout_marginLeft="112dp"
-                app:layout_constraintEnd_toEndOf="@+id/tv_phone_sheet"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/tv_phone_sheet"
-                app:layout_constraintTop_toBottomOf="@+id/tv_phone_sheet" />
-
-
-            <Button
-                android:id="@+id/btn_goto_sheet"
-                android:layout_width="46dp"
-                android:layout_height="22dp"
-                android:background="#CC9F9F"
-                android:drawableLeft="@drawable/ic_date"
-                android:text="VISIT"
-                android:textColor="#747474"
-                android:textSize="8dp"
-                app:layout_constraintBottom_toBottomOf="@+id/btn_collapse"
-                app:layout_constraintEnd_toEndOf="@+id/iv_store_sheet"
-                app:layout_constraintStart_toStartOf="@+id/iv_store_sheet"
-                app:layout_constraintTop_toTopOf="@+id/btn_collapse" />
 
             <Button
                 android:id="@+id/btn_collapse"
-                android:layout_width="73dp"
+                android:layout_width="wrap_content"
                 android:layout_height="19dp"
                 android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginRight="8dp"
-                android:layout_marginBottom="8dp"
                 android:background="@android:color/transparent"
-                android:drawableLeft="@drawable/ic_date"
+                android:drawableLeft="@drawable/ic_keyboard_arrow_down_indigo_900_24dp"
                 android:text="hide info"
                 android:textColor="#894646"
-                android:textSize="8sp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_type_sheet"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.501"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_discription_sheet" />
+                app:layout_constraintTop_toTopOf="@+id/tv_type_sheet" />
 
-            <Button
-                android:id="@+id/iv_farovate_sheet"
-                android:layout_width="wrap_content"
-                android:layout_height="19dp"
-                android:layout_marginLeft="16dp"
+            <ImageView
+                android:layout_width="95dp"
+                android:layout_height="80dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
-                android:background="@android:color/transparent"
-                android:drawableLeft="@drawable/ic_date"
-                android:text="add favourite"
-                android:textColor="#c67a7a"
-                android:textSize="8sp"
-                app:layout_constraintBottom_toBottomOf="@+id/btn_collapse"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@+id/btn_collapse"
-                app:layout_constraintTop_toTopOf="@+id/btn_collapse" />
-
-
+                android:scaleType="fitCenter"
+                android:src="@drawable/skyline"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/tv_price_sheet"
+                app:layout_constraintHorizontal_bias="0.84"
+                app:layout_constraintStart_toEndOf="@+id/btn_collapse" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

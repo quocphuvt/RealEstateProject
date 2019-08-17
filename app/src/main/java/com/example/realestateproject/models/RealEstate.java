@@ -11,13 +11,15 @@ public class RealEstate {
     private String city;
     private String type;
     private String status;
+    private String location;
+    private String img;
     private String _idUser;
 
     public RealEstate() {
 
     }
 
-    public RealEstate(String name, String address, String contactNumber, String description, Double price, Double area, String city, String type, String status, String _idUser) {
+    public RealEstate(String name, String address, String contactNumber, String description, Double price, Double area, String city, String type, String status, String location, String img, String _idUser) {
         this.name = name;
         this.address = address;
         this.contactNumber = contactNumber;
@@ -27,10 +29,12 @@ public class RealEstate {
         this.city = city;
         this.type = type;
         this.status = status;
+        this.location = location;
+        this.img = img;
         this._idUser = _idUser;
     }
 
-    public RealEstate(String _id, String name, String address, String contactNumber, String description, Double price, Double area, String city, String type, String status, String _idUser) {
+    public RealEstate(String _id, String name, String address, String contactNumber, String description, Double price, Double area, String city, String type, String status, String location, String img, String _idUser) {
         this._id = _id;
         this.name = name;
         this.address = address;
@@ -41,6 +45,8 @@ public class RealEstate {
         this.city = city;
         this.type = type;
         this.status = status;
+        this.location = location;
+        this.img = img;
         this._idUser = _idUser;
     }
 
@@ -130,5 +136,21 @@ public class RealEstate {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 }

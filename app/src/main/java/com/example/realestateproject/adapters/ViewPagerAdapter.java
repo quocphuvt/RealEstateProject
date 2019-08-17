@@ -28,9 +28,6 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
             case 2:
                 fragment = new SearchFragment();
                 break;
-            case 3:
-                fragment = new ContactFragment();
-                break;
             default:
                 return null;
 
@@ -40,6 +37,6 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 4; //Trả về số fragment tương ứng với số Tab
+        return 3; //Trả về số fragment tương ứng với số Tab
     }
 }

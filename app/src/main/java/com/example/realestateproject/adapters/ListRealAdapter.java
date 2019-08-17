@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,6 +13,7 @@ import com.example.realestateproject.R;
 import com.example.realestateproject.activities.ListRealActivity;
 import com.example.realestateproject.interfaces.ClickRealItemListener;
 import com.example.realestateproject.models.RealEstate;
+import com.example.realestateproject.supports.Utils;
 
 import java.util.List;
 
@@ -59,6 +61,7 @@ public class ListRealAdapter extends BaseAdapter {
         TextView tv_area = view.findViewById(R.id.tv_area_item_real);
         TextView tv_price = view.findViewById(R.id.tv_price_item_real);
         TextView tv_seeDetails = view.findViewById(R.id.tv_seeDetails_item_real);
+        ImageView iv_picture = view.findViewById(R.id.iv_picture_real);
         final RealEstate realEstate= listReals.get(i);
         tv_name.setText(realEstate.getName());
         tv_address.setText(realEstate.getAddress());
@@ -66,11 +69,10 @@ public class ListRealAdapter extends BaseAdapter {
         tv_type.setText(realEstate.getType());
         tv_contact.setText(realEstate.getContactNumber());
         tv_price.setText("VND "+String.format("%.0f",realEstate.getPrice()));
-
+        iv_picture.setImageBitmap(Utils.decodeBase64Image(realEstate.getImg()));
         tv_seeDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Toast.makeText(context, "Click ne"+realEstate.getId(), Toast.LENGTH_SHORT).show();
                 clickRealItemListener.onClickItem(realEstate.getId());
             }
         });
