@@ -3,6 +3,7 @@ package com.example.realestateproject.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -36,9 +37,6 @@ public class MyClientActivity extends AppCompatActivity implements ClickRealItem
     private ListView lv_favorite;
     private Retrofit retrofit;
     private RetroUser retroUser;
-    private RetroReal retroReal;
-    private Favorites favorites = null;
-    private List<RealEstate> realEstates;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,40 +51,22 @@ public class MyClientActivity extends AppCompatActivity implements ClickRealItem
         String idUser = sharedPreferences.getString("id", "");
         retrofit = RetroClient.getInstance();
         retroUser = retrofit.create(RetroUser.class);
-        retroReal = retrofit.create(RetroReal.class);
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.show();
+        progressDialog.setTitle("Fetching data");
+        progressDialog.setMessage("Wait for second...");
         Call<UserResponses> callFavoritedRealsGetting = retroUser.getFavoritedReals(idUser);
         callFavoritedRealsGetting.enqueue(new Callback<UserResponses>() {
             @Override
             public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
                 if (response.isSuccessful()) {
                     UserResponses userResponses = response.body();
-                    favorites = userResponses.getFavorites();
                     if (userResponses.getStatus() == 1) {
-                        realEstates = new ArrayList<>();
-                        for (int i = 0; i < favorites.getFavoritedReals().size(); i++) {
-                            FavoritedReal favoritedReal = favorites.getFavoritedReals().get(i);
-                            if(favoritedReal.isLike()) {
-                                Call<UserResponses> callFavorite = retroReal.getRealById(favoritedReal.get_idReal());
-                                callFavorite.enqueue(new Callback<UserResponses>() {
-                                    @Override
-                                    public void onResponse(Call<UserResponses> call, Response<UserResponses> response) {
-                                        if (response.isSuccessful()) {
-                                            UserResponses userResponses = response.body();
-                                            if (userResponses.getStatus() == 1) {
-                                                    realEstates.add(userResponses.getRealEstate());
-                                            }
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<UserResponses> call, Throwable t) {
-
-                                    }
-                                });
-                            }
-                        }
-                        ListRealAdapter listRealAdapter = new ListRealAdapter(realEstates, MyClientActivity.this, MyClientActivity.this);
+                        ListRealAdapter listRealAdapter = new ListRealAdapter(userResponses.getRealList(), MyClientActivity.this, MyClientActivity.this);
                         lv_favorite.setAdapter(listRealAdapter);
+                        if(userResponses.getRealList().size() != 0) {
+                            progressDialog.dismiss();
+                        }
                     }
                 }
             }

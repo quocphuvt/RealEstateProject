@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const UserService = require("../services/UserService");
+const RealService = require("../services/RealService");
 
 router.post("/register", async (request, response) => {
     const userData = request.body;
@@ -34,7 +35,7 @@ router.get("/signIn", async (request, response) => {
     const user = await UserService.getUser(id);
     if (user) {
         if (user.password === password) {
-            return response.json({ status: 1, message: "Sign In successfully"});
+            return response.json({ status: 1, message: "Sign In successfully" });
         }
         return response.json({ status: -1, message: "Uncorrect password" });
     }
@@ -58,9 +59,9 @@ router.put("/", async (request, response) => {
     const userData = request.body;
     const updatedUser = await UserService.updateUser(userData);
     if (updatedUser) {
-        return response.json({ status: 1, message: "User has been updated"});
+        return response.json({ status: 1, message: "User has been updated" });
     }
-    return response.json({ status: 0, message: "Can not update your profile"});
+    return response.json({ status: 0, message: "Can not update your profile" });
 });
 
 router.post("/saveFavorite", async (request, response) => {
@@ -76,10 +77,28 @@ router.post("/saveFavorite", async (request, response) => {
 router.get("/:id/favoriteList", async (request, response) => {
     const id = request.params.id;
     const favoriteList = await UserService.getFavoritedReals(id);
-    if(favoriteList) {
-        return response.json({ status: 1, favorites: favoriteList});
+    const realId = favoriteList.favoritedReals.map( (favorite) => {
+        if (favorite.isLike == true) {
+            if (typeof favorite._idReal == "string") {
+                return favorite._idReal
+            }
+        }
+    });
+    const realIdNotNull = realId.filter(id => id != null);
+    
+    var i = 0;
+    const reals = [];
+    while(i < realIdNotNull.length){
+        const real = await RealService.getReal(realIdNotNull[i]);
+        if(real) {
+            reals.push(real);
+            i++;
+        }
     }
-    return response.json({ status: 0 });
+    
+    if (reals.length === realIdNotNull.length) {
+        return response.json({ status: 1, realList: reals });
+    }
 })
 
 module.exports = router;

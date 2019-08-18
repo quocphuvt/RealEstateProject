@@ -256,7 +256,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                     Log.i("bitmapError", e+"");
                                 }
                             } else {
-                                Snackbar.make(view, userResponses.getMessage(), Snackbar.LENGTH_SHORT).show();
+
                             }
                         }
                     }

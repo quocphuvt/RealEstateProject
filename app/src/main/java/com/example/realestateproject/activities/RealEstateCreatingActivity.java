@@ -132,7 +132,7 @@ public class RealEstateCreatingActivity extends AppCompatActivity implements Vie
                 String realArea = et_realArea.getText().toString().trim();
                 String realPrice = et_realPrice.getText().toString().trim();
                 String status = Constants.STATUS[0];
-                String location = et_location.getText().toString();
+                String location = et_location.getText().toString().replace(" ", "");
                 SharedPreferences sharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
                 String userId = sharedPreferences.getString("id", "");
                 if (realName.isEmpty()) {

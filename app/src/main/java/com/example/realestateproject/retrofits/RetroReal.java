@@ -56,7 +56,7 @@ public interface RetroReal {
     @GET("/real/{userId}/realList/available")
     Call<UserResponses> getAvailableReals(@Path("userId") String idUser);
 
-    @DELETE("/real/{realId}")
+        @DELETE("/real/{realId}")
     Call<UserResponses> deleteRealById(@Path("realId") String realId);
 
     @PUT("/real")

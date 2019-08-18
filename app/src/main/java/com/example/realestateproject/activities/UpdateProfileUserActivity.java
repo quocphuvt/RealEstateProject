@@ -127,7 +127,7 @@ public class UpdateProfileUserActivity extends AppCompatActivity implements View
                     Snackbar.make(view, "Please type all field", Snackbar.LENGTH_SHORT).show();
                 }
                 else {
-                    UserModel userModel = new UserModel(userId, fullname, birthday, phonenumber, city, gender, img);
+                    UserModel userModel = new UserModel(userId, fullname, birthday, city, phonenumber, gender, img);
                     Call<UserResponses> call = retroUser.updateUserData(userModel);
                     call.enqueue(new Callback<UserResponses>() {
                         @Override

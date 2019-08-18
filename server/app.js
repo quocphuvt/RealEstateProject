@@ -13,7 +13,7 @@ app.use(bodyparser.json({ limit: "50mb" }));
 app.use(bodyparser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
 app.use(express.static('public'));
 
-mongoose.connect("mongodb+srv://quocphuvt:lequocphu@realestate-j8e9d.mongodb.net/test?retryWrites=true&w=majority", (err, client) => {
+mongoose.connect("mongodb://localhost/RealEstateManager", (err, client) => {
     if (err) {  
         console.log("Unable to connect to MongoDB. Error: " + err)
     }
