@@ -73,7 +73,7 @@ public class MyClientActivity extends AppCompatActivity implements ClickRealItem
                                         if (response.isSuccessful()) {
                                             UserResponses userResponses = response.body();
                                             if (userResponses.getStatus() == 1) {
-                                                realEstates.add(userResponses.getRealEstate());
+                                                    realEstates.add(userResponses.getRealEstate());
                                             }
                                         }
                                     }

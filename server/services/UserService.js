@@ -18,6 +18,7 @@ exports.getAllUsers = async () => {
 
 exports.updateUser = async (user) => {
     const updatedUser = await UserModel.findOneAndUpdate({ id: user.id }, user, { new: true });
+    console.log(updatedUser);
     return updatedUser;
 };
 
@@ -38,5 +39,6 @@ exports.getFavoriteReal = async (favoriteData) => {
 
 exports.getFavoritedReals = async (id) => {
     const favoritedReals = await FavoriteModel.findOne({_idUser: id}).exec();
+    console.log(favoritedReals)
     return favoritedReals;
 }

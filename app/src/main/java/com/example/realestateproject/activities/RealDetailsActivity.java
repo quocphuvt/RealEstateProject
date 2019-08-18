@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -32,6 +33,7 @@ import com.example.realestateproject.retrofits.RetroClient;
 import com.example.realestateproject.retrofits.RetroReal;
 import com.example.realestateproject.retrofits.RetroUser;
 import com.example.realestateproject.supports.Utils;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -150,7 +152,7 @@ public class RealDetailsActivity extends AppCompatActivity implements View.OnCli
                             FavoritedReal favoritedReal = favorites.getFavoritedReals().get(i);
                             if (favoritedReal.get_idReal().equals(idReal)) {
                                 isLike = favoritedReal.isLike();
-                                iv_favorite.setImageResource(favoritedReal.isLike() ? R.drawable.ic_favorite_active : R.drawable.ic_favorite_unactive);
+                                iv_favorite.setImageResource(favoritedReal.isLike() ? R.drawable.star_active : R.drawable.star_unactive);
                                 break;
                             }
                         }
@@ -179,6 +181,7 @@ public class RealDetailsActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_selected_realDetail:
+                Snackbar.make(view, "Coming soon", Snackbar.LENGTH_SHORT).show();
                 break;
             case R.id.btn_seeUsOnMap:
                 break;
@@ -188,10 +191,10 @@ public class RealDetailsActivity extends AppCompatActivity implements View.OnCli
                 break;
             case R.id.iv_favorite:
                 if (isLike) {
-                    iv_favorite.setImageResource(R.drawable.ic_favorite_unactive);
+                    iv_favorite.setImageResource(R.drawable.star_unactive);
                     isLike = false;
                 } else {
-                    iv_favorite.setImageResource(R.drawable.ic_favorite_active);
+                    iv_favorite.setImageResource(R.drawable.star_active);
                     isLike = true;
                 }
         }
