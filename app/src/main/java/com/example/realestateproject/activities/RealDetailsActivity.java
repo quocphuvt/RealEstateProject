@@ -147,15 +147,13 @@ public class RealDetailsActivity extends AppCompatActivity implements View.OnCli
                 if (response.isSuccessful()) {
                     UserResponses userResponses = response.body();
                     if(userResponses.getStatus() == 1) {
-                        favorites = userResponses.getFavorites();
-                        for (int i = 0; i < favorites.getFavoritedReals().size(); i++) {
-                            FavoritedReal favoritedReal = favorites.getFavoritedReals().get(i);
-                            if (favoritedReal.get_idReal().equals(idReal)) {
-                                isLike = favoritedReal.isLike();
-                                iv_favorite.setImageResource(favoritedReal.isLike() ? R.drawable.star_active : R.drawable.star_unactive);
+                        for(int i = 0; i < userResponses.getRealList().size() ; i++){
+                            if(idReal.equals(userResponses.getRealList().get(i).getId())) {
+                                iv_favorite.setImageResource(R.drawable.star_active);
                                 break;
                             }
                         }
+
                     }
                 }
             }
